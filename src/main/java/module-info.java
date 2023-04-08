@@ -1,7 +1,8 @@
 module cl.sep2 {
   requires javafx.controls;
   requires javafx.fxml;
+  requires java.desktop;
 
-  opens cl.sep2 to javafx.fxml;
-  exports cl.sep2;
+  opens app to javafx.fxml;
+  exports app;
 }
