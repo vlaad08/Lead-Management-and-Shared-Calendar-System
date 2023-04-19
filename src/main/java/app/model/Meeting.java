@@ -58,7 +58,7 @@ public class Meeting
   public void removeEmployee(Employee employee){
     //It will be removed only if the object is the same
     //overwise this method should be edited
-    employeeList.remove(employee); 
+    employeeList.remove(employee);
 
   }
 }
