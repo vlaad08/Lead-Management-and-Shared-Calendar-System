@@ -4,5 +4,7 @@ module cl.sep2 {
   requires java.desktop;
 
   opens app to javafx.fxml;
+  opens app.view to javafx.fxml;
+
   exports app;
 }
