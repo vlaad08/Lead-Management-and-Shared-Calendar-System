@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.List;
 
 public class CalendarController implements Initializable {
 
@@ -33,6 +35,13 @@ public class CalendarController implements Initializable {
 
     @FXML
     private FlowPane calendar;
+
+    @FXML private Button closeButton;
+
+    public void onCloseButton()
+    {
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
