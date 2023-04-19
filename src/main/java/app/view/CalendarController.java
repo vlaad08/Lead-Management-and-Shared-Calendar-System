@@ -1,5 +1,6 @@
 package app.view;
 
+import app.viewmodel.CalendarViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,7 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,6 +29,8 @@ public class CalendarController implements Initializable {
 
     ZonedDateTime dateFocus;
     ZonedDateTime today;
+    private ViewHandler viewHandler;
+    private CalendarViewModel calendarViewModel;
 
     @FXML
     private Text year;
@@ -38,16 +43,40 @@ public class CalendarController implements Initializable {
 
     @FXML private Button closeButton;
 
+
+    @FXML private Button ManageMeeting;
+
+    private Region root;
+
     public void onCloseButton()
     {
 
     }
+
+    //THIS MY BE ILLEGAL BUT ILL MAKE AN INIT HERE
+    public void init(ViewHandler viewHandler, CalendarViewModel calendarViewModel, Region root){
+
+        this.calendarViewModel = calendarViewModel;
+        this.viewHandler = viewHandler;
+        this.root = root;
+
+    }
+
+    public Region getRoot(){
+        return this.root;
+    }
+
+    //public void reset(){} //Ill just leave this here we may need this later for smt
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateFocus = ZonedDateTime.now();
         today = ZonedDateTime.now();
         drawCalendar();
+    }
+
+    @FXML public void onManageMeeting(){
+        viewHandler.openView("Meeting");
     }
 
     @FXML

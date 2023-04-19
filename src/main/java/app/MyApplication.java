@@ -1,5 +1,9 @@
 package app;
 
+import app.model.Model;
+import app.model.ModelManager;
+import app.view.ViewHandler;
+import app.viewmodel.ViewModelFactory;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,9 +25,14 @@ public class MyApplication extends Application
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("calendar.fxml"));
     Scene scene= new Scene(loader.load());
-    primaryStage.setResizable(false);
+    /*primaryStage.setResizable(false);
     primaryStage.initStyle(StageStyle.TRANSPARENT);
     primaryStage.setScene(scene);
-    primaryStage.show();
+    primaryStage.show();*/
+
+    Model model = new ModelManager();
+    ViewModelFactory viewModelFactory = new ViewModelFactory(model);
+    ViewHandler viewHandler = new ViewHandler(viewModelFactory);
+    viewHandler.start(primaryStage);
   }
 }
