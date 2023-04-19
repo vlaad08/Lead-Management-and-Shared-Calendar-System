@@ -1,6 +1,9 @@
 package app.model;
 
-public class Lead {
+import java.io.Serializable;
+
+public class Lead implements Serializable
+{
   private String name;
   private String address;
   private String phoneNumber;

@@ -1,8 +1,9 @@
 package app.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Task
+public class Task implements Serializable
 {
   private String title;
   private int priorityPoints; //The idea for this is that it can be set from 0-5, and the default value would be 0 (low priority).

@@ -1,9 +1,10 @@
 package app.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Meeting
+public class Meeting implements Serializable
 {
   private Date startDate;
   private Date endDate;
