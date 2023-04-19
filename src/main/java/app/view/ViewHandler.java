@@ -27,7 +27,7 @@ public class ViewHandler
     currentScene.setRoot(viewFacotryRegion);
     primaryStage.setScene(currentScene);
     //primaryStage.setResizable(false);
-    primaryStage.setTitle("Meeting");
+    primaryStage.setTitle("Meeting");      //itt a meetingre megy ra mindig az open view, valahogy ugy kene h setTitle id es akkor mindig kikerni
     primaryStage.show();
   }
 
