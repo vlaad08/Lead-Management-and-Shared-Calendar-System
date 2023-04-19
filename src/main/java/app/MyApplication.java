@@ -1,6 +1,8 @@
 package app;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MyApplication extends Application
