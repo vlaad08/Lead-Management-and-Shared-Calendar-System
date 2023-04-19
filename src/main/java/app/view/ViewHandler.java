@@ -4,7 +4,7 @@ import app.viewmodel.ViewModelFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-
+import javafx.stage.StageStyle;
 
 public class ViewHandler
 {
@@ -26,7 +26,8 @@ public class ViewHandler
     Region viewFacotryRegion = viewFactory.loadView(id);
     currentScene.setRoot(viewFacotryRegion);
     primaryStage.setScene(currentScene);
-    //primaryStage.setResizable(false);
+    primaryStage.setResizable(false);
+    primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.setTitle("Meeting");
     primaryStage.show();
   }
