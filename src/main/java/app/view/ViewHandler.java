@@ -23,11 +23,10 @@ public class ViewHandler
   }
 
   public void openView(String id){
-    Region viewFacotryRegion = viewFactory.loadView(id);
-    currentScene.setRoot(viewFacotryRegion);
+    Region viewFactoryRegion = viewFactory.loadView(id);
+    currentScene.setRoot(viewFactoryRegion);
     primaryStage.setScene(currentScene);
     primaryStage.setResizable(false);
-    primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.setTitle("Meeting");
     primaryStage.show();
   }

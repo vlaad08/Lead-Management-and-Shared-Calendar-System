@@ -123,7 +123,7 @@
                <top>
                   <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="closeButton" mnemonicParsing="false" style="-fx-background-color: none;" text="X" textFill="WHITE">
+                        <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>

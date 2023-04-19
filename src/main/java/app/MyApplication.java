@@ -25,10 +25,10 @@ public class MyApplication extends Application
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("calendar.fxml"));
     Scene scene= new Scene(loader.load());
-    /*primaryStage.setResizable(false);
-    primaryStage.initStyle(StageStyle.TRANSPARENT);
+    primaryStage.setResizable(false);
+    primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.setScene(scene);
-    primaryStage.show();*/
+    primaryStage.show();
 
     Model model = new ModelManager();
     ViewModelFactory viewModelFactory = new ViewModelFactory(model);

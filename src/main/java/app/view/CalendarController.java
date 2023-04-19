@@ -50,10 +50,10 @@ public class CalendarController implements Initializable {
 
     public void onCloseButton()
     {
-
+        viewHandler.close();
     }
 
-    //THIS MY BE ILLEGAL BUT ILL MAKE AN INIT HERE
+    //THIS MAY BE ILLEGAL BUT ILL MAKE AN INIT HERE
     public void init(ViewHandler viewHandler, CalendarViewModel calendarViewModel, Region root){
 
         this.calendarViewModel = calendarViewModel;
