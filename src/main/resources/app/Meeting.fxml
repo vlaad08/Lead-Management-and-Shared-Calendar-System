@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.CalendarController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.MeetingController">
     <left>
         <BorderPane prefHeight="615.0" prefWidth="295.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
             <top>
@@ -43,7 +43,7 @@
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: none;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
+                        <Button fx:id="Calendar" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#onCalendarView" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: none;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
                             <font>
                                 <Font size="18.0" />
                             </font>

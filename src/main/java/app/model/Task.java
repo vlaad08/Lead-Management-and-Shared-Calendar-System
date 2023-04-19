@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Task implements Serializable
-{
-  private String title;
+{ private String title;
   private int priorityPoints; //The idea for this is that it can be set from 0-5, and the default value would be 0 (low priority).
   private String description;
   private ArrayList<Employee> assignedEmployees; //This would be for the assigned employees to complete the task. It could also be left empty.
@@ -50,12 +49,12 @@ public class Task implements Serializable
   public void setDescription(String description)
   {
     this.description = description;
-  }
+ }
 
   public void setTitle(String title)
   {
     this.title = title;
-  }
+ }
 
   public String getTitle()
   {
