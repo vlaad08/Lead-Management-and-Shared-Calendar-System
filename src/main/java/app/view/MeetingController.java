@@ -47,6 +47,11 @@ public class MeetingController
     });
   }
 
+  public void onCloseButton()
+  {
+    viewHandler.close();
+  }
+
   public Region getRoot()
   {
     return root;
