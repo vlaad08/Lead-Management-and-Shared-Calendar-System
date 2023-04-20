@@ -1,4 +1,6 @@
-package app.model;
+package app.shared;
+
+import app.model.User;
 
 import java.io.Serializable;
 

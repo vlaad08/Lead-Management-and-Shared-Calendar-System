@@ -1,12 +1,11 @@
 package app.server;
 
-import app.model.Lead;
-import app.model.Meeting;
-import app.model.Task;
+import app.shared.Lead;
+import app.shared.Meeting;
+import app.shared.Task;
 import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
 
-import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 

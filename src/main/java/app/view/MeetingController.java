@@ -13,12 +13,38 @@ public class MeetingController
   private ViewHandler viewHandler;
   private MeetingViewModel meetingViewModel;
 
+  @FXML private Button plansButton;
+  @FXML private  Button taskButton;
+  @FXML private  Button leadButton;
+  @FXML private  Button availableButton;
+  @FXML private  Button clientsButton;
+  @FXML private  Button manageLeadsButton;
+  @FXML private  Button closeButton;
+
+
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root){
     this.viewHandler = viewHandler;
     this.meetingViewModel = meetingViewModel;
     this.root = root;
 
     //bs comes below
+    hoverButtonNavbar(plansButton);
+    hoverButtonNavbar(taskButton);
+    hoverButtonNavbar(leadButton);
+    hoverButtonNavbar(availableButton);
+    hoverButtonNavbar(clientsButton);
+    hoverButtonNavbar(manageLeadsButton);
+    hoverButtonNavbar(closeButton);
+  }
+
+  public void hoverButtonNavbar(Button b)
+  {
+    b.setOnMouseEntered(event -> {
+        b.setStyle("-fx-background-color: #786FAC;");
+    });
+    b.setOnMouseExited(event -> {
+      b.setStyle("-fx-background-color: none");
+    });
   }
 
   public Region getRoot()
