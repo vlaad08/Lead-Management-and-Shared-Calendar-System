@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class ViewFactory
 {
-  private ViewHandler viewHandler;
-  private ViewModelFactory viewModelFactory;
+  private final ViewHandler viewHandler;
+  private final ViewModelFactory viewModelFactory;
   private MeetingController meetingController;
   private CalendarController calendarController;
   private TaskController taskController;
