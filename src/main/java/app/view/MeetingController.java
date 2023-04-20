@@ -1,6 +1,7 @@
 package app.view;
 
 import app.viewmodel.MeetingViewModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
@@ -64,22 +65,25 @@ public class MeetingController
 
   public void  reset(){} //why not
 
-  @FXML public void onCalendarView(){
-    viewHandler.openView("Calendar");
-  }
-  @FXML public void onTasksView(){
-    viewHandler.openView("Tasks");
+  @FXML public void changeView(ActionEvent e)
+  {
+    if(e.getSource().getClass() == Button.class)
+    {
+      Button b = (Button) e.getSource();
+
+      switch (b.getText())
+      {
+        case "Calendar", "Plans" ->
+            viewHandler.openView("Calendar");
+        case "Manage meeting" -> viewHandler.openView("Meeting");
+        case "Manage task" -> viewHandler.openView("Task");
+        case "Lead", "Available Clients" ->
+            viewHandler.openView("AvailableClients");
+        case "All Clients" -> viewHandler.openView("AllClients");
+        case "Manage leads" -> viewHandler.openView("Leads");
+      }
+    }
   }
 
-  @FXML public void onAvailableClientsView(){
-    viewHandler.openView("AvailableClients");
-  }
-
-  @FXML public void onAllClientsView(){
-    viewHandler.openView("AllClients");
-  }
-
-  @FXML public void onLeadsView(){
-    viewHandler.openView("Leads");
-  }
 }
+

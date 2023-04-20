@@ -13,10 +13,10 @@ public class ViewFactory
   private ViewModelFactory viewModelFactory;
   private MeetingController meetingController;
   private CalendarController calendarController;
-  private TasksController tasksController;
+  private TaskController taskController;
   private AvailableClientsController availableClientsController;
   private AllClientsController allClientsController;
-  private LeadsController leadsController;
+  private ManageLeadsController manageLeadsController;
 
   public ViewFactory(ViewHandler viewHandler, ViewModelFactory viewModelFactory)
   {
@@ -32,7 +32,7 @@ public class ViewFactory
         {
           case "Calendar" -> loadCalendarView();   //other views can be added
           case "Meeting" -> loadMeetingView();
-          case "Tasks" -> loadTasksView();
+          case "Task" -> loadTasksView();
           case "AvailableClients" -> loadAvailableClientsView();
           case "AllClients" -> loadAllClientsView();
           case "Leads" -> loadLeadsView();
@@ -45,7 +45,7 @@ public class ViewFactory
     if (calendarController == null)
     {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("/app/calendar.fxml"));
+      loader.setLocation(getClass().getResource("/app/Calendar.fxml"));
       try
       {
         Region root = loader.load();
@@ -86,15 +86,15 @@ public class ViewFactory
 
   public Region loadTasksView()
   {
-    if (tasksController == null)
+    if (taskController == null)
     {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/app/Task.fxml"));
       try
       {
         Region root = loader.load();
-        tasksController = loader.getController();
-        tasksController.init(viewHandler, viewModelFactory.getTasksViewModel(),
+        taskController = loader.getController();
+        taskController.init(viewHandler, viewModelFactory.getTasksViewModel(),
             root);
       }
       catch (IOException e)
@@ -102,7 +102,7 @@ public class ViewFactory
         throw new IOError(e);
       }
     }
-    return tasksController.getRoot();
+    return taskController.getRoot();
   }
 
   public Region loadAvailableClientsView()
@@ -110,7 +110,7 @@ public class ViewFactory
     if (availableClientsController == null)
     {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("/app/Available.fxml"));
+      loader.setLocation(getClass().getResource("/app/AvailableClients.fxml"));
       try
       {
         Region root = loader.load();
@@ -147,15 +147,15 @@ public class ViewFactory
 
   public Region loadLeadsView()
   {
-    if (leadsController == null)
+    if (manageLeadsController == null)
     {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("/app/Leads.fxml"));
+      loader.setLocation(getClass().getResource("/app/ManageLeads.fxml"));
       try
       {
         Region root = loader.load();
-        leadsController = loader.getController();
-        leadsController.init(viewHandler, viewModelFactory.getLeadsViewModel(),
+        manageLeadsController = loader.getController();
+        manageLeadsController.init(viewHandler, viewModelFactory.getLeadsViewModel(),
             root);
       }
       catch (IOException e)
@@ -164,6 +164,6 @@ public class ViewFactory
       }
     }
 
-    return leadsController.getRoot();
+    return manageLeadsController.getRoot();
   }
 }

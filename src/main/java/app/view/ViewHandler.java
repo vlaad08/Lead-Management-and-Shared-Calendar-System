@@ -23,11 +23,10 @@ public class ViewHandler
   }
 
   public void openView(String id){
-    Region viewFacotryRegion = viewFactory.loadView(id);
-    currentScene.setRoot(viewFacotryRegion);
+    System.out.println(id);
+    Region viewFactoryRegion = viewFactory.loadView(id);
+    currentScene.setRoot(viewFactoryRegion);
     primaryStage.setScene(currentScene);
-    //primaryStage.setResizable(false);
-    primaryStage.setTitle("Meeting");      //itt a meetingre megy ra mindig az open view, valahogy ugy kene h setTitle id es akkor mindig kikerni
     primaryStage.show();
   }
 

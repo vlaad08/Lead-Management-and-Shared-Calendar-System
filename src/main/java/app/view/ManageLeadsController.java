@@ -1,41 +1,40 @@
 package app.view;
 
-import app.viewmodel.AvailableClientsViewModel;
-import app.viewmodel.MeetingViewModel;
+import app.viewmodel.LeadsViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 
-public class AvailableClientsController
+public class ManageLeadsController
 {
-
-
-
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
   @FXML private Button clientsButton;
+  @FXML private Button availableClientsButton;
   @FXML private Button meetingButton;
   @FXML private Button plansButton;
   @FXML private Button closeButton;
-  @FXML private Button manageLeadsButton;
+
+
 
   private Region root;
   private ViewHandler viewHandler;
-  private AvailableClientsViewModel availableClientsViewModel;
+  private LeadsViewModel leadsViewModel;
 
-  public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
+  public void init(ViewHandler viewHandler, LeadsViewModel leadsViewModel, Region root){
     this.viewHandler = viewHandler;
-    this.availableClientsViewModel = availableClientsViewModel;
+    this.leadsViewModel = leadsViewModel;
     this.root = root;
 
     //bs comes below
     hoverButtonNavbar(calendarButton);
+    hoverButtonNavbar(availableClientsButton);
     hoverButtonNavbar(plansButton);
     hoverButtonNavbar(meetingButton);
     hoverButtonNavbar(tasksButton);
     hoverButtonNavbar(clientsButton);
-    hoverButtonNavbar(manageLeadsButton);
+
     hoverButtonNavbar(closeButton);
   }
 

@@ -23,7 +23,7 @@ public class MyApplication extends Application
   {
     primaryStage.setTitle("Calendar");
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("calendar.fxml"));
+    loader.setLocation(getClass().getResource("Calendar.fxml"));
     Scene scene= new Scene(loader.load());
     primaryStage.setResizable(false);
     primaryStage.initStyle(StageStyle.UNDECORATED);
