@@ -23,7 +23,6 @@ public class ViewHandler
   }
 
   public void openView(String id){
-    System.out.println(id);
     Region viewFactoryRegion = viewFactory.loadView(id);
     currentScene.setRoot(viewFactoryRegion);
     primaryStage.setScene(currentScene);
