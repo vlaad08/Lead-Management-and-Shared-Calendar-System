@@ -1,6 +1,5 @@
 package app.view;
 
-import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
