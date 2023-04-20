@@ -2,6 +2,7 @@ package app.view;
 
 import app.viewmodel.CalendarViewModel;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -60,11 +62,15 @@ public class CalendarController implements Initializable {
         this.viewHandler = viewHandler;
         this.root = root;
 
+
+
     }
 
     public Region getRoot(){
         return this.root;
     }
+
+
 
     //public void reset(){} //Ill just leave this here we may need this later for smt
 

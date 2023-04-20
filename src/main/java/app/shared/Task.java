@@ -1,4 +1,6 @@
-package app.model;
+package app.shared;
+
+import app.model.Employee;
 
 import java.io.Serializable;
 import java.util.ArrayList;

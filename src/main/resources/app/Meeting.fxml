@@ -43,12 +43,12 @@
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button fx:id="Calendar" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#onCalendarView" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: none;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
+                        <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#onCalendarView" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: none;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="71.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
+                        <Button fx:id="taskButton" mnemonicParsing="false" prefHeight="71.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -59,22 +59,22 @@
                             </font>
                         </Button>
                         <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4" />
-                        <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: none;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
+                        <Button fx:id="leadButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: none;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
                             <font>
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="52.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
+                        <Button fx:id="availableButton" mnemonicParsing="false" prefHeight="52.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Clients" textFill="WHITE" GridPane.rowIndex="7">
+                        <Button fx:id="clientsButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Clients" textFill="WHITE" GridPane.rowIndex="7">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leeds" textFill="WHITE" GridPane.rowIndex="8">
+                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leeds" textFill="WHITE" GridPane.rowIndex="8">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -91,7 +91,7 @@
                     <top>
                         <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
                             <children>
-                                <Button fx:id="closeButton" mnemonicParsing="false" style="-fx-background-color: none;" text="X" textFill="WHITE">
+                                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
