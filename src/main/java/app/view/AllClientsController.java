@@ -1,26 +1,27 @@
 package app.view;
 
+import app.viewmodel.AllClientsViewModel;
 import app.viewmodel.MeetingViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 
-public class MeetingController
+public class AllClientsController
 {
   @FXML private Button Calendar;
   @FXML private Button Tasks;
   @FXML private Button AvailableClients;
-  @FXML private Button AllClients;
+  @FXML private Button ManageMeeting;
   @FXML private Button Leads;
 
 
   private Region root;
   private ViewHandler viewHandler;
-  private MeetingViewModel meetingViewModel;
+  private AllClientsViewModel allClientsViewModel;
 
-  public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root){
+  public void init(ViewHandler viewHandler, AllClientsViewModel allClientsViewModel, Region root){
     this.viewHandler = viewHandler;
-    this.meetingViewModel = meetingViewModel;
+    this.allClientsViewModel = allClientsViewModel;
     this.root = root;
 
     //bs comes below
@@ -44,8 +45,8 @@ public class MeetingController
     viewHandler.openView("AvailableClients");
   }
 
-  @FXML public void onAllClientsView(){
-    viewHandler.openView("AllClients");
+  @FXML public void onManageMeetingView(){
+    viewHandler.openView("Meeting");
   }
 
   @FXML public void onLeadsView(){

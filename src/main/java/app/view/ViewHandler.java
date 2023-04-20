@@ -4,7 +4,7 @@ import app.viewmodel.ViewModelFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+
 
 public class ViewHandler
 {
@@ -23,11 +23,11 @@ public class ViewHandler
   }
 
   public void openView(String id){
-    Region viewFactoryRegion = viewFactory.loadView(id);
-    currentScene.setRoot(viewFactoryRegion);
+    Region viewFacotryRegion = viewFactory.loadView(id);
+    currentScene.setRoot(viewFacotryRegion);
     primaryStage.setScene(currentScene);
-    primaryStage.setResizable(false);
-    primaryStage.setTitle("Meeting");
+    //primaryStage.setResizable(false);
+    primaryStage.setTitle("Meeting");      //itt a meetingre megy ra mindig az open view, valahogy ugy kene h setTitle id es akkor mindig kikerni
     primaryStage.show();
   }
 
