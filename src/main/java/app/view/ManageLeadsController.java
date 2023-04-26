@@ -3,8 +3,13 @@ package app.view;
 import app.viewmodel.LeadsViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+
+import java.io.IOException;
 
 public class ManageLeadsController
 {
@@ -15,6 +20,10 @@ public class ManageLeadsController
   @FXML private Button meetingButton;
   @FXML private Button plansButton;
   @FXML private Button closeButton;
+
+  //Experimental Code
+  @FXML private VBox printLead;
+  //
 
 
 
@@ -36,6 +45,18 @@ public class ManageLeadsController
     hoverButtonNavbar(clientsButton);
 
     hoverButtonNavbar(closeButton);
+
+    //Experimental Code
+    Node[] nodes = new Node[10];
+    for(Node element: nodes){
+      try{
+        element = (Node) FXMLLoader.load(getClass().getResource("/app/lead.fxml"));
+        printLead.getChildren().add(element);
+      }catch (IOException e){
+        e.printStackTrace();
+      }
+    }
+    //Close of experimental code
   }
 
   public void hoverButtonNavbar(Button b)
