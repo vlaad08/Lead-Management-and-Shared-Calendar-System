@@ -59,29 +59,34 @@ public class TaskController
 
   public void drawTiles(){
     HBox container = new HBox();
+    for (int i = 0; i < taskList.size(); i++)
+    {
 
-    VBox tile0 = new VBox();
-    TextArea title0 = new TextArea("Task title");
-    TextArea description0 = new TextArea("Task description");
-    ComboBox employees0 = new ComboBox<>();
-    Text assignees0 = new Text("JP.Morgan, Vlad Putin Nita");
+      VBox tile0 = new VBox();
+      TextArea title0 = new TextArea("Task title");
+      TextArea description0 = new TextArea("Task description");
+      ComboBox employees0 = new ComboBox<>();
+      Text assignees0 = new Text("JP.Morgan, Vlad Putin Nita");
 
-    tile0.getChildren().add(title0);           title0.setPrefSize(50,20);
-    tile0.getChildren().add(description0);     description0.setPrefSize(100,20);
-    tile0.getChildren().add(employees0);       employees0.setPrefSize(75,20);
-    tile0.getChildren().add(assignees0);
+      tile0.getChildren().add(title0);
+      title0.setPrefSize(50, 20);
+      tile0.getChildren().add(description0);
+      description0.setPrefSize(100, 20);
+      tile0.getChildren().add(employees0);
+      employees0.setPrefSize(75, 20);
+      tile0.getChildren().add(assignees0);
 
-    container.getChildren().add(0,tile0);
-    parent.setCenter(container);
-    //parent.getChildren().add(container);
+      container.getChildren().add(0, tile0);
+      parent.setCenter(container);
+      //parent.getChildren().add(container);
 
-    tile0.minHeight(50);
-    tile0.minWidth(50);
-    title0.maxHeight(50);
-    tile0.maxWidth(50);
+      tile0.minHeight(50);
+      tile0.minWidth(50);
+      title0.maxHeight(50);
+      tile0.maxWidth(50);
 
-    container.minHeight(300);
-    container.minWidth(300);
+      container.minHeight(300);
+      container.minWidth(300);
 
 
 
@@ -92,6 +97,7 @@ public class TaskController
     tile.getChildren().add(taskName);
     parent.getChildren().add(tile);
     parent.setCenter(tile);*/
+    }
   }
 
   public void drawTilesSecondTry(){
@@ -156,6 +162,7 @@ public class TaskController
       System.out.println(taskList);
       System.out.println(observableTaskList);
       // Close the popup
+      drawTiles(); //!!!!!
       popup.close();
     });
 
@@ -165,6 +172,8 @@ public class TaskController
     Scene popupScene = new Scene(layout);
     popup.setScene(popupScene);
     popup.show();
+
+
   }
 
   /*public void addTaskFinal(){

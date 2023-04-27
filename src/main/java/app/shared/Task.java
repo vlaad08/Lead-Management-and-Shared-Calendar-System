@@ -97,4 +97,12 @@ public class Task implements Serializable
   {
     return startDate;
   }
+
+  @Override public String toString()
+  {
+    return "Task{" + "title='" + title + '\'' + ", priorityPoints="
+        + priorityPoints + ", description='" + description + '\''
+        + ", assignedEmployees=" + assignedEmployees + ", startDate="
+        + startDate + ", endDate=" + endDate + '}';
+  }
 }
