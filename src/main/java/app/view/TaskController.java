@@ -2,6 +2,8 @@ package app.view;
 
 import app.shared.Task;
 import app.viewmodel.TasksViewModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -37,6 +39,7 @@ public class TaskController
   private TasksViewModel tasksViewModel;
 
   private ArrayList<Task> taskList;
+  ObservableList<Task> observableTaskList = FXCollections.observableArrayList();
 
   public void init(ViewHandler viewHandler, TasksViewModel tasksViewModel, Region root){
     this.viewHandler = viewHandler;
@@ -170,7 +173,7 @@ public class TaskController
     employeesComboBox.setPrefSize(200, 20);
     employeesComboBox.getItems().addAll("Employee 1", "Employee 2", "Employee 3");
 
-    // Button
+    // Button  WHOLE OF THIS SHOULD BE DIFF METHOD AND BIND IN SCENE BUILDER
     Button addButton = new Button("Add");
     addButton.setOnAction(event -> {
       // Create a new task with the values from the popup fields
@@ -185,7 +188,12 @@ public class TaskController
       taskList.add(newTask);
 
       // Update the taskListView
-      taskListView.setItems(taskList);
+      //taskList.setItems(taskList);
+      //observableTaskList.addAll(taskList);
+      //taskList.setItems(observableTaskList);
+
+      observableTaskList.addAll(taskList);     // MAKE THE FOR LOOP OS DISPLAY GENYO 
+      //taskListView.setItems(observableTaskList);
 
       // Close the popup
       popup.close();
