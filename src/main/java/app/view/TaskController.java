@@ -38,7 +38,9 @@ public class TaskController
   private ViewHandler viewHandler;
   private TasksViewModel tasksViewModel;
 
-  private ArrayList<Task> taskList;
+  //private ArrayList<Task> taskList;
+  private List<Task> taskList = new ArrayList<>();
+
   ObservableList<Task> observableTaskList = FXCollections.observableArrayList();
 
   public void init(ViewHandler viewHandler, TasksViewModel tasksViewModel, Region root){
@@ -102,49 +104,6 @@ public class TaskController
 
   }
 
- /* public void onAddTask() {
-    Stage popup = new Stage();
-
-    // Task Name
-    Text taskNameText = new Text("Task Name:");
-    TextArea taskNameTextArea = new TextArea();
-    taskNameTextArea.setPrefSize(200, 20);
-
-    // Description
-    Text descriptionText = new Text("Description:");
-    TextArea descriptionTextArea = new TextArea();
-    descriptionTextArea.setPrefSize(200, 100);
-
-    // Employees
-    Text employeesText = new Text("Employees:");
-    ComboBox<String> employeesComboBox = new ComboBox<>();
-    employeesComboBox.setPrefSize(200, 20);
-    employeesComboBox.getItems().addAll("Employee 1", "Employee 2", "Employee 3");
-
-    // Button
-    Button addButton = new Button("Add");
-    addButton.setOnAction(event -> {
-      // Create a new task with the values from the popup fields
-      String taskName = taskNameTextArea.getText();
-      String description = descriptionTextArea.getText();
-      String employee = employeesComboBox.getValue();
-      Task newTask = new Task(taskName, description, employee);
-
-      // Add the new task to the view model
-      tasksViewModel.addTask(newTask);
-
-      // Close the popup
-      popup.close();
-    });
-
-    // Layout
-    VBox layout = new VBox();
-    layout.getChildren().addAll(taskNameText, taskNameTextArea, descriptionText, descriptionTextArea, employeesText, employeesComboBox, addButton);
-    Scene popupScene = new Scene(layout);
-    popup.setScene(popupScene);
-    popup.show();
-  } */
-
   public void onAddTask()
   {
     Stage popup = new Stage();
@@ -194,7 +153,8 @@ public class TaskController
 
       observableTaskList.addAll(taskList);     // MAKE THE FOR LOOP OS DISPLAY GENYO 
       //taskListView.setItems(observableTaskList);
-
+      System.out.println(taskList);
+      System.out.println(observableTaskList);
       // Close the popup
       popup.close();
     });
@@ -206,6 +166,21 @@ public class TaskController
     popup.setScene(popupScene);
     popup.show();
   }
+
+  /*public void addTaskFinal(){
+
+    // Create a new task with the values from the popup fields
+    String taskName = taskNameTextArea.getText();
+    String description = descriptionTextArea.getText();
+    String employee = employeesComboBox.getValue();
+    LocalDate startDate = startDatePicker.getValue();
+    LocalDate endDate = endDatePicker.getValue();
+    Task newTask = new Task(taskName, description, startDate, endDate);
+
+  }*/
+
+
+
 
   public void hoverButtonNavbar (Button b)
     {
