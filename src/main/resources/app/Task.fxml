@@ -85,7 +85,7 @@
         </BorderPane>
     </left>
     <center>
-        <BorderPane prefHeight="694.0" prefWidth="972.0" BorderPane.alignment="CENTER">
+        <BorderPane fx:id="parent" prefHeight="694.0" prefWidth="972.0" BorderPane.alignment="CENTER">
             <top>
                 <BorderPane prefHeight="119.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
                     <top>
@@ -101,6 +101,9 @@
                     </top>
                 </BorderPane>
             </top>
+         <bottom>
+            <Button mnemonicParsing="false" onAction="#onAddTask" prefHeight="45.0" prefWidth="109.0" text="Add Task" BorderPane.alignment="BOTTOM_LEFT" />
+         </bottom>
         </BorderPane>
     </center>
 </BorderPane>

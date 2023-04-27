@@ -3,6 +3,7 @@ package app.shared;
 import app.model.Employee;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Task implements Serializable
@@ -10,10 +11,10 @@ public class Task implements Serializable
   private int priorityPoints; //The idea for this is that it can be set from 0-5, and the default value would be 0 (low priority).
   private String description;
   private ArrayList<Employee> assignedEmployees; //This would be for the assigned employees to complete the task. It could also be left empty.
-  private String startDate; // Leave it as a string for now until we see what type of object we will use for the dates.
-  private String endDate;  // same as startDate.
+  private LocalDate startDate; // Leave it as a string for now until we see what type of object we will use for the dates.
+  private LocalDate endDate;  // same as startDate.
 
-  public Task(String title, String description, String startDate, String endDate)
+  public Task(String title, String description, LocalDate startDate, LocalDate endDate)
   {
     this.title = title;
     this.description = description;
@@ -38,12 +39,12 @@ public class Task implements Serializable
     priorityPoints = points;
   }
 
-  public void setStartDate(String startDate)
+  public void setStartDate(LocalDate startDate)
   {
     this.startDate = startDate;
   }
 
-  public void setEndDate(String endDate)
+  public void setEndDate(LocalDate endDate)
   {
     this.endDate = endDate;
   }
@@ -87,12 +88,12 @@ public class Task implements Serializable
     return description;
   }
 
-  public String getEndDate()
+  public LocalDate getEndDate()
   {
     return endDate;
   }
 
-  public String getStartDate()
+  public LocalDate getStartDate()
   {
     return startDate;
   }
