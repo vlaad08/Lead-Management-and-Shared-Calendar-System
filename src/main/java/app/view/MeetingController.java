@@ -1,10 +1,13 @@
 package app.view;
 
+import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+
+import java.util.ArrayList;
 
 public class MeetingController
 {
@@ -83,6 +86,18 @@ public class MeetingController
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }
+  }
+
+  public void addMeeting(){
+
+  }
+
+  public void removeMeeting(){
+    //meetingViewModel.removeMeeting(meeting);
+  }
+
+  public void editMeeting(){
+
   }
 
 }

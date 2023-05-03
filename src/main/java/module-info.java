@@ -4,6 +4,8 @@ module cl.sep2 {
   requires java.desktop;
   requires remoteobserver;
   requires java.rmi;
+  requires org.postgresql.jdbc;
+  requires java.sql;
 
   opens app to javafx.fxml;
   opens app.view to javafx.fxml;
