@@ -1,5 +1,7 @@
 package app.shared;
 
+import app.model.User;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,7 +9,7 @@ public class Task implements Serializable
 { private String title;
   private int priorityPoints; //The idea for this is that it can be set from 0-5, and the default value would be 0 (low priority).
   private String description;
-  private ArrayList<Employee> assignedEmployees; //This would be for the assigned employees to complete the task. It could also be left empty.
+  private ArrayList<User> assignedEmployees; //This would be for the assigned employees to complete the task. It could also be left empty.
   private String startDate; // Leave it as a string for now until we see what type of object we will use for the dates.
   private String endDate;  // same as startDate.
 
@@ -17,16 +19,16 @@ public class Task implements Serializable
     this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
-    assignedEmployees = new ArrayList<Employee>();
+    assignedEmployees = new ArrayList<User>();
     priorityPoints = 0;
   }
 
-  public void assignEmployee(Employee e)
+  public void assignEmployee(User e)
   {
     assignedEmployees.add(e);
   }
 
-  public void removeEmployee(Employee e)
+  public void removeEmployee(User e)
   {
     assignedEmployees.remove(e);
   }
@@ -61,14 +63,14 @@ public class Task implements Serializable
     return title;
   }
 
-  public ArrayList<Employee> getAssignedEmployees()
+  public ArrayList<User> getAssignedEmployees()
   {
     return assignedEmployees;
   }
 
-  public Employee[] getAssignedEmployeesArray()
+  public User[] getAssignedEmployeesArray()
   {
-    Employee[] employees = new Employee[assignedEmployees.size()];
+    User[] employees = new User[assignedEmployees.size()];
     employees = assignedEmployees.toArray(employees);
 
     return employees;

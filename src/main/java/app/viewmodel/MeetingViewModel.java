@@ -1,7 +1,7 @@
 package app.viewmodel;
 
-import app.model.Employee;
 import app.model.Model;
+import app.model.User;
 import app.shared.Meeting;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class MeetingViewModel
   }
 
   public void addMeeting(Date startDate, Date endDate,
-      String description, ArrayList<Employee> employees)
+      String description, ArrayList<User> employees)
   {
     model.addMeeting(startDate, endDate, description, employees);
   }
@@ -33,7 +33,7 @@ public class MeetingViewModel
 
   public void editMeeting(Date oldStartDate, Date oldEndDate,
       Date startDate, Date endDate, String description,
-      ArrayList<Employee> employees)
+      ArrayList<User> employees)
   {
     model.editMeeting(oldStartDate, oldEndDate,
         startDate, endDate, description, employees);
