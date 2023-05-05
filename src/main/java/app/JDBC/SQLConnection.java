@@ -26,7 +26,7 @@ public class SQLConnection
 
   private Connection getConnection() throws SQLException
   {
-    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "1945");
+    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "password");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException
@@ -56,7 +56,8 @@ public class SQLConnection
     try
         (
             Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, starttime, endtime")
+            PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, startime, endtime) v"
+                + )
             )
     {
       statement.executeUpdate();
