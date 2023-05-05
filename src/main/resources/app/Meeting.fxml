@@ -9,11 +9,13 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.CalendarController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.MeetingController">
     <left>
         <BorderPane prefHeight="615.0" prefWidth="295.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
             <top>
@@ -46,12 +48,12 @@
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: none;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
+                        <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#changeView" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: none;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="71.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
+                        <Button fx:id="taskButton" mnemonicParsing="false" onAction="#changeView" prefHeight="71.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -62,22 +64,22 @@
                             </font>
                         </Button>
                         <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4" />
-                        <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: none;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
+                        <Button fx:id="leadButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: none;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
                             <font>
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="52.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
+                        <Button fx:id="availableButton" mnemonicParsing="false" onAction="#changeView" prefHeight="52.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Clients" textFill="WHITE" GridPane.rowIndex="7">
+                        <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Clients" textFill="WHITE" GridPane.rowIndex="7">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leeds" textFill="WHITE" GridPane.rowIndex="8">
+                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leeds" textFill="WHITE" GridPane.rowIndex="8">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -94,7 +96,7 @@
                     <top>
                         <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
                             <children>
-                                <Button fx:id="closeButton" mnemonicParsing="false" style="-fx-background-color: none;" text="X" textFill="WHITE">
+                                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
@@ -107,10 +109,19 @@
          <center>
             <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <content>
-                  <TilePane prefHeight="660.0" prefWidth="1128.0">
+                  <TilePane fx:id="tilePane" prefHeight="660.0" prefWidth="1128.0">
                      <padding>
                         <Insets left="40.0" right="40.0" top="20.0" />
                      </padding>
+                     <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0">
+                           <children>
+                              <Rectangle fx:id="addRectangle" arcHeight="5.0" arcWidth="5.0" fill="#544997" height="200.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-color: #544997;" width="200.0" />
+                              <Line endX="-11.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
+                              <Line endX="-110.0" endY="90.0" startX="-110.0" stroke="WHITE" strokeWidth="4.0" />
+                           </children>
+                        </StackPane>
+                     </children>
                   </TilePane>
                </content>
             </ScrollPane>
