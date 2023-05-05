@@ -1,13 +1,14 @@
 package app.view;
 
-import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
-
-import java.util.ArrayList;
+import javafx.stage.Stage;
 
 public class MeetingController
 {
@@ -89,7 +90,17 @@ public class MeetingController
   }
 
   public void addMeeting(){
-
+    try{
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
+          "/app/CreateMeetingObject.fxml"));
+      Stage stage = new Stage();
+      Parent root1 = (Parent) fxmlLoader.load();
+      stage.setScene(new Scene(root1));
+     // stage.initStyle(StageStyle.UNDECORATED);
+      stage.show();
+    }catch (Exception e){
+      e.printStackTrace();
+    }
   }
 
   public void removeMeeting(){
@@ -99,6 +110,8 @@ public class MeetingController
   public void editMeeting(){
 
   }
+
+
 
 }
 
