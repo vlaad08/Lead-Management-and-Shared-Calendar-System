@@ -15,11 +15,7 @@ public class TestClass
   public static void main(String[] args) throws SQLException
   {
     SQLConnection sqlConnection = SQLConnection.getInstance();
-    ArrayList<Meeting> meetings = sqlConnection.getMeetingsByBusinessId(1);
-    for(Meeting meeting : meetings)
-    {
-      System.out.println(meeting);
-    }
+
 
   }
 }

@@ -29,43 +29,51 @@ public class SQLConnection
     return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "1945");
   }
 
-  public ArrayList<Meeting> getMeetingsByBusinessId(int business_id) throws SQLException
+  public ArrayList<Meeting> getMeetings() throws SQLException
   {
     try(
         Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("select * from meeting where business_id = ?")) {
-        ArrayList<Meeting> meetings = new ArrayList<>();
-        statement.setInt(1, business_id);
-        ResultSet resultSet = statement.executeQuery();
-        while(resultSet.next())
-        {
-          String title = resultSet.getString("title");
-          String description = resultSet.getString("description");
-          Date date = resultSet.getDate("date");
-          Time startTime = resultSet.getTime("starttime");
-          Time endTime = resultSet.getTime("endtime");
-          meetings.add(new Meeting(title, description, date, startTime, endTime));
-        }
-        if(!meetings.isEmpty())
-        {
-          return meetings;
-        }
-        return null;
+        PreparedStatement statement = connection.prepareStatement("select * from meeting")
+        )
+    {
+      ArrayList<Meeting> meetings = new ArrayList<>();
+      ResultSet set = statement.getResultSet();
+      while(set.next())
+      {
+        String title = set.getString("title");
+        String description = set.getString("description");
+        Date date = set.getDate("date");
+        Time startTime = set.getTime("starttime");
+        Time endTime = set.getTime("endtime");
+        meetings.add(new Meeting(title, description, date, startTime, endTime));
+      }
+      return meetings;
     }
   }
 
-  public void createMeetingInBusiness(String title, String description, Date date, Time startTime, Time endTime, int business_id) throws SQLException
+  public void createMeeting(String title, String description, Date date, Time startTime, Time endTime) throws SQLException
   {
-    try(Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, starttime, endtime, business_id) values(?, ?, ?, ?, ?, ?)"))   {
-      statement.setString(1, title);
-      statement.setString(2, description);
-      statement.setDate(3, date);
-      statement.setTime(4, startTime);
-      statement.setTime(5, endTime);
-      statement.setInt(6, business_id);
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, starttime, endtime")
+            )
+    {
       statement.executeUpdate();
     }
   }
+
+
+  public void removeMeeting() throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from meeting where date < now() - interval '7 days'")
+        )
+    {
+      statement.executeUpdate();
+    }
+  }
+  
 
 }
