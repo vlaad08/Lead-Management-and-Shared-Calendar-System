@@ -56,9 +56,14 @@ public class SQLConnection
     try
         (
             Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, starttime, endtime")
+            PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, starttime, endtime) values (?,?,?,?,?)")
             )
     {
+      statement.setString(1, title);
+      statement.setString(2, description);
+      statement.setDate(3, date);
+      statement.setTime(4, startTime);
+      statement.setTime(5, endTime);
       statement.executeUpdate();
     }
   }
