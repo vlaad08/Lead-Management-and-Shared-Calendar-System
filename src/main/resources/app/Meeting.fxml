@@ -107,23 +107,27 @@
                 </BorderPane>
             </top>
          <center>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <content>
                   <TilePane fx:id="tilePane" prefHeight="660.0" prefWidth="1128.0">
                      <padding>
-                        <Insets left="40.0" right="40.0" top="20.0" />
+                        <Insets top="20.0" />
                      </padding>
                      <children>
                         <StackPane prefHeight="150.0" prefWidth="200.0">
                            <children>
-                              <Rectangle fx:id="addRectangle" arcHeight="5.0" arcWidth="5.0" fill="#544997" height="200.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-color: #544997;" width="200.0" />
+                              <Rectangle fx:id="addRectangle" arcHeight="20.0" arcWidth="20.0" fill="#544997" height="200.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-color: #544997;" width="200.0" />
                               <Line endX="-11.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
                               <Line endX="-110.0" endY="90.0" startX="-110.0" stroke="WHITE" strokeWidth="4.0" />
+                              <Button fx:id="addButton" mnemonicParsing="false" onAction="#createRectangleWithText" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" textAlignment="CENTER" textFill="TRANSPARENT" />
                            </children>
                         </StackPane>
                      </children>
                   </TilePane>
                </content>
+               <padding>
+                  <Insets left="80.0" right="40.0" top="20.0" />
+               </padding>
             </ScrollPane>
          </center>
         </BorderPane>

@@ -4,8 +4,10 @@ import app.model.Model;
 import app.model.User;
 import app.shared.Meeting;
 
+import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class MeetingViewModel
 {
@@ -15,10 +17,9 @@ public class MeetingViewModel
     this.model = model;
   }
 
-  public void addMeeting(Date startDate, Date endDate,
-      String description, ArrayList<User> employees)
+  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime) throws SQLException
   {
-    model.addMeeting(startDate, endDate, description, employees);
+    model.addMeeting(title,description,date,startTime,endTime);
   }
 
   public void removeMeeting(Meeting meeting)
