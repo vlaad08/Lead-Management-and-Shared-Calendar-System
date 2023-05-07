@@ -35,7 +35,7 @@
                   </TextField>
                   <Label alignment="CENTER" prefHeight="26.0" prefWidth="24.0" text="to:" />
                   <TextField alignment="CENTER" prefHeight="25.0" prefWidth="61.0" text="11:30" />
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" style="-fx-background-color: #348e2f;" text="Create" textFill="WHITE">
+                  <Button mnemonicParsing="false" onAction="#createMeetingObject" prefHeight="26.0" prefWidth="63.0" style="-fx-background-color: #348e2f;" text="Create" textFill="WHITE">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>

@@ -16,17 +16,15 @@ public class SQLConnection
 
   public synchronized static SQLConnection getInstance() throws SQLException
   {
-    if(instance == null)
-    {
+    if(instance == null) {
       instance = new SQLConnection();
-
     }
     return instance;
   }
 
   private Connection getConnection() throws SQLException
   {
-    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "1945");
+    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "7319");
   }
 
   public ArrayList<Meeting> getMeetingsByBusinessId(int business_id) throws SQLException

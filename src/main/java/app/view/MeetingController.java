@@ -4,20 +4,18 @@ import app.viewmodel.MeetingViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MeetingController
 {
-  @FXML private Button Calendar;
-  @FXML private Button Tasks;
-  @FXML private Button AvailableClients;
-  @FXML private Button AllClients;
-  @FXML private Button Leads;
-
 
   private Region root;
   private ViewHandler viewHandler;
@@ -30,6 +28,8 @@ public class MeetingController
   @FXML private  Button clientsButton;
   @FXML private  Button manageLeadsButton;
   @FXML private  Button closeButton;
+
+  @FXML private TilePane tilePane;
 
 
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root){
@@ -99,6 +99,15 @@ public class MeetingController
      // stage.initStyle(StageStyle.UNDECORATED);
       stage.show();
     }catch (Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  public void createMeetingObject(){
+    try{
+      Node element = (Node) FXMLLoader.load(getClass().getResource("/app/MeetingObject.fxml"));
+      tilePane.getChildren().add(element);
+    }catch (IOException e){
       e.printStackTrace();
     }
   }
