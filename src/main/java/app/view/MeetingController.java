@@ -4,7 +4,11 @@ package app.view;
 import app.viewmodel.MeetingViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -14,7 +18,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -109,8 +115,28 @@ public class MeetingController
     }
   }
 
-  public void addMeeting(){
 
+  public void addMeeting(){
+    try{
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
+          "/app/CreateMeetingObject.fxml"));
+      Stage stage = new Stage();
+      Parent root1 = (Parent) fxmlLoader.load();
+      stage.setScene(new Scene(root1));
+      // stage.initStyle(StageStyle.UNDECORATED);
+      stage.show();
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+  }
+
+  public void createMeetingObject(){
+    try{
+      Node element = (Node) FXMLLoader.load(getClass().getResource("/app/MeetingObject.fxml"));
+      tilePane.getChildren().add(element);
+    }catch (IOException e){
+      e.printStackTrace();
+    }
   }
 
   public void removeMeeting(){
