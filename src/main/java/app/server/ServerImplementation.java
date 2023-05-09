@@ -1,5 +1,6 @@
 package app.server;
 
+import app.JDBC.SQLConnection;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
@@ -7,6 +8,7 @@ import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ServerImplementation implements Server
@@ -18,21 +20,25 @@ public class ServerImplementation implements Server
   private ArrayList<Task> taskList;
   private ArrayList<Lead> leadList;
 
+  private SQLConnection connection;
+
   public ServerImplementation(){
     meetingList = new ArrayList<>();
     taskList = new ArrayList<>();
     leadList = new ArrayList<>();
     supportMeeting = new RemotePropertyChangeSupport<>();
+    try{
+      this.connection = SQLConnection.getInstance();
+    }catch (SQLException e){
+      e.printStackTrace();
+    }
   }
 
   @Override public void addPropertyChangeListener(
-      RemotePropertyChangeListener<Meeting> meetingListener,
-      RemotePropertyChangeListener<Task> taskListener,
-      RemotePropertyChangeListener<Lead> leadListener) throws RemoteException
+      RemotePropertyChangeListener<Meeting> meetingListener)
+      throws RemoteException
   {
     supportMeeting.addPropertyChangeListener(meetingListener);
-    supportTask.addPropertyChangeListener(taskListener);
-    supportLead.addPropertyChangeListener(leadListener);
   }
 
   @Override
@@ -61,6 +67,8 @@ public class ServerImplementation implements Server
     return meetingList;
   }
 
+  //We don't need the code that is bellow right know.
+  /*
   @Override public void addTask(Task task) throws RemoteException
   {
     taskList.add(task);
@@ -108,4 +116,6 @@ public class ServerImplementation implements Server
   {
     return leadList;
   }
+
+   */
 }

@@ -52,6 +52,29 @@ public class SQLConnection
     }
   }
 
+  public ArrayList<Meeting> getMeetings() throws SQLException{
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from meeting")) {
+      ArrayList<Meeting> meetings = new ArrayList<>();
+      ResultSet resultSet = statement.executeQuery();
+      while(resultSet.next())
+      {
+        String title = resultSet.getString("title");
+        String description = resultSet.getString("description");
+        Date date = resultSet.getDate("date");
+        Time startTime = resultSet.getTime("starttime");
+        Time endTime = resultSet.getTime("endtime");
+        meetings.add(new Meeting(title, description, date, startTime, endTime));
+      }
+      if(!meetings.isEmpty())
+      {
+        return meetings;
+      }
+      return null;
+    }
+  }
+
   public void createMeetingInBusiness(String title, String description, Date date, Time startTime, Time endTime, int business_id) throws SQLException
   {
     try(Connection connection = getConnection();
