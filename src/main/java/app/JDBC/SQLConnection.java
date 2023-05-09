@@ -27,6 +27,7 @@ public class SQLConnection
     return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "7319");
   }
 
+  /*
   public ArrayList<Meeting> getMeetingsByBusinessId(int business_id) throws SQLException
   {
     try(
@@ -52,6 +53,8 @@ public class SQLConnection
     }
   }
 
+   */
+
   public ArrayList<Meeting> getMeetings() throws SQLException{
     try(
         Connection connection = getConnection();
@@ -65,7 +68,8 @@ public class SQLConnection
         Date date = resultSet.getDate("date");
         Time startTime = resultSet.getTime("starttime");
         Time endTime = resultSet.getTime("endtime");
-        meetings.add(new Meeting(title, description, date, startTime, endTime));
+        String email = resultSet.getString("email");
+        meetings.add(new Meeting(title, description, date, startTime, endTime, email));
       }
       if(!meetings.isEmpty())
       {
@@ -75,16 +79,16 @@ public class SQLConnection
     }
   }
 
-  public void createMeetingInBusiness(String title, String description, Date date, Time startTime, Time endTime, int business_id) throws SQLException
+  public void createMeeting(String title, String description, Date date, Time startTime, Time endTime, String email) throws SQLException
   {
     try(Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("insert into meeting(title, description, date, starttime, endtime, business_id) values(?, ?, ?, ?, ?, ?)"))   {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Meeting(title, description, date, startTime, endTime, email) VALUES(?, ?, ?, ?, ?, ?)"))   {
       statement.setString(1, title);
       statement.setString(2, description);
       statement.setDate(3, date);
       statement.setTime(4, startTime);
       statement.setTime(5, endTime);
-      statement.setInt(6, business_id);
+      statement.setString(6, email);
       statement.executeUpdate();
     }
   }

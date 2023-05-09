@@ -4,6 +4,7 @@ import app.model.Model;
 import app.model.User;
 import app.shared.Meeting;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,10 +16,9 @@ public class MeetingViewModel
     this.model = model;
   }
 
-  public void addMeeting(Date startDate, Date endDate,
-      String description, ArrayList<User> employees)
+  public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email)
   {
-    model.addMeeting(startDate, endDate, description, employees);
+    model.addMeeting(title, description, date, startTime, endTime, email);
   }
 
   public void removeMeeting(Meeting meeting)

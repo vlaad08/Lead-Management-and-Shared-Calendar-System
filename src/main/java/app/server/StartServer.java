@@ -11,7 +11,7 @@ public class StartServer
   {
     Registry registry = LocateRegistry.createRegistry(1099);
     ServerImplementation communicator = new ServerImplementation();
-    Remote remote = UnicastRemoteObject.exportObject(communicator,0);
+    Remote remote = UnicastRemoteObject.exportObject(communicator,8888);
     registry.bind("communicator", remote);
   }
 

@@ -11,4 +11,5 @@ module cl.sep2 {
   opens app.view to javafx.fxml;
 
   exports app;
+  exports app.server to java.rmi;
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public interface Server extends Remote
 {
-  void addPropertyChangeListener(RemotePropertyChangeListener<Meeting> MeetingListener) throws RemoteException;
+  void addPropertyChangeListener(RemotePropertyChangeListener<String> listener) throws RemoteException;
 
   public void addMeeting(Meeting meeting)throws RemoteException;
   public void manageMeeting(Meeting deletedMeeting, Meeting createdMeeting) throws RemoteException;
