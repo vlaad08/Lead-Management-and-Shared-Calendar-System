@@ -1,31 +1,41 @@
 package app.view;
 
 
+import app.model.User;
 import app.viewmodel.MeetingViewModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 
 public class MeetingController
 {
@@ -117,25 +127,111 @@ public class MeetingController
 
 
   public void addMeeting(){
-    try{
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-          "/app/CreateMeetingObject.fxml"));
-      Stage stage = new Stage();
-      Parent root1 = (Parent) fxmlLoader.load();
-      stage.setScene(new Scene(root1));
-      // stage.initStyle(StageStyle.UNDECORATED);
-      stage.show();
-    }catch (Exception e){
-      e.printStackTrace();
-    }
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setEffect(new DropShadow(20, Color.BLACK));
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    closeButton.setPrefHeight(40);
+    hoverButtonNavbar(closeButton);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+    HBox dateTime = new HBox();
+    dateTime.setPadding(new Insets(5));
+    dateTime.setSpacing(20);
+
+    Label startDate = new Label("Start date:");
+    startDate.setPrefWidth(75);
+
+    DatePicker datePicker = new DatePicker(LocalDate.now());
+    datePicker.setPrefWidth(170);
+    TextField startTime = new TextField(LocalTime.now().format(
+        DateTimeFormatter.ISO_LOCAL_TIME));
+    startTime.setPrefWidth(60);
+    Label to = new Label("to: ");
+    TextField endTime = new TextField(LocalTime.now().format(
+        DateTimeFormatter.ISO_LOCAL_TIME));
+    endTime.setPrefWidth(60);
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+    create.setOnAction(event -> {
+      try
+      {
+        createRectangleWithText();
+      }
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+    dateTime.getChildren().add(startDate);
+    dateTime.getChildren().add(datePicker);
+    dateTime.getChildren().add(startTime);
+    dateTime.getChildren().add(to);
+    dateTime.getChildren().add(endTime);
+    dateTime.getChildren().add(create);
+
+    HBox descr = new HBox();
+    descr.setSpacing(20);
+    Label description = new Label("Description:");
+    description.setPrefWidth(75);
+    TextField descrTextField = new TextField();
+    descrTextField.setAlignment(Pos.TOP_LEFT);
+    descrTextField.setPrefWidth(330);
+    descrTextField.setPrefHeight(100);
+    descr.getChildren().add(description);
+    descr.getChildren().add(descrTextField);
+    descr.setLayoutY(10);
+
+    HBox employeeAttendance = new HBox();
+    TableView<User> attendance = new TableView<>();
+    TableColumn<User, String> firstName = new TableColumn<>("First Name");
+    TableColumn<User, String> lastName = new TableColumn<>("Last Name");
+    TableColumn<User, ComboBox> attends = new TableColumn<>("Attends");
+    attendance.getColumns().addAll(firstName, lastName, attends);
+    attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    attendance.setPrefWidth(600);
+    attendance.setPrefHeight(150);
+    attendance.setPadding(Insets.EMPTY);
+    employeeAttendance.getChildren().add(attendance);
+
+
+    dateTime.setPadding(new Insets(20, 0, 0, 20));
+    descr.setPadding(new Insets(20, 0, 10, 20));
+
+    insert.addAll(topBar, dateTime, descr, employeeAttendance);
+
+
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
   }
 
   public void createMeetingObject(){
-    try{
-      Node element = (Node) FXMLLoader.load(getClass().getResource("/app/MeetingObject.fxml"));
-      tilePane.getChildren().add(element);
-    }catch (IOException e){
-      e.printStackTrace();
+    try
+    {
+      tilePane.getChildren().add(createRectangleWithText());
+    }
+    catch (SQLException | NullPointerException e)
+    {
+      throw new RuntimeException(e);
     }
   }
 
@@ -147,7 +243,7 @@ public class MeetingController
 
   }
 
-  public void createRectangleWithText() throws SQLException
+  public StackPane createRectangleWithText() throws SQLException
   {
 
     Rectangle rect = new Rectangle(200, 200);
@@ -190,8 +286,7 @@ public class MeetingController
     meetingViewModel.addMeeting(title,description,date,startTime,endTime);
 
     VBox vBox=new VBox(titleText,descriptionText,dateText,startText,endText);
-    StackPane stackPane=new StackPane(rect,vBox);
-    tilePane.getChildren().add(stackPane);
+    return new StackPane(rect,vBox);
   }
 
 }
