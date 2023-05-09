@@ -24,6 +24,7 @@ public class ModelManager implements Model
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime) throws SQLException
   {
     connection.createMeeting(title,description,date,startTime,endTime);
+    System.out.println("THIS IS A TEST");
   }
 
   @Override public void editMeeting(java.sql.Date oldStartDate,
