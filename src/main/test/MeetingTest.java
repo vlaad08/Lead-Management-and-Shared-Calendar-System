@@ -52,7 +52,7 @@ public class MeetingTest {
     String description = "meeting description asdasdasdasdasdasdasd";
     User user1 = new User("JohnDoe123","123asd","asd@gmail.com","John","Doe",true);
     User user2 = new User("JaneDoe123","dsa321","dsa321@gmail.com","Jane","Doe",false);
-    Meeting mockMeeting = new Meeting("meeting",description,day,startTime,endTime);
+    Meeting mockMeeting = new Meeting("meeting",description,day,startTime,endTime,"leadsemail@via.geci");
     mockMeeting.addUser(user1);
     mockMeeting.addUser(user2);
       /*meetingController = Mockito.mock(MeetingController.class);
@@ -73,7 +73,7 @@ public class MeetingTest {
     Time startTime = new Time(10);
     Time endTime = new Time(11);
     String description = "meeting description asdasdasdasdasdasdasd";
-    Meeting meeting = new Meeting("meeting",description,day,startTime,endTime);//PLUS EMPLOYEE VALIDATION
+    Meeting meeting = new Meeting("meeting",description,day,startTime,endTime,"leadsemail@via.geci");//PLUS EMPLOYEE VALIDATION
 
     Mockito.when(meetingViewModel.getMeetings()).thenReturn(
         (ArrayList<Meeting>) Arrays.asList(meeting));
@@ -110,7 +110,7 @@ public class MeetingTest {
     Time startTime = new Time(10);
     Time endTime = new Time(11);
     String description = "meeting description asdasdasdasdasdasdasd";
-    Meeting meeting = new Meeting("meeting",description,day,startTime,endTime);
+    Meeting meeting = new Meeting("meeting",description,day,startTime,endTime,"leadsemail@via.geci");
 
     meetingViewModel.addMeeting("meeting",description,day,startTime,endTime);
 
@@ -134,7 +134,7 @@ public class MeetingTest {
     Time endTime = new Time(10); // end time before start time
     User user1 = new User("JohnDoe123","123asd","asd@gmail.com","John","Doe",true);
     User user2 = new User("JaneDoe123","dsa321","dsa@gmail.com","Jane","Doe",false);
-    Meeting mockMeeting = new Meeting("meeting","",day,startTime,endTime);
+    Meeting mockMeeting = new Meeting("meeting","",day,startTime,endTime,"leadsemail@via.geci");
     mockMeeting.addUser(user1);
     mockMeeting.addUser(user2);
 
@@ -220,7 +220,7 @@ public class MeetingTest {
     Time startTime = new Time(10);
     Time endTime = new Time(11);;
     User user1 = new User("JohnDoe123", "123asd", "asd@gmail.com", "John", "Doe", true);
-    Meeting mockMeeting = new Meeting("meeting","",day,startTime,endTime);
+    Meeting mockMeeting = new Meeting("meeting","",day,startTime,endTime,"leadsemail@via.geci");
     mockMeeting.addUser(user1);
 
     assertNull(mockMeeting.getDescription());
