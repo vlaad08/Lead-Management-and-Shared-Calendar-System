@@ -86,7 +86,7 @@ public class MeetingController
   public void hoverButtonNavbar(Button b)
   {
     b.setOnMouseEntered(event -> {
-        b.setStyle("-fx-background-color: #786FAC;");
+      b.setStyle("-fx-background-color: #786FAC;");
     });
     b.setOnMouseExited(event -> {
       b.setStyle("-fx-background-color: none");
@@ -172,6 +172,7 @@ public class MeetingController
       try
       {
         createRectangleWithText();
+        stage.close();
       }
       catch (SQLException e)
       {
@@ -245,7 +246,6 @@ public class MeetingController
 
   public StackPane createRectangleWithText() throws SQLException
   {
-
     Rectangle rect = new Rectangle(200, 200);
     rect.setFill(Color.rgb(84,73,151));
     rect.setArcWidth(20);
@@ -283,7 +283,6 @@ public class MeetingController
     startText.setFill(Color.WHITE);
     endText.setFill(Color.WHITE);
 
-    meetingViewModel.addMeeting(title,description,date,startTime,endTime);
 
     VBox vBox=new VBox(titleText,descriptionText,dateText,startText,endText);
     return new StackPane(rect,vBox);
