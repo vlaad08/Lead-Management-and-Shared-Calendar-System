@@ -3,6 +3,7 @@ package app.view;
 
 import app.model.User;
 import app.shared.Lead;
+import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -43,6 +44,7 @@ import java.time.LocalTime;
 import java.sql.Date;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class MeetingController
 {
@@ -68,7 +70,9 @@ public class MeetingController
   @FXML private Button addButton;
 
 
-  public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root){
+  public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root)
+      throws SQLException
+  {
     this.viewHandler = viewHandler;
     this.meetingViewModel = meetingViewModel;
     this.root = root;
@@ -88,6 +92,18 @@ public class MeetingController
     tilePane.setPrefColumns(3);
     tilePane.setPrefRows(1);
     tilePane.setTileAlignment(Pos.CENTER_LEFT);
+
+    ArrayList<Meeting> meetings=meetingViewModel.getMeetings();
+    for(Meeting meeting: meetings)
+    {
+      Date date=meeting.date();
+      LocalDate localDate=LocalDate.of(date.getYear(),date.getMonth(),date.getDay());
+      DatePicker datePicker=new DatePicker(localDate);
+      String startTime=meeting.startTime().toString();
+      String endTime=meeting.endTime().toString();
+      tilePane.getChildren().add(createRectangleWithText(meeting.title(),datePicker,startTime,endTime,
+          meeting.description(), null));
+    }
   }
 
   public void hoverButtonNavbar(Button b)
@@ -172,7 +188,7 @@ public class MeetingController
     HBox dateTime = new HBox();
     dateTime.setPadding(new Insets(5));
     dateTime.setSpacing(20);
-    Label startDate = new Label("Start date:");
+    Label startDate = new Label("Date:");
     startDate.setPrefWidth(75);
     DatePicker datePicker = new DatePicker(LocalDate.now());
     datePicker.setPrefWidth(170);
@@ -321,7 +337,6 @@ Platform.runLater(()->{
     String chosenDescription = description;
     TableView chosenAttend = users;
 
-    chosenAttend.setVisible(false);
 
     HBox titleRow = new HBox();
     Label titleLabel = new Label("Title: ");

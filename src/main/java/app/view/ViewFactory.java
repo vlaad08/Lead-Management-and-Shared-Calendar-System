@@ -6,6 +6,7 @@ import javafx.scene.layout.Region;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ViewFactory
 {
@@ -78,6 +79,10 @@ public class ViewFactory
       catch (IOException e)
       {
         throw new IOError(e);
+      }
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
       }
     }
 
