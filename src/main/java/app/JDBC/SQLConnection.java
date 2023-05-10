@@ -45,7 +45,6 @@ public class SQLConnection
         Date date = set.getDate("date");
         Time startTime = set.getTime("starttime");
         Time endTime = set.getTime("endtime");
-        meetings.add(new Meeting(title, description, date, startTime, endTime));
       }
       return meetings;
     }
