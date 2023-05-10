@@ -59,7 +59,7 @@ public class MeetingTest {
         meetingViewModel = Mockito.mock(MeetingViewModel.class); */
 
     // stub the behavior of the meetingViewModel
-    Mockito.when(meetingViewModel.addMeeting("meeting",description,day,startTime,endTime).thenReturn(true));//??
+    meetingViewModel.addMeeting("meeting",description,day,startTime,endTime);
 
     // simulate user clicking the '+' button to add a new meeting assuming method works
     meetingController.addMeeting();
@@ -94,11 +94,11 @@ public class MeetingTest {
   @Test
   void test_if_no_meetings_are_displayed_when_there_are_none() {
 
-    Mockito.when(meetingViewModel.getMeetings()).thenReturn(Collections.emptyList());
+    Mockito.when(meetingViewModel.getMeetings()).thenReturn(new ArrayList<>());
 
     meetingController.init();
 
-    assertEquals(Collections.emptyList(), meetingController.getMeetings());
+    assertEquals(new ArrayList<>(), meetingController.getMeetings());
   }
 
   @Test
