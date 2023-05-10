@@ -2,8 +2,10 @@ package app;
 
 import app.JDBC.SQLConnection;
 import app.model.ClientListener;
+import app.model.ModelManager;
 import app.server.Server;
 import app.server.ServerImplementation;
+import app.viewmodel.MeetingViewModel;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -27,13 +29,13 @@ public class TestClass
         Time.valueOf(LocalTime.of(10,45,0)), "example@gmail.com");
 
      */
-    Registry registry = LocateRegistry.getRegistry(1099);
+
+    Registry registry = LocateRegistry.getRegistry(1024);
     Server server = (Server) registry.lookup("communicator");
     ClientListener listener = new ClientListener(server);
 
-    System.out.println(listener.getMeetings());
 
-
+    System.out.println(new MeetingViewModel(new ModelManager(listener)).getMeetings());
 
   }
 }

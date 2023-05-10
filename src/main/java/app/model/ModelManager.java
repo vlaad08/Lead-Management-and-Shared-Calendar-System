@@ -16,11 +16,16 @@ public class ModelManager implements Model
   }
 
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email) {
-   try{
-     clientListener.addMeeting(new Meeting(title, description, date, startTime, endTime, email));
-   }catch (Exception e){
-     e.printStackTrace();
-   }
+    if(endTime.before(startTime)){
+      throw new IllegalArgumentException("startTime must be before endTime");
+    }else {
+      try{
+        clientListener.addMeeting(new Meeting(title, description, date, startTime, endTime, email));
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+    }
+
   }
 
   @Override public void removeMeeting(Meeting meeting)
