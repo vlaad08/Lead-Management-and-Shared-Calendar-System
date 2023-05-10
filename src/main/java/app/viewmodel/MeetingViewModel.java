@@ -19,7 +19,7 @@ public class MeetingViewModel
 
   public void addMeeting(String title,String description,Date date, Time startTime,Time endTime) throws SQLException
   {
-    model.addMeeting(title,description,date,startTime,endTime);
+    //odel.addMeeting(title,description,date,startTime,endTime);
   }
 
   public void removeMeeting(Meeting meeting)
