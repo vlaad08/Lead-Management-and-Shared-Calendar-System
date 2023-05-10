@@ -2,15 +2,13 @@ package app.model;
 
 import app.shared.Meeting;
 
-import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 
 public interface Model
 {
-  void addMeeting(String title, String description,Date date, Time startTime, Time endTime)
-      throws SQLException;
+  void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email);
   void removeMeeting(Meeting meeting);
   ArrayList<Meeting> getMeetings();
   void editMeeting(Date oldStartDate, Date oldEndDate,

@@ -1,21 +1,39 @@
 package app;
 
 import app.JDBC.SQLConnection;
-import app.shared.Meeting;
+import app.model.ClientListener;
+import app.server.Server;
+import app.server.ServerImplementation;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 
 public class TestClass
 {
-  public static void main(String[] args) throws SQLException
+  public static void main(String[] args) throws Exception
   {
-//    SQLConnection sqlConnection = SQLConnection.getInstance();
-//    sqlConnection.createMeeting("Tryout","This is a test", Date.valueOf(LocalDate.of(2023,4,29)),Time.valueOf(LocalTime.of(12,0,0)),Time.valueOf(LocalTime.of(13,0,0)));
+
+
+    SQLConnection sqlConnection = SQLConnection.getInstance();
+    /*
+    sqlConnection.createMeeting("Meeting2","test",
+        Date.valueOf(LocalDate.of(2023,6,5)),
+        Time.valueOf(LocalTime.of(10,30,0)),
+        Time.valueOf(LocalTime.of(10,45,0)), "example@gmail.com");
+
+     */
+    Registry registry = LocateRegistry.getRegistry(1099);
+    Server server = (Server) registry.lookup("communicator");
+    ClientListener listener = new ClientListener(server);
+
+    System.out.println(listener.getMeetings());
+
+
 
   }
 }

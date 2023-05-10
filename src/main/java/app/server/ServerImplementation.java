@@ -1,5 +1,6 @@
 package app.server;
 
+import app.JDBC.SQLConnection;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
@@ -7,60 +8,73 @@ import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ServerImplementation implements Server
 {
-  private RemotePropertyChangeSupport<Meeting> supportMeeting;
-  private RemotePropertyChangeSupport<Task> supportTask;
-  private RemotePropertyChangeSupport<Lead> supportLead;
+  private RemotePropertyChangeSupport<String> support;
   private ArrayList<Meeting> meetingList;
-  private ArrayList<Task> taskList;
-  private ArrayList<Lead> leadList;
+
+  private SQLConnection connection;
 
   public ServerImplementation(){
     meetingList = new ArrayList<>();
-    taskList = new ArrayList<>();
-    leadList = new ArrayList<>();
-    supportMeeting = new RemotePropertyChangeSupport<>();
+    support = new RemotePropertyChangeSupport<>();
+    try{
+      this.connection = SQLConnection.getInstance();
+    }catch (SQLException e){
+      e.printStackTrace();
+    }
   }
 
   @Override public void addPropertyChangeListener(
-      RemotePropertyChangeListener<Meeting> meetingListener,
-      RemotePropertyChangeListener<Task> taskListener,
-      RemotePropertyChangeListener<Lead> leadListener) throws RemoteException
+      RemotePropertyChangeListener<String> listener)
+      throws RemoteException
   {
-    supportMeeting.addPropertyChangeListener(meetingListener);
-    supportTask.addPropertyChangeListener(taskListener);
-    supportLead.addPropertyChangeListener(leadListener);
+    support.addPropertyChangeListener(listener);
   }
 
   @Override
   public void addMeeting(Meeting meeting) throws RemoteException
   {
+    try{
+      connection.createMeeting(meeting.title(), meeting.description()
+          ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+    }catch (SQLException e){
+      e.printStackTrace();
+    }
+
     meetingList.add(meeting);
-    supportMeeting.firePropertyChange("meeting",null,meeting);
+    support.firePropertyChange("meeting",null,meeting.toString());
   }
 
   @Override public void manageMeeting(Meeting dealitedMeeting, Meeting createdMeeting) throws RemoteException
   {
     meetingList.remove(dealitedMeeting);
     meetingList.add(createdMeeting);
-    supportMeeting.firePropertyChange("meeting",null,createdMeeting);
+    support.firePropertyChange("meeting",null,createdMeeting.toString());
   }
 
   @Override public void removeMeeting(Meeting meeting) throws RemoteException
   {
     meetingList.remove(meeting);
-    supportMeeting.firePropertyChange("meeting",null,meeting);
+    support.firePropertyChange("meeting",null,meeting.toString());
   }
 
   @Override
   public ArrayList<Meeting> getMeetings() throws RemoteException
   {
-    return meetingList;
+    try{
+      return connection.getMeetings();
+    }catch (SQLException e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
+  //We don't need the code that is bellow right know.
+  /*
   @Override public void addTask(Task task) throws RemoteException
   {
     taskList.add(task);
@@ -108,4 +122,6 @@ public class ServerImplementation implements Server
   {
     return leadList;
   }
+
+   */
 }

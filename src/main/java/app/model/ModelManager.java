@@ -5,33 +5,22 @@ import app.shared.Meeting;
 
 import java.sql.SQLException;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class ModelManager implements Model
 {
-  private SQLConnection connection;
-  public ModelManager(){
-    try{
-      connection = SQLConnection.getInstance();
-    }catch (SQLException e){
-      e.printStackTrace();
-    }
+  private ClientListener clientListener;
+  public ModelManager(ClientListener clientListener){
+    this.clientListener = clientListener;
   }
 
-  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime) throws SQLException
-  {
-    connection.createMeeting(title,description,date,startTime,endTime);
-    System.out.println("THIS IS A TEST");
-  }
-
-  @Override public void editMeeting(java.sql.Date oldStartDate,
-      java.sql.Date oldEndDate, java.sql.Date startDate, java.sql.Date endDate,
-      String description, ArrayList<User> employees)
-  {
-
+  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email) {
+   try{
+     clientListener.addMeeting(new Meeting(title, description, date, startTime, endTime, email));
+   }catch (Exception e){
+     e.printStackTrace();
+   }
   }
 
   @Override public void removeMeeting(Meeting meeting)
@@ -39,9 +28,19 @@ public class ModelManager implements Model
 
   }
 
-  @Override public ArrayList<Meeting> getMeetings()
-  {
+  @Override public ArrayList<Meeting> getMeetings() {
+    try{
+      return clientListener.getMeetings();
+    }catch (Exception e){
+      e.printStackTrace();
+    }
     return null;
   }
 
+  @Override public void editMeeting(Date oldStartDate, Date oldEndDate,
+      Date startDate, Date endDate, String description,
+      ArrayList<User> employees)
+  {
+
+  }
 }
