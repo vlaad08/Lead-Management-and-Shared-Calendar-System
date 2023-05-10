@@ -41,6 +41,7 @@ public class ServerImplementation implements Server
     try{
       connection.createMeeting(meeting.title(), meeting.description()
           ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+      System.out.println("----------------");
     }catch (SQLException e){
       e.printStackTrace();
     }

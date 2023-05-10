@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.List;
 
 public class MeetingViewModel
 {
@@ -17,9 +18,9 @@ public class MeetingViewModel
     this.model = model;
   }
 
-  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime) throws SQLException
+  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime,String email) throws SQLException
   {
-    //odel.addMeeting(title,description,date,startTime,endTime);
+    model.addMeeting(title,description,date,startTime,endTime,email);
   }
 
   public void removeMeeting(Meeting meeting)

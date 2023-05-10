@@ -2,7 +2,9 @@ package app.view;
 
 
 import app.model.User;
+import app.shared.Lead;
 import app.viewmodel.MeetingViewModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
+import javafx.scene.LightBase;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -34,9 +37,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.sql.Date;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class MeetingController
@@ -156,6 +161,14 @@ public class MeetingController
     title.setPadding(new Insets(20, 0, 0, 20));
     title.getChildren().addAll(titleLabel, titleTextField);
 
+    HBox lead=new HBox();
+    Label leadLabel=new Label("Lead: ");
+    ComboBox<Lead> leads=new ComboBox<>();
+    leads.setPrefWidth(150);
+    lead.setSpacing(65);
+    lead.setPadding(new Insets(20,0,0,20));
+    lead.getChildren().addAll(leadLabel,leads);
+
     HBox dateTime = new HBox();
     dateTime.setPadding(new Insets(5));
     dateTime.setSpacing(20);
@@ -214,14 +227,23 @@ public class MeetingController
     dateTime.setPadding(new Insets(20, 0, 0, 20));
     descr.setPadding(new Insets(20, 0, 10, 20));
 
-    insert.addAll(topBar, title, dateTime, descr, employeeAttendance);
+    insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
 
-
-    create.setOnAction(event -> {
-      createMeetingObject(titleTextField.getText(), datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
+Platform.runLater(()->{
+  create.setOnAction(event -> {
+    if (checkTime(startTime.getText(),endTime.getText()) && checkDate(datePicker.getValue()))
+    {
+      createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
       stage.close();
-    });
+    }else
+    {
+      Alert A = new Alert(Alert.AlertType.ERROR);
+      A.setContentText("Check time and date inputs");
+      A.show();
+    }
 
+  });
+    });
 
     Scene scene = new Scene(parent);
     stage.setResizable(false);
@@ -230,10 +252,41 @@ public class MeetingController
 
   }
 
-  public void createMeetingObject(String title, DatePicker datePicker, String startTime, String endTime, String description, TableView users){
+  public boolean checkTime(String startTime, String endTime)
+  {
+    Time start=Time.valueOf(LocalTime.parse(startTime));
+    Time end=Time.valueOf(LocalTime.parse(endTime));
+    if (end.before(start))
+    {
+      return false;
+    }
+    return true;
+  }
+
+  public boolean checkDate(LocalDate date)
+  {
+    if (date.isBefore(LocalDate.now()))
+    {
+      return false;
+    }
+    return true;
+  }
+
+  public void createMeetingObject(String title,ComboBox<Lead> lead, DatePicker datePicker, String startTime, String endTime, String description, TableView users){
     try
     {
       tilePane.getChildren().add(createRectangleWithText(title, datePicker, startTime, endTime, description, users));
+      Date date=Date.valueOf(datePicker.getValue());
+      Platform.runLater(()->{
+        try
+        {
+          meetingViewModel.addMeeting(title,description,date,Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),null);
+        }
+        catch (SQLException e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
     }
     catch (SQLException | NullPointerException e)
     {
