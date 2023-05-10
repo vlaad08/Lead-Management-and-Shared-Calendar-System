@@ -1,5 +1,6 @@
 package app.view;
 
+import app.shared.Meeting;
 import app.viewmodel.CalendarViewModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,11 +24,14 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.ZonedDateTime;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
-public class CalendarController implements Initializable {
+public class CalendarController {
 
     ZonedDateTime dateFocus;
     ZonedDateTime today;
@@ -63,6 +67,9 @@ public class CalendarController implements Initializable {
         this.calendarViewModel = calendarViewModel;
         this.viewHandler = viewHandler;
         this.root = root;
+        dateFocus = ZonedDateTime.now();
+        today = ZonedDateTime.now();
+        drawCalendar();
 
 
         hoverButtonNavbar(availableClientsButton);
@@ -97,12 +104,7 @@ public class CalendarController implements Initializable {
 
     //public void reset(){} //Ill just leave this here we may need this later for smt
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        dateFocus = ZonedDateTime.now();
-        today = ZonedDateTime.now();
-        drawCalendar();
-    }
+
 
     @FXML public void changeView(ActionEvent e)
         {
@@ -241,13 +243,21 @@ public class CalendarController implements Initializable {
 
     private Map<Integer, List<CalendarActivity>> getCalendarActivitiesMonth(ZonedDateTime dateFocus) {
         List<CalendarActivity> calendarActivities = new ArrayList<>();
-        int year = dateFocus.getYear();
-        int month = dateFocus.getMonth().getValue();
-
         Random random = new Random();
-        for (int i = 0; i < 50; i++) {
-            ZonedDateTime time = ZonedDateTime.of(year, month, random.nextInt(27)+1, 16,0,0,0,dateFocus.getZone());
-            calendarActivities.add(new CalendarActivity(time, "Hans", 111111));
+        if(calendarViewModel.getMeetings() != null)
+        {
+            ArrayList<Meeting> meetings = calendarViewModel.getMeetings();
+            for (Meeting meeting : meetings)
+            {
+                LocalDate date = meeting.date().toLocalDate();
+                LocalTime time = meeting.startTime().toLocalTime();
+                LocalDateTime localDateTime = LocalDateTime.of(date, time);
+                ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, dateFocus.getZone());
+                System.out.println(zonedDateTime);
+                calendarActivities.add(
+                    new CalendarActivity(zonedDateTime, meeting.title(),
+                        random.nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE)));
+            }
         }
 
         return createCalendarMap(calendarActivities);

@@ -93,16 +93,19 @@ public class MeetingController
     tilePane.setPrefRows(1);
     tilePane.setTileAlignment(Pos.CENTER_LEFT);
 
-    ArrayList<Meeting> meetings=meetingViewModel.getMeetings();
-    for(Meeting meeting: meetings)
+    if (meetingViewModel.getMeetings()!=null)
     {
-      Date date=meeting.date();
-      LocalDate localDate=LocalDate.of(date.getYear(),date.getMonth(),date.getDay());
-      DatePicker datePicker=new DatePicker(localDate);
-      String startTime=meeting.startTime().toString();
-      String endTime=meeting.endTime().toString();
-      tilePane.getChildren().add(createRectangleWithText(meeting.title(),datePicker,startTime,endTime,
-          meeting.description(), null));
+      ArrayList<Meeting> meetings=meetingViewModel.getMeetings();
+      for(Meeting meeting: meetings)
+      {
+        Date date=meeting.date();
+        LocalDate localDate=LocalDate.of(date.getYear(),date.getMonth(),date.getDay());
+        DatePicker datePicker=new DatePicker(localDate);
+        String startTime=meeting.startTime().toString();
+        String endTime=meeting.endTime().toString();
+        tilePane.getChildren().add(createRectangleWithText(meeting.title(),datePicker,startTime,endTime,
+            meeting.description(), null));
+      }
     }
   }
 
