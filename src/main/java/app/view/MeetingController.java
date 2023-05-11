@@ -20,6 +20,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -29,7 +32,7 @@ import java.sql.Date;
 import java.time.format.DateTimeFormatter;
 
 
-public class MeetingController
+public class MeetingController implements PropertyChangeListener
 {
 
   private Region root;
@@ -45,6 +48,7 @@ public class MeetingController
   @FXML private  Button closeButton;
   @FXML private TilePane tilePane;
   @FXML private Button addButton;
+  @FXML private StackPane addRectangle;
 
 
   private final ListView<Meeting> meetings = new ListView<>();
@@ -56,7 +60,8 @@ public class MeetingController
     this.viewHandler = viewHandler;
     this.meetingViewModel = meetingViewModel;
     this.root = root;
-    
+
+    meetingViewModel.addPropertyChangeListener(this);
 
 
 
@@ -85,15 +90,36 @@ public class MeetingController
 
   public void drawExistingMeetings() throws SQLException
   {
+    for(Node node : tilePane.getChildren())
+    {
+      if(node instanceof VBox)
+      {
+        Platform.runLater(()->{
+          tilePane.getChildren().remove(node);
+        });
+      }
+    }
+
     for(Meeting meeting : meetings.getItems())
     {
+      System.out.println(meeting.title());
       LocalDate date = meeting.date().toLocalDate();
       DatePicker datePicker=new DatePicker(date);
       String startTime=meeting.startTime().toString();
       String endTime=meeting.endTime().toString();
-      tilePane.getChildren().add(
-          createMeetingTile(meeting.title(),datePicker,startTime,endTime,
-              meeting.description(), null));
+      Platform.runLater(()->{
+        try
+        {
+          tilePane.getChildren().add(
+              createMeetingTile(meeting.title(),datePicker,startTime,endTime,
+                  meeting.description(), null));
+
+        }
+        catch (SQLException e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
     }
   }
 
@@ -239,7 +265,7 @@ public class MeetingController
     insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
 
     Platform.runLater(()->{
-  create.setOnAction(event -> {
+    create.setOnAction(event -> {
     if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
     {
       createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
@@ -372,5 +398,22 @@ public class MeetingController
     return meeting;
   }
 
+  @Override public void propertyChange(PropertyChangeEvent evt)
+  {
+    if(evt.getPropertyName().equals("reloadMeetings"))
+    {
+        Platform.runLater(()->{
+          try
+          {
+            drawExistingMeetings();
+          }
+          catch (SQLException e)
+          {
+            throw new RuntimeException(e);
+          }
+        });
+
+    }
+  }
 }
 
