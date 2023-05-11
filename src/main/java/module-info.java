@@ -9,7 +9,7 @@ module cl.sep2 {
 
   opens app to javafx.fxml;
   opens app.view to javafx.fxml;
+  opens app.shared to java.rmi;
 
   exports app;
-  exports app.server to java.rmi;
 }

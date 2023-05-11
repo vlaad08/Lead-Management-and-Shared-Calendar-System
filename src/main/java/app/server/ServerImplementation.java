@@ -1,8 +1,10 @@
 package app.server;
 
 import app.JDBC.SQLConnection;
+import app.shared.Communicator;
 import app.shared.Lead;
 import app.shared.Meeting;
+
 import app.shared.Task;
 import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
@@ -11,145 +13,83 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ServerImplementation implements Server
+public class ServerImplementation implements Communicator
 {
-  private RemotePropertyChangeSupport<String> support;
-  private ArrayList<Meeting> meetingList;
+  private final RemotePropertyChangeSupport<Meeting> meetingSupport;
 
   private SQLConnection connection;
-  private int readers;
-  private int writers;
-  private int writersWaiting;
 
-  public ServerImplementation(){
-    meetingList = new ArrayList<>();
-    support = new RemotePropertyChangeSupport<>();
 
-    this.readers = 0;
-    this.writers = 0;
-    this.writersWaiting = 0;
 
-    try{
-      this.connection = SQLConnection.getInstance();
-    }catch (SQLException e){
-      e.printStackTrace();
-    }
-  }
-
-  @Override public void addPropertyChangeListener(
-      RemotePropertyChangeListener<String> listener)
-      throws RemoteException
+  public ServerImplementation() throws SQLException
   {
-    support.addPropertyChangeListener(listener);
+    meetingSupport = new RemotePropertyChangeSupport<>();
+
   }
 
-  @Override
-  public void addMeeting(Meeting meeting) throws RemoteException
+
+  @Override public void createMeeting(Meeting meeting) throws SQLException, RemoteException
   {
-    try{
-      SQLConnection sqlConnection = requestWrite();
-      sqlConnection.createMeeting(meeting.title(), meeting.description()
-          ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
-      support.firePropertyChange("meeting",null,meeting.toString());
-    }catch (SQLException e){
-      e.printStackTrace();
-    }finally {
-      releaseWrite();
-    }
+     connection = SQLConnection.getInstance();
+    connection.createMeeting(meeting.title(), meeting.description()
+        ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+    meetingSupport.firePropertyChange("Meeting Created", null, meeting);
   }
 
-  @Override public void manageMeeting(Meeting dealitedMeeting, Meeting createdMeeting) throws RemoteException
+  @Override public void createTask(Task task)
+      throws SQLException, RemoteException
   {
-    meetingList.remove(dealitedMeeting);
-    meetingList.add(createdMeeting);
-    support.firePropertyChange("meeting",null,createdMeeting.toString());
+
   }
 
-  @Override public void removeMeeting(Meeting meeting) throws RemoteException
+  @Override public void createLead(Lead lead)
+      throws SQLException, RemoteException
   {
-    meetingList.remove(meeting);
-    support.firePropertyChange("meeting",null,meeting.toString());
+
   }
 
-  @Override
-  public ArrayList<Meeting> getMeetings() throws RemoteException {
-    try{
-      SQLConnection sqlConnection = requestRead();
-      return sqlConnection.getMeetings();
-    }catch (SQLException e){
-      e.printStackTrace();
-    }finally {
-      releaseRead();
-    }
-    return null;
-  }
-
-  @Override
-  public void addTask(Task task) throws RemoteException
+  @Override public void removeMeeting(Meeting meeting)
+      throws SQLException, RemoteException
   {
-    try{
-      SQLConnection sqlConnection = requestWrite();
-      sqlConnection.addTask(task);
-    }catch (SQLException e){
-      e.printStackTrace();
-    }finally {
-      releaseWrite();
-    }
+
   }
 
-  @Override
-  public ArrayList<Task> getTasks() throws RemoteException {
-    try{
-      SQLConnection sqlConnection = requestRead();
-      return sqlConnection.getTasks();
-    }catch (SQLException e){
-      e.printStackTrace();
-    }finally {
-      releaseRead();
-    }
-    return null;
+  @Override public void removeTask(Task task) throws SQLException
+  {
+
+  }
+
+  @Override public void removeLead(Lead lead) throws SQLException
+  {
+
+  }
+
+  @Override public void addMeetingListener(
+      RemotePropertyChangeListener<Meeting> listener) throws RemoteException
+  {
+    meetingSupport.addPropertyChangeListener(listener);
+  }
+
+  @Override public void addTaskListener(
+      RemotePropertyChangeListener<Task> listener) throws RemoteException
+  {
+
+  }
+
+  @Override public void addLeadListener(
+      RemotePropertyChangeListener<Lead> listener) throws RemoteException
+  {
+
+  }
+
+  @Override public ArrayList<Meeting> getMeetings() throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getMeetings();
   }
 
   //Syncronization of Users
-  private synchronized SQLConnection requestRead(){
-    while(writers > 0 || writersWaiting > 0) {
-      try {
-        wait();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-    readers++;
-    return connection;
-  }
 
-  private synchronized void releaseRead(){
-    readers--;
-    if (readers == 0) {
-      notifyAll();
-    }
-  }
-
-  private synchronized SQLConnection requestWrite() {
-    writersWaiting++;
-    while(writers > 0 || readers > 0) {
-      try {
-        wait();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-    writers++;
-    writersWaiting--;
-    return connection;
-  }
-
-  private synchronized void releaseWrite() {
-    writers--;
-    if (writers == 0) {
-      notifyAll();
-    }
-  }
 
   /*
   @Override public void addTask(Task task) throws RemoteException
@@ -199,5 +139,6 @@ public class ServerImplementation implements Server
   {
     return leadList;
   }
+
    */
 }

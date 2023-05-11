@@ -1,11 +1,14 @@
 package app.model;
 
+<<<<<<< Updated upstream
+import app.server.Server;
+=======
 import app.JDBC.SQLConnection;
 import app.model.ClientListener;
 import app.model.Model;
 import app.model.ModelManager;
 import app.model.User;
-import app.server.Server;
+>>>>>>> Stashed changes
 import app.shared.Meeting;
 import app.view.MeetingController;
 import app.viewmodel.MeetingViewModel;
