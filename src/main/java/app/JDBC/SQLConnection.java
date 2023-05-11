@@ -24,7 +24,7 @@ public class SQLConnection
 
   private Connection getConnection() throws SQLException
   {
-    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "password");
+    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "1945");
   }
 
   /*
