@@ -100,7 +100,7 @@ public class SQLConnection
       PreparedStatement statement = connection.prepareStatement("INSERT INTO Task(title, description, dueDate, status, business_id) VALUES (?, ?, ?, ?, ?")) {
         statement.setString(1, task.getTitle());
         statement.setString(2, task.getDescription());
-        statement.setDate(3,);
+        statement.setDate(3,task.getDate());
         statement.setString(4,task.getStatus());
         statement.setInt(5,task.getBusinessId());
         statement.executeUpdate();

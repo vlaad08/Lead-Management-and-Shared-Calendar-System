@@ -3,19 +3,19 @@ package app.shared;
 import app.model.User;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Task implements Serializable
 { private String title;
   private String description;
-  private Date date;
+  private java.sql.Date date;
   private String status;
   private int business_id;
 
   private ArrayList<User> assignedEmployees; //This would be for the assigned employees to complete the task. It could also be left empty.
 
-  public Task(String title, String description, Date date, String status, int business_id){
+  public Task(String title, String description, java.sql.Date date, String status, int business_id){
     this.title = title;
     this.description = description;
     this.date = date;
@@ -39,7 +39,7 @@ public class Task implements Serializable
   public void setDescription(String description) {
     this.description = description;
   }
-  public void setDate(Date date)
+  public void setDate(java.sql.Date date)
   {
     this.date = date;
   }
