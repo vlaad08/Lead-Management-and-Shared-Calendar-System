@@ -1,50 +1,35 @@
 package app.view;
 
 
+import app.model.ConstraintChecker;
 import app.model.User;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
-import javafx.scene.LightBase;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.sql.Date;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static app.model.ConstraintChecker.checkTime;
 
 public class MeetingController
 {
@@ -103,7 +88,8 @@ public class MeetingController
         DatePicker datePicker=new DatePicker(localDate);
         String startTime=meeting.startTime().toString();
         String endTime=meeting.endTime().toString();
-        tilePane.getChildren().add(createRectangleWithText(meeting.title(),datePicker,startTime,endTime,
+        tilePane.getChildren().add(
+            createMeetingTile(meeting.title(),datePicker,startTime,endTime,
             meeting.description(), null));
       }
     }
@@ -248,9 +234,9 @@ public class MeetingController
 
     insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
 
-Platform.runLater(()->{
+    Platform.runLater(()->{
   create.setOnAction(event -> {
-    if (checkTime(startTime.getText(),endTime.getText()) && checkDate(datePicker.getValue()))
+    if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
     {
       createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
       stage.close();
@@ -271,30 +257,12 @@ Platform.runLater(()->{
 
   }
 
-  public boolean checkTime(String startTime, String endTime)
-  {
-    Time start=Time.valueOf(LocalTime.parse(startTime));
-    Time end=Time.valueOf(LocalTime.parse(endTime));
-    if (end.before(start))
-    {
-      return false;
-    }
-    return true;
-  }
-
-  public boolean checkDate(LocalDate date)
-  {
-    if (date.isBefore(LocalDate.now()))
-    {
-      return false;
-    }
-    return true;
-  }
 
   public void createMeetingObject(String title,ComboBox<Lead> lead, DatePicker datePicker, String startTime, String endTime, String description, TableView users){
     try
     {
-      tilePane.getChildren().add(createRectangleWithText(title, datePicker, startTime, endTime, description, users));
+      tilePane.getChildren().add(
+          createMeetingTile(title, datePicker, startTime, endTime, description, users));
       Date date=Date.valueOf(datePicker.getValue());
       Platform.runLater(()->{
         try
@@ -321,7 +289,7 @@ Platform.runLater(()->{
 
   }
 
-  public VBox createRectangleWithText(String title, DatePicker datePicker, String startTime, String endTime, String description, TableView users) throws SQLException
+  public VBox createMeetingTile(String title, DatePicker datePicker, String startTime, String endTime, String description, TableView users) throws SQLException
   {
     VBox meeting = new VBox();
 
