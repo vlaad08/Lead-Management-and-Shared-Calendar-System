@@ -3,8 +3,13 @@ package app.view;
 import app.viewmodel.TasksViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+
+import java.io.IOException;
 
 public class TaskController
 {
@@ -20,6 +25,7 @@ public class TaskController
   private Region root;
   private ViewHandler viewHandler;
   private TasksViewModel tasksViewModel;
+  @FXML private VBox taskList;
 
   public void init(ViewHandler viewHandler, TasksViewModel tasksViewModel, Region root){
     this.viewHandler = viewHandler;
@@ -34,6 +40,16 @@ public class TaskController
     hoverButtonNavbar(clientsButton);
     hoverButtonNavbar(manageLeadsButton);
     hoverButtonNavbar(closeButton);
+
+    Node[] nodes = new Node[3];
+    for(int i=0; i<nodes.length; i++){
+      try{
+        nodes[i] = (Node) FXMLLoader.load(getClass().getResource("/app/TaskObject.fxml"));
+        taskList.getChildren().add(nodes[i]);
+      }catch (IOException e){
+        e.printStackTrace();
+      }
+    }
   }
   public void hoverButtonNavbar(Button b)
   {
