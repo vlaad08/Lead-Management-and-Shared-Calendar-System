@@ -84,6 +84,25 @@ public class ServerImplementation implements Server
     return null;
   }
 
+  @Override
+  public void addTask(Task task)
+  {
+    try{
+      SQLConnection sqlConnection = requestWrite();
+      sqlConnection.addTask(task);
+    }catch (SQLException e){
+      e.printStackTrace();
+    }finally {
+      releaseWrite();
+    }
+  }
+
+  @Override
+  public ArrayList<Task> getTasks() throws RemoteException
+  {
+    return null;
+  }
+
   //Syncronization of Users
   private synchronized SQLConnection requestRead(){
     while(writers > 0 || writersWaiting > 0) {
@@ -125,9 +144,6 @@ public class ServerImplementation implements Server
     }
   }
 
-
-
-  //We don't need the code that is bellow right know.
   /*
   @Override public void addTask(Task task) throws RemoteException
   {
@@ -176,6 +192,5 @@ public class ServerImplementation implements Server
   {
     return leadList;
   }
-
    */
 }
