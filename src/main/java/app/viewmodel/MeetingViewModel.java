@@ -33,13 +33,6 @@ public class MeetingViewModel
     return model.getMeetings();
   }
 
-  public void editMeeting(Date oldStartDate, Date oldEndDate,
-      Date startDate, Date endDate, String description,
-      ArrayList<User> employees)
-  {
-    model.editMeeting(oldStartDate, oldEndDate,
-        startDate, endDate, description, employees);
-  }
 
   public boolean checkUser()
   {

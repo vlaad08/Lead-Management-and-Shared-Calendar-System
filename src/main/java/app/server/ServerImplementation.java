@@ -85,7 +85,7 @@ public class ServerImplementation implements Server
   }
 
   @Override
-  public void addTask(Task task)
+  public void addTask(Task task) throws RemoteException
   {
     try{
       SQLConnection sqlConnection = requestWrite();
@@ -98,8 +98,15 @@ public class ServerImplementation implements Server
   }
 
   @Override
-  public ArrayList<Task> getTasks() throws RemoteException
-  {
+  public ArrayList<Task> getTasks() throws RemoteException {
+    try{
+      SQLConnection sqlConnection = requestRead();
+      return sqlConnection.getTasks();
+    }catch (SQLException e){
+      e.printStackTrace();
+    }finally {
+      releaseRead();
+    }
     return null;
   }
 

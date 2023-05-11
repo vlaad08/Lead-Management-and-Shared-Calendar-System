@@ -2,6 +2,7 @@ package app.model;
 
 import app.server.Server;
 import app.shared.Meeting;
+import app.shared.Task;
 import dk.via.remote.observer.RemotePropertyChangeEvent;
 import dk.via.remote.observer.RemotePropertyChangeListener;
 
@@ -29,6 +30,14 @@ public class ClientListener extends UnicastRemoteObject implements
 
   public ArrayList<Meeting> getMeetings()throws RemoteException{
     return server.getMeetings();
+  }
+
+  public void addTask(Task task)throws RemoteException{
+    server.addTask(task);
+  }
+
+  public ArrayList<Task> getTasks() throws RemoteException{
+    return server.getTasks();
   }
 
   public void propertyChange(RemotePropertyChangeEvent<String> event) throws RemoteException

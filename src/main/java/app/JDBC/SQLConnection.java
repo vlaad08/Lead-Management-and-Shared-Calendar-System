@@ -25,36 +25,8 @@ public class SQLConnection
 
   private Connection getConnection() throws SQLException
   {
-    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "password");
+    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "7319");
   }
-
-  /*
-  public ArrayList<Meeting> getMeetingsByBusinessId(int business_id) throws SQLException
-  {
-    try(
-        Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("select * from meeting where business_id = ?")) {
-        ArrayList<Meeting> meetings = new ArrayList<>();
-        statement.setInt(1, business_id);
-        ResultSet resultSet = statement.executeQuery();
-        while(resultSet.next())
-        {
-          String title = resultSet.getString("title");
-          String description = resultSet.getString("description");
-          Date date = resultSet.getDate("date");
-          Time startTime = resultSet.getTime("starttime");
-          Time endTime = resultSet.getTime("endtime");
-          meetings.add(new Meeting(title, description, date, startTime, endTime));
-        }
-        if(!meetings.isEmpty())
-        {
-          return meetings;
-        }
-        return null;
-    }
-  }
-
-   */
 
   public ArrayList<Meeting> getMeetings() throws SQLException{
     try(
@@ -97,7 +69,7 @@ public class SQLConnection
   public void addTask(Task task) throws SQLException{
     try(
       Connection connection = getConnection();
-      PreparedStatement statement = connection.prepareStatement("INSERT INTO Task(title, description, dueDate, status, business_id) VALUES (?, ?, ?, ?, ?")) {
+      PreparedStatement statement = connection.prepareStatement("INSERT INTO Task(title, description, dueDate, status, business_id) VALUES (?, ?, ?, ?, ?)")) {
         statement.setString(1, task.getTitle());
         statement.setString(2, task.getDescription());
         statement.setDate(3,task.getDate());
@@ -105,6 +77,29 @@ public class SQLConnection
         statement.setInt(5,task.getBusinessId());
         statement.executeUpdate();
       }
+  }
+
+  public ArrayList<Task> getTasks() throws SQLException{
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from task")) {
+      ArrayList<Task> tasks = new ArrayList<>();
+      ResultSet resultSet = statement.executeQuery();
+      while(resultSet.next())
+      {
+        String title = resultSet.getString("title");
+        String description = resultSet.getString("description");
+        Date date = resultSet.getDate("dueDate");
+        String status = resultSet.getString("status");
+        int businessId = resultSet.getInt("business_id");
+        tasks.add(new Task(title, description, date, status,businessId));
+      }
+      if(!tasks.isEmpty())
+      {
+        return tasks;
+      }
+      return null;
+    }
   }
 }
 

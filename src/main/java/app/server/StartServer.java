@@ -9,9 +9,9 @@ public class StartServer
 {
   public static void main(String[] args) throws Exception
   {
-    Registry registry = LocateRegistry.createRegistry(1024);
+    Registry registry = LocateRegistry.createRegistry(1099);
     ServerImplementation communicator = new ServerImplementation();
-    Remote remote = UnicastRemoteObject.exportObject(communicator,5555);
+    Remote remote = UnicastRemoteObject.exportObject(communicator,0);
     registry.bind("communicator", remote);
   }
 }

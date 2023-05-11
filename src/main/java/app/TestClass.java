@@ -5,7 +5,9 @@ import app.model.ClientListener;
 import app.model.ModelManager;
 import app.server.Server;
 import app.server.ServerImplementation;
+import app.shared.Task;
 import app.viewmodel.MeetingViewModel;
+import app.viewmodel.TasksViewModel;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -19,9 +21,17 @@ public class TestClass
 {
   public static void main(String[] args) throws Exception
   {
-
-
+    /*
     SQLConnection sqlConnection = SQLConnection.getInstance();
+    sqlConnection.addTask(new Task(
+        "Task2","description",
+        Date.valueOf(LocalDate.of(2023,6,5)),"To do",
+        7456
+    ));
+     */
+
+    //sqlConnection.addTask(new Task("Task2","Des",
+      //  Date.valueOf(LocalDate.of(2023,6,20)),"To do",7456));
     /*
     sqlConnection.createMeeting("Meeting2","test",
         Date.valueOf(LocalDate.of(2023,6,5)),
@@ -30,12 +40,26 @@ public class TestClass
 
      */
 
-    Registry registry = LocateRegistry.getRegistry(1024);
+
+    Registry registry = LocateRegistry.getRegistry(1099);
     Server server = (Server) registry.lookup("communicator");
     ClientListener listener = new ClientListener(server);
 
 
-    System.out.println(new MeetingViewModel(new ModelManager(listener)).getMeetings());
+    //System.out.println(new MeetingViewModel(new ModelManager(listener)).getMeetings());
+    System.out.println(new TasksViewModel(new ModelManager(listener)).getTasks());
+
+
+
+    /*
+    ServerImplementation server = new ServerImplementation();
+    server.addTask(new Task(
+        "Task3","description",
+        Date.valueOf(LocalDate.of(2023,6,5)),"To do",
+        7456
+    ));
+
+     */
 
   }
 }

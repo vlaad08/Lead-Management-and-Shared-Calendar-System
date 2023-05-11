@@ -2,12 +2,14 @@ package app.model;
 
 import app.JDBC.SQLConnection;
 import app.shared.Meeting;
+import app.shared.Task;
 
 import java.beans.PropertyChangeSupport;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class ModelManager implements Model
@@ -30,17 +32,6 @@ public class ModelManager implements Model
         e.printStackTrace();
       }
     }
-
-  }
-
-  public void setUser()
-  {
-    user.setManager(true);
-  }
-
-  @Override public void removeMeeting(Meeting meeting)
-  {
-
   }
 
   @Override public ArrayList<Meeting> getMeetings() {
@@ -52,12 +43,35 @@ public class ModelManager implements Model
     return null;
   }
 
-  @Override public void editMeeting(Date oldStartDate, Date oldEndDate,
-      Date startDate, Date endDate, String description,
-      ArrayList<User> employees)
-  {
-
+  @Override
+  public void addTask(String title, String description, Date date, String status, int business_id) {
+    try{
+      clientListener.addTask(new Task(title, description, date, status, business_id));
+    }catch (RemoteException e){
+      e.printStackTrace();
+    }
   }
+
+  @Override public ArrayList<Task> getTasks()
+  {
+    try{
+      return clientListener.getTasks();
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public void setUser()
+  {
+    user.setManager(true);
+  }
+
+  @Override public void removeMeeting(Meeting meeting)
+  {
+  }
+
+
 
   public boolean checkUser(){
     if (user.isManager()==false)
