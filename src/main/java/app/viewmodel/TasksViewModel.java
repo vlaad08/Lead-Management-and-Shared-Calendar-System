@@ -15,10 +15,11 @@ public class TasksViewModel
   }
 
   public void addTask(String title, String description, Date date, String status, int business_id){
-    model.addTask(title, description, date, status, business_id);
+//    model.addTask(title, description, date, status, business_id);
   }
 
   public ArrayList<Task> getTasks(){
-    return model.getTasks();
+//    return model.getTasks();
+    return null;
   }
 }

@@ -63,10 +63,6 @@ public class MeetingViewModel implements PropertyChangeListener
   }
 
 
-  public boolean checkUser()
-  {
-    return model.checkUser();
-  }
 
 
   public boolean checkUser()
