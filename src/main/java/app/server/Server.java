@@ -18,7 +18,7 @@ public interface Server extends Remote
   public void manageMeeting(Meeting deletedMeeting, Meeting createdMeeting) throws RemoteException;
   public void removeMeeting(Meeting meeting)throws RemoteException;
   public ArrayList<Meeting> getMeetings()throws RemoteException;
-  void addTask(Task task);
+  void addTask(Task task) throws RemoteException;
   ArrayList<Task> getTasks() throws RemoteException;
 
   //We don't need the code below right know

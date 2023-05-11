@@ -122,7 +122,7 @@ public class MeetingTest {
 
 
   @Test
-  void when_a_meeting_is_created_size_is_increasing_and_database_is_returning_that_object()
+  void when_a_meeting_is_created_size_is_increasing_and_database_is_returning_that_object() throws SQLException
   {
     int i = meetingViewModel.getMeetings().size();
     Random random = new Random();
