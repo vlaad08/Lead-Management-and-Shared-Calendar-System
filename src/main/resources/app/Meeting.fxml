@@ -114,9 +114,9 @@
                         <Insets top="20.0" />
                      </padding>
                      <children>
-                        <StackPane prefHeight="250.0" prefWidth="250.0">
+                        <StackPane fx:id="addRectangle" prefHeight="250.0" prefWidth="250.0">
                            <children>
-                              <Rectangle fx:id="addRectangle" arcHeight="20.0" arcWidth="20.0" fill="#544997" height="250.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-color: #544997;" width="250.0" />
+                              <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#544997" height="250.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-color: #544997;" width="250.0" />
                               <Line endX="-11.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
                               <Line endX="-110.0" endY="90.0" startX="-110.0" stroke="WHITE" strokeWidth="4.0" />
                               <Button fx:id="addButton" mnemonicParsing="false" onAction="#addMeeting" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" textAlignment="CENTER" textFill="TRANSPARENT" />

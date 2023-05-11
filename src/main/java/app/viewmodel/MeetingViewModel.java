@@ -41,4 +41,9 @@ public class MeetingViewModel
         startDate, endDate, description, employees);
   }
 
+  public boolean checkUser()
+  {
+    return model.checkUser();
+  }
+
 }
