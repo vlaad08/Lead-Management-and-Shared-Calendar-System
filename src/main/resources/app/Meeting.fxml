@@ -92,7 +92,7 @@
     <center>
         <BorderPane prefHeight="694.0" prefWidth="972.0" BorderPane.alignment="CENTER">
             <top>
-                <BorderPane prefHeight="119.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
+                <BorderPane prefHeight="41.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
                     <top>
                         <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
                             <children>

@@ -1,51 +1,35 @@
 package app.view;
 
 
+import app.model.ConstraintChecker;
 import app.model.User;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
-import javafx.scene.LightBase;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.sql.Date;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static app.model.ConstraintChecker.checkTime;
 
 public class MeetingController
 {
@@ -69,7 +53,6 @@ public class MeetingController
   @FXML private  Button closeButton;
   @FXML private TilePane tilePane;
   @FXML private Button addButton;
-  @FXML private StackPane addRectangle;
 
 
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root)
@@ -105,14 +88,10 @@ public class MeetingController
         DatePicker datePicker=new DatePicker(localDate);
         String startTime=meeting.startTime().toString();
         String endTime=meeting.endTime().toString();
-        tilePane.getChildren().add(createRectangleWithText(meeting.title(),datePicker,startTime,endTime,
+        tilePane.getChildren().add(
+            createMeetingTile(meeting.title(),datePicker,startTime,endTime,
             meeting.description(), null));
       }
-    }
-
-    if(!meetingViewModel.checkUser())
-    {
-      addRectangle.setEffect(new ColorAdjust(0, 0, 0.15, -0.50));
     }
   }
 
@@ -160,156 +139,130 @@ public class MeetingController
 
 
   public void addMeeting(){
-    if (meetingViewModel.checkUser())
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    closeButton.setPrefHeight(40);
+    hoverButtonNavbar(closeButton);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+    HBox title = new HBox();
+    Label titleLabel = new Label("Title: ");
+    TextField titleTextField = new TextField();
+    title.setSpacing(65);
+    title.setPadding(new Insets(20, 0, 0, 20));
+    title.getChildren().addAll(titleLabel, titleTextField);
+
+    HBox lead=new HBox();
+    Label leadLabel=new Label("Lead: ");
+    ComboBox<Lead> leads=new ComboBox<>();
+    leads.setPrefWidth(150);
+    lead.setSpacing(65);
+    lead.setPadding(new Insets(20,0,0,20));
+    lead.getChildren().addAll(leadLabel,leads);
+
+    HBox dateTime = new HBox();
+    dateTime.setPadding(new Insets(5));
+    dateTime.setSpacing(20);
+    Label startDate = new Label("Date:");
+    startDate.setPrefWidth(75);
+    DatePicker datePicker = new DatePicker(LocalDate.now());
+    datePicker.setPrefWidth(170);
+    TextField startTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+    startTime.setPrefWidth(60);
+    Label to = new Label("to: ");
+    TextField endTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+    endTime.setPrefWidth(60);
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+
+    dateTime.getChildren().add(startDate);
+    dateTime.getChildren().add(datePicker);
+    dateTime.getChildren().add(startTime);
+    dateTime.getChildren().add(to);
+    dateTime.getChildren().add(endTime);
+    dateTime.getChildren().add(create);
+
+    HBox descr = new HBox();
+    descr.setSpacing(20);
+    Label description = new Label("Description:");
+    description.setPrefWidth(75);
+    TextField descrTextField = new TextField();
+    descrTextField.setAlignment(Pos.TOP_LEFT);
+    descrTextField.setPrefWidth(330);
+    descrTextField.setPrefHeight(100);
+    descr.getChildren().add(description);
+    descr.getChildren().add(descrTextField);
+    descr.setLayoutY(10);
+    HBox employeeAttendance = new HBox();
+    TableView<User> attendance = new TableView<>();
+    TableColumn<User, String> firstName = new TableColumn<>("First Name");
+    TableColumn<User, String> lastName = new TableColumn<>("Last Name");
+    TableColumn<User, String> attends = new TableColumn<>("Attends");
+
+    firstName.setCellValueFactory(new PropertyValueFactory<>("firstname"));
+    lastName.setCellValueFactory(new PropertyValueFactory<>("lastname"));
+    attends.setCellFactory(ComboBoxTableCell.forTableColumn(""));
+    attends.setCellValueFactory(new PropertyValueFactory<>("attends"));
+
+    attendance.getColumns().setAll(firstName, lastName, attends);
+
+    attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    attendance.setPrefWidth(600);
+    attendance.setPrefHeight(150);
+    attendance.setPadding(Insets.EMPTY);
+    employeeAttendance.getChildren().add(attendance);
+
+
+    dateTime.setPadding(new Insets(20, 0, 0, 20));
+    descr.setPadding(new Insets(20, 0, 10, 20));
+
+    insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
+
+    Platform.runLater(()->{
+  create.setOnAction(event -> {
+    if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
     {
-      Stage stage = new Stage();
-
-      VBox parent = new VBox();
-      parent.setPrefHeight(400);
-      parent.setPrefWidth(600);
-      parent.setAlignment(Pos.TOP_LEFT);
-      ObservableList<Node> insert = parent.getChildren();
-
-      HBox topBar = new HBox();
-      Button closeButton = new Button("X");
-      closeButton.setOnAction(event -> stage.close());
-      closeButton.setStyle("-fx-background-color: none");
-      closeButton.setTextFill(Paint.valueOf("White"));
-      closeButton.setPrefHeight(40);
-      hoverButtonNavbar(closeButton);
-      topBar.setPrefHeight(40);
-      topBar.setAlignment(Pos.CENTER_RIGHT);
-      topBar.setStyle("-fx-background-color:  #544997");
-      topBar.getChildren().add(closeButton);
-
-      HBox title = new HBox();
-      Label titleLabel = new Label("Title: ");
-      TextField titleTextField = new TextField();
-      title.setSpacing(65);
-      title.setPadding(new Insets(20, 0, 0, 20));
-      title.getChildren().addAll(titleLabel, titleTextField);
-
-      HBox lead=new HBox();
-      Label leadLabel=new Label("Lead: ");
-      ComboBox<Lead> leads=new ComboBox<>();
-      leads.setPrefWidth(150);
-      lead.setSpacing(65);
-      lead.setPadding(new Insets(20,0,0,20));
-      lead.getChildren().addAll(leadLabel,leads);
-
-      HBox dateTime = new HBox();
-      dateTime.setPadding(new Insets(5));
-      dateTime.setSpacing(20);
-      Label startDate = new Label("Date:");
-      startDate.setPrefWidth(75);
-      DatePicker datePicker = new DatePicker(LocalDate.now());
-      datePicker.setPrefWidth(170);
-      TextField startTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-      startTime.setPrefWidth(60);
-      Label to = new Label("to: ");
-      TextField endTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-      endTime.setPrefWidth(60);
-      Button create = new Button("Create");
-      create.setPrefWidth(60);
-      create.setTextFill(Paint.valueOf("White"));
-      create.setStyle("-fx-background-color:  #348e2f");
-
-      dateTime.getChildren().add(startDate);
-      dateTime.getChildren().add(datePicker);
-      dateTime.getChildren().add(startTime);
-      dateTime.getChildren().add(to);
-      dateTime.getChildren().add(endTime);
-      dateTime.getChildren().add(create);
-
-      HBox descr = new HBox();
-      descr.setSpacing(20);
-      Label description = new Label("Description:");
-      description.setPrefWidth(75);
-      TextField descrTextField = new TextField();
-      descrTextField.setAlignment(Pos.TOP_LEFT);
-      descrTextField.setPrefWidth(330);
-      descrTextField.setPrefHeight(100);
-      descr.getChildren().add(description);
-      descr.getChildren().add(descrTextField);
-      descr.setLayoutY(10);
-      HBox employeeAttendance = new HBox();
-      TableView<User> attendance = new TableView<>();
-      TableColumn<User, String> firstName = new TableColumn<>("First Name");
-      TableColumn<User, String> lastName = new TableColumn<>("Last Name");
-      TableColumn<User, String> attends = new TableColumn<>("Attends");
-
-      firstName.setCellValueFactory(new PropertyValueFactory<>("firstname"));
-      lastName.setCellValueFactory(new PropertyValueFactory<>("lastname"));
-      attends.setCellFactory(ComboBoxTableCell.forTableColumn(""));
-      attends.setCellValueFactory(new PropertyValueFactory<>("attends"));
-
-      attendance.getColumns().setAll(firstName, lastName, attends);
-
-      attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-      attendance.setPrefWidth(600);
-      attendance.setPrefHeight(150);
-      attendance.setPadding(Insets.EMPTY);
-      employeeAttendance.getChildren().add(attendance);
-
-
-      dateTime.setPadding(new Insets(20, 0, 0, 20));
-      descr.setPadding(new Insets(20, 0, 10, 20));
-
-      insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
-
-      Platform.runLater(()->{
-        create.setOnAction(event -> {
-          if (checkTime(startTime.getText(),endTime.getText()) && checkDate(datePicker.getValue()))
-          {
-            createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
-            stage.close();
-          }else
-          {
-            Alert A = new Alert(Alert.AlertType.ERROR);
-            A.setContentText("Check time and date inputs");
-            A.show();
-          }
-
-        });
-      });
-
-      Scene scene = new Scene(parent);
-      stage.setResizable(false);
-      stage.setScene(scene);
-      stage.show();
+      createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
+      stage.close();
     }else
     {
-      Alert A=new Alert(Alert.AlertType.INFORMATION);
-      A.setContentText("Only managers can add a meeting.");
+      Alert A = new Alert(Alert.AlertType.ERROR);
+      A.setContentText("Check time and date inputs");
       A.show();
     }
 
+  });
+    });
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
   }
 
-  public boolean checkTime(String startTime, String endTime)
-  {
-    Time start=Time.valueOf(LocalTime.parse(startTime));
-    Time end=Time.valueOf(LocalTime.parse(endTime));
-    if (end.before(start))
-    {
-      return false;
-    }
-    return true;
-  }
-
-  public boolean checkDate(LocalDate date)
-  {
-    if (date.isBefore(LocalDate.now()))
-    {
-      return false;
-    }
-    return true;
-  }
 
   public void createMeetingObject(String title,ComboBox<Lead> lead, DatePicker datePicker, String startTime, String endTime, String description, TableView users){
     try
     {
-      tilePane.getChildren().add(createRectangleWithText(title, datePicker, startTime, endTime, description, users));
+      tilePane.getChildren().add(
+          createMeetingTile(title, datePicker, startTime, endTime, description, users));
       Date date=Date.valueOf(datePicker.getValue());
       Platform.runLater(()->{
         try
@@ -336,7 +289,7 @@ public class MeetingController
 
   }
 
-  public VBox createRectangleWithText(String title, DatePicker datePicker, String startTime, String endTime, String description, TableView users) throws SQLException
+  public VBox createMeetingTile(String title, DatePicker datePicker, String startTime, String endTime, String description, TableView users) throws SQLException
   {
     VBox meeting = new VBox();
 
