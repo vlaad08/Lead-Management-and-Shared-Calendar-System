@@ -7,6 +7,8 @@ import app.shared.Lead;
 import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
@@ -29,16 +33,9 @@ import java.sql.Date;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import static app.model.ConstraintChecker.checkTime;
 
-public class MeetingController
+public class MeetingController implements PropertyChangeListener
 {
-  @FXML private Button Calendar;
-  @FXML private Button Tasks;
-  @FXML private Button AvailableClients;
-  @FXML private Button AllClients;
-  @FXML private Button Leads;
-
 
   private Region root;
   private ViewHandler viewHandler;
@@ -55,12 +52,18 @@ public class MeetingController
   @FXML private Button addButton;
 
 
+  private final ListView<Meeting> meetings = new ListView<>();
+
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root)
       throws SQLException
   {
+
     this.viewHandler = viewHandler;
     this.meetingViewModel = meetingViewModel;
     this.root = root;
+    
+
+
 
     //bs comes below
     hoverButtonNavbar(plansButton);
@@ -78,20 +81,25 @@ public class MeetingController
     tilePane.setPrefRows(1);
     tilePane.setTileAlignment(Pos.CENTER_LEFT);
 
-    if (meetingViewModel.getMeetings()!=null)
+
+    meetingViewModel.bindMeetings(meetings.itemsProperty());
+
+
+    drawExistingMeetings();
+  }
+
+  public void drawExistingMeetings() throws SQLException
+  {
+    for(Meeting meeting : meetings.getItems())
     {
-      ArrayList<Meeting> meetings=meetingViewModel.getMeetings();
-      for(Meeting meeting: meetings)
-      {
-        Date date=meeting.date();
-        LocalDate localDate=LocalDate.of(date.getYear(),date.getMonth(),date.getDay());
-        DatePicker datePicker=new DatePicker(localDate);
-        String startTime=meeting.startTime().toString();
-        String endTime=meeting.endTime().toString();
-        tilePane.getChildren().add(
-            createMeetingTile(meeting.title(),datePicker,startTime,endTime,
-            meeting.description(), null));
-      }
+      LocalDate date = meeting.date().toLocalDate();
+      DatePicker datePicker=new DatePicker(date);
+      String startTime=meeting.startTime().toString();
+      String endTime=meeting.endTime().toString();
+      tilePane.getChildren().add(
+          createMeetingTile(meeting.title(),datePicker,startTime,endTime,
+              meeting.description(), null));
+
     }
   }
 
@@ -115,7 +123,9 @@ public class MeetingController
     return root;
   }
 
-  public void  reset(){} //why not
+  public void  reset() throws SQLException
+  {
+  } //why not
 
   @FXML public void changeView(ActionEvent e)
   {
@@ -368,5 +378,19 @@ public class MeetingController
     return meeting;
   }
 
+  @Override public void propertyChange(PropertyChangeEvent evt)
+  {
+    if(evt.getPropertyName().equals("reloadMeetings"))
+    {
+      try
+      {
+        drawExistingMeetings();
+      }
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
+      }
+    }
+  }
 }
 

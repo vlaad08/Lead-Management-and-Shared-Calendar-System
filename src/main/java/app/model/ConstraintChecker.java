@@ -19,11 +19,11 @@ public class ConstraintChecker
 
   public static boolean checkDate(LocalDate date)
   {
-    if (date.isBefore(LocalDate.now()))
+    if (LocalDate.now().isEqual(date) || LocalDate.now().isBefore(date))
     {
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
 }
