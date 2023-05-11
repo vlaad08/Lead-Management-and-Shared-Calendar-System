@@ -47,20 +47,20 @@ public class ServerImplementation implements Server
     }
 
     meetingList.add(meeting);
-    support.firePropertyChange("meeting",null,meeting.toString());
+    support.firePropertyChange("addMeeting",null,meeting.toString());
   }
 
   @Override public void manageMeeting(Meeting dealitedMeeting, Meeting createdMeeting) throws RemoteException
   {
     meetingList.remove(dealitedMeeting);
     meetingList.add(createdMeeting);
-    support.firePropertyChange("meeting",null,createdMeeting.toString());
+    support.firePropertyChange("manageMeeting",null,createdMeeting.toString());
   }
 
   @Override public void removeMeeting(Meeting meeting) throws RemoteException
   {
     meetingList.remove(meeting);
-    support.firePropertyChange("meeting",null,meeting.toString());
+    support.firePropertyChange("removeMeeting",null,meeting.toString());
   }
 
   @Override
