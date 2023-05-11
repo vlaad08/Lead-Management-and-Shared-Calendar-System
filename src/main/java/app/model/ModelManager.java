@@ -3,6 +3,7 @@ package app.model;
 import app.JDBC.SQLConnection;
 import app.shared.Meeting;
 
+import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -11,9 +12,12 @@ import java.util.List;
 
 public class ModelManager implements Model
 {
+  private final User user=new User("employee-1","password","faafas@123123.com","Craig","Lahrman",false);
   private ClientListener clientListener;
+  PropertyChangeSupport support;
   public ModelManager(ClientListener clientListener){
     this.clientListener = clientListener;
+    support=new PropertyChangeSupport(this);
   }
 
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email) {
@@ -43,5 +47,13 @@ public class ModelManager implements Model
       ArrayList<User> employees)
   {
 
+  }
+
+  public boolean checkUser(){
+    if (user.isManager()==false)
+    {
+      return false;
+    }
+    return true;
   }
 }

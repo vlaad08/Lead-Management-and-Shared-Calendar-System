@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
 import javafx.scene.input.MouseEvent;
@@ -68,6 +69,7 @@ public class MeetingController
   @FXML private  Button closeButton;
   @FXML private TilePane tilePane;
   @FXML private Button addButton;
+  @FXML private StackPane addRectangle;
 
 
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root)
@@ -106,6 +108,11 @@ public class MeetingController
         tilePane.getChildren().add(createRectangleWithText(meeting.title(),datePicker,startTime,endTime,
             meeting.description(), null));
       }
+    }
+
+    if(!meetingViewModel.checkUser())
+    {
+      addRectangle.setEffect(new ColorAdjust(0, 0, 0.15, -0.50));
     }
   }
 
@@ -153,121 +160,129 @@ public class MeetingController
 
 
   public void addMeeting(){
-    Stage stage = new Stage();
-
-    VBox parent = new VBox();
-    parent.setPrefHeight(400);
-    parent.setPrefWidth(600);
-    parent.setAlignment(Pos.TOP_LEFT);
-    ObservableList<Node> insert = parent.getChildren();
-
-    HBox topBar = new HBox();
-    Button closeButton = new Button("X");
-    closeButton.setOnAction(event -> stage.close());
-    closeButton.setStyle("-fx-background-color: none");
-    closeButton.setTextFill(Paint.valueOf("White"));
-    closeButton.setPrefHeight(40);
-    hoverButtonNavbar(closeButton);
-    topBar.setPrefHeight(40);
-    topBar.setAlignment(Pos.CENTER_RIGHT);
-    topBar.setStyle("-fx-background-color:  #544997");
-    topBar.getChildren().add(closeButton);
-
-    HBox title = new HBox();
-    Label titleLabel = new Label("Title: ");
-    TextField titleTextField = new TextField();
-    title.setSpacing(65);
-    title.setPadding(new Insets(20, 0, 0, 20));
-    title.getChildren().addAll(titleLabel, titleTextField);
-
-    HBox lead=new HBox();
-    Label leadLabel=new Label("Lead: ");
-    ComboBox<Lead> leads=new ComboBox<>();
-    leads.setPrefWidth(150);
-    lead.setSpacing(65);
-    lead.setPadding(new Insets(20,0,0,20));
-    lead.getChildren().addAll(leadLabel,leads);
-
-    HBox dateTime = new HBox();
-    dateTime.setPadding(new Insets(5));
-    dateTime.setSpacing(20);
-    Label startDate = new Label("Date:");
-    startDate.setPrefWidth(75);
-    DatePicker datePicker = new DatePicker(LocalDate.now());
-    datePicker.setPrefWidth(170);
-    TextField startTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-    startTime.setPrefWidth(60);
-    Label to = new Label("to: ");
-    TextField endTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-    endTime.setPrefWidth(60);
-    Button create = new Button("Create");
-    create.setPrefWidth(60);
-    create.setTextFill(Paint.valueOf("White"));
-    create.setStyle("-fx-background-color:  #348e2f");
-
-    dateTime.getChildren().add(startDate);
-    dateTime.getChildren().add(datePicker);
-    dateTime.getChildren().add(startTime);
-    dateTime.getChildren().add(to);
-    dateTime.getChildren().add(endTime);
-    dateTime.getChildren().add(create);
-
-    HBox descr = new HBox();
-    descr.setSpacing(20);
-    Label description = new Label("Description:");
-    description.setPrefWidth(75);
-    TextField descrTextField = new TextField();
-    descrTextField.setAlignment(Pos.TOP_LEFT);
-    descrTextField.setPrefWidth(330);
-    descrTextField.setPrefHeight(100);
-    descr.getChildren().add(description);
-    descr.getChildren().add(descrTextField);
-    descr.setLayoutY(10);
-    HBox employeeAttendance = new HBox();
-    TableView<User> attendance = new TableView<>();
-    TableColumn<User, String> firstName = new TableColumn<>("First Name");
-    TableColumn<User, String> lastName = new TableColumn<>("Last Name");
-    TableColumn<User, String> attends = new TableColumn<>("Attends");
-
-    firstName.setCellValueFactory(new PropertyValueFactory<>("firstname"));
-    lastName.setCellValueFactory(new PropertyValueFactory<>("lastname"));
-    attends.setCellFactory(ComboBoxTableCell.forTableColumn(""));
-    attends.setCellValueFactory(new PropertyValueFactory<>("attends"));
-
-    attendance.getColumns().setAll(firstName, lastName, attends);
-
-    attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    attendance.setPrefWidth(600);
-    attendance.setPrefHeight(150);
-    attendance.setPadding(Insets.EMPTY);
-    employeeAttendance.getChildren().add(attendance);
-
-
-    dateTime.setPadding(new Insets(20, 0, 0, 20));
-    descr.setPadding(new Insets(20, 0, 10, 20));
-
-    insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
-
-Platform.runLater(()->{
-  create.setOnAction(event -> {
-    if (checkTime(startTime.getText(),endTime.getText()) && checkDate(datePicker.getValue()))
+    if (meetingViewModel.checkUser())
     {
-      createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
-      stage.close();
+      Stage stage = new Stage();
+
+      VBox parent = new VBox();
+      parent.setPrefHeight(400);
+      parent.setPrefWidth(600);
+      parent.setAlignment(Pos.TOP_LEFT);
+      ObservableList<Node> insert = parent.getChildren();
+
+      HBox topBar = new HBox();
+      Button closeButton = new Button("X");
+      closeButton.setOnAction(event -> stage.close());
+      closeButton.setStyle("-fx-background-color: none");
+      closeButton.setTextFill(Paint.valueOf("White"));
+      closeButton.setPrefHeight(40);
+      hoverButtonNavbar(closeButton);
+      topBar.setPrefHeight(40);
+      topBar.setAlignment(Pos.CENTER_RIGHT);
+      topBar.setStyle("-fx-background-color:  #544997");
+      topBar.getChildren().add(closeButton);
+
+      HBox title = new HBox();
+      Label titleLabel = new Label("Title: ");
+      TextField titleTextField = new TextField();
+      title.setSpacing(65);
+      title.setPadding(new Insets(20, 0, 0, 20));
+      title.getChildren().addAll(titleLabel, titleTextField);
+
+      HBox lead=new HBox();
+      Label leadLabel=new Label("Lead: ");
+      ComboBox<Lead> leads=new ComboBox<>();
+      leads.setPrefWidth(150);
+      lead.setSpacing(65);
+      lead.setPadding(new Insets(20,0,0,20));
+      lead.getChildren().addAll(leadLabel,leads);
+
+      HBox dateTime = new HBox();
+      dateTime.setPadding(new Insets(5));
+      dateTime.setSpacing(20);
+      Label startDate = new Label("Date:");
+      startDate.setPrefWidth(75);
+      DatePicker datePicker = new DatePicker(LocalDate.now());
+      datePicker.setPrefWidth(170);
+      TextField startTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+      startTime.setPrefWidth(60);
+      Label to = new Label("to: ");
+      TextField endTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+      endTime.setPrefWidth(60);
+      Button create = new Button("Create");
+      create.setPrefWidth(60);
+      create.setTextFill(Paint.valueOf("White"));
+      create.setStyle("-fx-background-color:  #348e2f");
+
+      dateTime.getChildren().add(startDate);
+      dateTime.getChildren().add(datePicker);
+      dateTime.getChildren().add(startTime);
+      dateTime.getChildren().add(to);
+      dateTime.getChildren().add(endTime);
+      dateTime.getChildren().add(create);
+
+      HBox descr = new HBox();
+      descr.setSpacing(20);
+      Label description = new Label("Description:");
+      description.setPrefWidth(75);
+      TextField descrTextField = new TextField();
+      descrTextField.setAlignment(Pos.TOP_LEFT);
+      descrTextField.setPrefWidth(330);
+      descrTextField.setPrefHeight(100);
+      descr.getChildren().add(description);
+      descr.getChildren().add(descrTextField);
+      descr.setLayoutY(10);
+      HBox employeeAttendance = new HBox();
+      TableView<User> attendance = new TableView<>();
+      TableColumn<User, String> firstName = new TableColumn<>("First Name");
+      TableColumn<User, String> lastName = new TableColumn<>("Last Name");
+      TableColumn<User, String> attends = new TableColumn<>("Attends");
+
+      firstName.setCellValueFactory(new PropertyValueFactory<>("firstname"));
+      lastName.setCellValueFactory(new PropertyValueFactory<>("lastname"));
+      attends.setCellFactory(ComboBoxTableCell.forTableColumn(""));
+      attends.setCellValueFactory(new PropertyValueFactory<>("attends"));
+
+      attendance.getColumns().setAll(firstName, lastName, attends);
+
+      attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+      attendance.setPrefWidth(600);
+      attendance.setPrefHeight(150);
+      attendance.setPadding(Insets.EMPTY);
+      employeeAttendance.getChildren().add(attendance);
+
+
+      dateTime.setPadding(new Insets(20, 0, 0, 20));
+      descr.setPadding(new Insets(20, 0, 10, 20));
+
+      insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
+
+      Platform.runLater(()->{
+        create.setOnAction(event -> {
+          if (checkTime(startTime.getText(),endTime.getText()) && checkDate(datePicker.getValue()))
+          {
+            createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
+            stage.close();
+          }else
+          {
+            Alert A = new Alert(Alert.AlertType.ERROR);
+            A.setContentText("Check time and date inputs");
+            A.show();
+          }
+
+        });
+      });
+
+      Scene scene = new Scene(parent);
+      stage.setResizable(false);
+      stage.setScene(scene);
+      stage.show();
     }else
     {
-      Alert A = new Alert(Alert.AlertType.ERROR);
-      A.setContentText("Check time and date inputs");
+      Alert A=new Alert(Alert.AlertType.INFORMATION);
+      A.setContentText("Only managers can add a meeting.");
       A.show();
     }
-
-  });
-    });
-
-    Scene scene = new Scene(parent);
-    stage.setResizable(false);
-    stage.setScene(scene);
-    stage.show();
 
   }
 
