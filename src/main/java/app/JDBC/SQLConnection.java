@@ -1,6 +1,7 @@
 package app.JDBC;
 
 import app.shared.Meeting;
+import app.shared.Task;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -93,4 +94,17 @@ public class SQLConnection
     }
   }
 
+  public void addTask(Task task) throws SQLException{
+    try(
+      Connection connection = getConnection();
+      PreparedStatement statement = connection.prepareStatement("INSERT INTO Task(title, description, dueDate, status, business_id) VALUES (?, ?, ?, ?, ?")) {
+        statement.setString(1, task.getTitle());
+        statement.setString(2, task.getDescription());
+        statement.setDate(3,task.getDate());
+        statement.setString(4,task.getStatus());
+        statement.setInt(5,task.getBusinessId());
+        statement.executeUpdate();
+      }
+  }
 }
+

@@ -1,5 +1,10 @@
 package app.model;
 
+import app.JDBC.SQLConnection;
+import app.model.ClientListener;
+import app.model.Model;
+import app.model.ModelManager;
+import app.model.User;
 import app.server.Server;
 import app.shared.Meeting;
 import app.view.MeetingController;
@@ -117,7 +122,7 @@ public class MeetingTest {
 
 
   @Test
-  void when_a_meeting_is_created_size_is_increasing_and_database_is_returning_that_object() throws SQLException
+  void when_a_meeting_is_created_size_is_increasing_and_database_is_returning_that_object()
   {
     int i = meetingViewModel.getMeetings().size();
     Random random = new Random();

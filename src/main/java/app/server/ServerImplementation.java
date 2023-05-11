@@ -17,10 +17,18 @@ public class ServerImplementation implements Server
   private ArrayList<Meeting> meetingList;
 
   private SQLConnection connection;
+  private int readers;
+  private int writers;
+  private int writersWaiting;
 
   public ServerImplementation(){
     meetingList = new ArrayList<>();
     support = new RemotePropertyChangeSupport<>();
+
+    this.readers = 0;
+    this.writers = 0;
+    this.writersWaiting = 0;
+
     try{
       this.connection = SQLConnection.getInstance();
     }catch (SQLException e){
@@ -39,15 +47,15 @@ public class ServerImplementation implements Server
   public void addMeeting(Meeting meeting) throws RemoteException
   {
     try{
-      connection.createMeeting(meeting.title(), meeting.description()
+      SQLConnection sqlConnection = requestWrite();
+      sqlConnection.createMeeting(meeting.title(), meeting.description()
           ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
-      System.out.println("----------------");
+      support.firePropertyChange("meeting",null,meeting.toString());
     }catch (SQLException e){
       e.printStackTrace();
+    }finally {
+      releaseWrite();
     }
-
-    meetingList.add(meeting);
-    support.firePropertyChange("meeting",null,meeting.toString());
   }
 
   @Override public void manageMeeting(Meeting dealitedMeeting, Meeting createdMeeting) throws RemoteException
@@ -64,17 +72,78 @@ public class ServerImplementation implements Server
   }
 
   @Override
-  public ArrayList<Meeting> getMeetings() throws RemoteException
-  {
+  public ArrayList<Meeting> getMeetings() throws RemoteException {
     try{
-      return connection.getMeetings();
+      SQLConnection sqlConnection = requestRead();
+      return sqlConnection.getMeetings();
     }catch (SQLException e){
       e.printStackTrace();
+    }finally {
+      releaseRead();
     }
     return null;
   }
 
-  //We don't need the code that is bellow right know.
+  @Override
+  public void addTask(Task task)
+  {
+    try{
+      SQLConnection sqlConnection = requestWrite();
+      sqlConnection.addTask(task);
+    }catch (SQLException e){
+      e.printStackTrace();
+    }finally {
+      releaseWrite();
+    }
+  }
+
+  @Override
+  public ArrayList<Task> getTasks() throws RemoteException
+  {
+    return null;
+  }
+
+  //Syncronization of Users
+  private synchronized SQLConnection requestRead(){
+    while(writers > 0 || writersWaiting > 0) {
+      try {
+        wait();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    readers++;
+    return connection;
+  }
+
+  private synchronized void releaseRead(){
+    readers--;
+    if (readers == 0) {
+      notifyAll();
+    }
+  }
+
+  private synchronized SQLConnection requestWrite() {
+    writersWaiting++;
+    while(writers > 0 || readers > 0) {
+      try {
+        wait();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    writers++;
+    writersWaiting--;
+    return connection;
+  }
+
+  private synchronized void releaseWrite() {
+    writers--;
+    if (writers == 0) {
+      notifyAll();
+    }
+  }
+
   /*
   @Override public void addTask(Task task) throws RemoteException
   {
@@ -123,6 +192,5 @@ public class ServerImplementation implements Server
   {
     return leadList;
   }
-
    */
 }
