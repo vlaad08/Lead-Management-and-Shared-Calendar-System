@@ -26,11 +26,11 @@ public class MyApplication extends Application
 
   @Override public void start(Stage primaryStage) throws Exception
   {
-    primaryStage.setTitle("Calendar");
+    primaryStage.setTitle("SelectRole");
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("Calendar.fxml"));
+    loader.setLocation(getClass().getResource("SelectRole.fxml"));
     Scene scene= new Scene(loader.load());
-    primaryStage.setResizable(false);
+//    primaryStage.setResizable(false);
     primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.setScene(scene);
     primaryStage.show();

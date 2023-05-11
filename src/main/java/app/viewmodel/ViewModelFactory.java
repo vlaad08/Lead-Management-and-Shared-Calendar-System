@@ -10,6 +10,7 @@ public class ViewModelFactory
   private AvailableClientsViewModel availableClientsViewModel;
   private AllClientsViewModel allClientsViewModel;
   private LeadsViewModel leadsViewModel;
+  private SelectRoleViewModel selectRoleViewModel;
 
   public ViewModelFactory(Model model){
     this.calendarViewModel = new CalendarViewModel(model);
@@ -18,6 +19,12 @@ public class ViewModelFactory
     this.availableClientsViewModel = new AvailableClientsViewModel(model);
     this.allClientsViewModel = new AllClientsViewModel(model);
     this.leadsViewModel = new LeadsViewModel(model);
+    this.selectRoleViewModel=new SelectRoleViewModel(model);
+  }
+
+  public SelectRoleViewModel getSelectRoleViewModel()
+  {
+    return selectRoleViewModel;
   }
 
   public CalendarViewModel getCalendarViewModel(){

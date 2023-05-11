@@ -2,27 +2,26 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SelectRole">
+<FlowPane alignment="CENTER" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.SelectRoleController">
    <children>
-      <GridPane layoutY="-15.0" prefHeight="409.0" prefWidth="600.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <GridPane alignment="CENTER" prefHeight="483.0" prefWidth="665.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="126.0" prefWidth="281.0" text="Manager" GridPane.rowIndex="1">
+            <Button fx:id="managerButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onManagerButton" prefHeight="126.0" prefWidth="281.0" text="Manager" GridPane.rowIndex="1">
                <font>
                   <Font size="37.0" />
                </font>
@@ -30,7 +29,7 @@
                   <Insets left="12.0" />
                </GridPane.margin>
             </Button>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="129.0" prefWidth="281.0" text="Employee" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button fx:id="employeeButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onEmployeeButton" prefHeight="129.0" prefWidth="281.0" text="Employee" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="37.0" />
                </font>
@@ -44,4 +43,4 @@
          </children>
       </GridPane>
    </children>
-</AnchorPane>
+</FlowPane>

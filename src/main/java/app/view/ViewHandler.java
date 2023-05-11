@@ -19,7 +19,7 @@ public class ViewHandler
 
   public void start(Stage primaryStage){
     this.primaryStage = primaryStage;
-    openView("Calendar");
+    openView("SelectRole");
   }
 
   public void openView(String id){

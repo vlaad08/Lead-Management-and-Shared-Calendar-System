@@ -12,12 +12,12 @@ import java.util.List;
 
 public class ModelManager implements Model
 {
-  private final User user=new User("employee-1","password","faafas@123123.com","Craig","Lahrman",false);
+  private User user;
   private ClientListener clientListener;
-  PropertyChangeSupport support;
+
   public ModelManager(ClientListener clientListener){
     this.clientListener = clientListener;
-    support=new PropertyChangeSupport(this);
+    user=new User("employee-1", "password", "wasdwasd@1234.com","Craig","Larhman", false);
   }
 
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email) {
@@ -26,6 +26,11 @@ public class ModelManager implements Model
    }catch (Exception e){
      e.printStackTrace();
    }
+  }
+
+  public void setUser()
+  {
+    user.setManager(true);
   }
 
   @Override public void removeMeeting(Meeting meeting)

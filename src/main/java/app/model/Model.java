@@ -14,4 +14,5 @@ public interface Model
   ArrayList<Meeting> getMeetings();
   void editMeeting(Date oldStartDate, Date oldEndDate, Date startDate, Date endDate, String description, ArrayList<User> employees);
   boolean checkUser();
+  void setUser();
 }

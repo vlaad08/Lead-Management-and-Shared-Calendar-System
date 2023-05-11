@@ -1,5 +1,6 @@
 package app.view;
 
+import app.viewmodel.SelectRoleViewModel;
 import app.viewmodel.ViewModelFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Region;
@@ -18,6 +19,7 @@ public class ViewFactory
   private AvailableClientsController availableClientsController;
   private AllClientsController allClientsController;
   private ManageLeadsController manageLeadsController;
+  private SelectRoleController selectRoleController;
 
   public ViewFactory(ViewHandler viewHandler, ViewModelFactory viewModelFactory)
   {
@@ -31,7 +33,8 @@ public class ViewFactory
   {
     return switch (id)
         {
-          case "Calendar" -> loadCalendarView();   //other views can be added
+          case "SelectRole" -> loadSelectRoleView();
+          case "Calendar" -> loadCalendarView();
           case "Meeting" -> loadMeetingView();
           case "Task" -> loadTasksView();
           case "AvailableClients" -> loadAvailableClientsView();
@@ -170,5 +173,27 @@ public class ViewFactory
     }
 
     return manageLeadsController.getRoot();
+  }
+
+  public Region loadSelectRoleView()
+  {
+    if(selectRoleController == null)
+    {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(getClass().getResource("/app/SelectRole.fxml"));
+      try
+      {
+        Region root = loader.load();
+        selectRoleController = loader.getController();
+        selectRoleController.init(viewHandler, viewModelFactory.getSelectRoleViewModel(),
+            root);
+      }
+      catch (IOException e)
+      {
+        throw new IOError(e);
+      }
+    }
+
+    return selectRoleController.getRoot();
   }
 }
