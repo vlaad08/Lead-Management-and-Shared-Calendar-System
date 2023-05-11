@@ -135,16 +135,40 @@
          </top>
          <center>
              <AnchorPane prefHeight="643.0" prefWidth="1130.0">
-                 <FlowPane fx:id="calendar" hgap="10.0" layoutX="-2.0" layoutY="103.0" prefHeight="522.0" prefWidth="1132.0" vgap="5.0" />
-                 <HBox alignment="CENTER" layoutX="-2.0" layoutY="17.0" prefHeight="69.0" prefWidth="1127.0" spacing="88.75">
+                 <FlowPane fx:id="calendar" hgap="10.0" layoutX="-2.0" layoutY="103.0" prefHeight="522.0" prefWidth="1132.0" vgap="5.0">
+                  <padding>
+                     <Insets left="1.0" top="1.0" />
+                  </padding></FlowPane>
+                 <HBox alignment="CENTER" layoutX="-2.0" layoutY="17.0" prefHeight="69.0" prefWidth="1127.0" spacing="120.0">
                      <children>
-                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Su" textAlignment="CENTER" />
-                         <Text layoutX="213.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mo" textAlignment="CENTER" />
-                         <Text layoutX="222.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tu" textAlignment="CENTER" />
-                         <Text layoutX="232.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We" textAlignment="CENTER" />
-                         <Text layoutX="241.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Th" textAlignment="CENTER" />
-                         <Text layoutX="251.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fr" textAlignment="CENTER" />
-                         <Text layoutX="266.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sa" textAlignment="CENTER" />
+                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Su" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
+                         <Text layoutX="213.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mo" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
+                         <Text layoutX="222.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tu" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
+                         <Text layoutX="232.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
+                         <Text layoutX="241.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Th" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
+                         <Text layoutX="251.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fr" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
+                         <Text layoutX="266.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sa" textAlignment="CENTER">
+                        <font>
+                           <Font size="30.0" />
+                        </font></Text>
                      </children>
                      <padding>
                          <Insets right="9.0" />

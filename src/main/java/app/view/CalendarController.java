@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -165,9 +166,12 @@ public class CalendarController {
                 StackPane stackPane = new StackPane();
 
                 Rectangle rectangle = new Rectangle();
-                rectangle.setFill(Color.TRANSPARENT);
-                rectangle.setStroke(Color.BLACK);
-                rectangle.setStrokeWidth(strokeWidth);
+                rectangle.setFill(Color.valueOf("#e2e0eb"));
+                rectangle.setStyle("-fx-background-radius: 20px");
+                rectangle.setArcHeight(20);
+                rectangle.setArcWidth(20);
+                rectangle.setStroke(Color.valueOf("#544997"));
+                rectangle.setStrokeWidth(strokeWidth + 1);
                 double rectangleWidth =(calendarWidth/7) - strokeWidth - spacingH;
                 rectangle.setWidth(rectangleWidth);
                 double rectangleHeight = (calendarHeight/6) - strokeWidth - spacingV;
@@ -199,6 +203,8 @@ public class CalendarController {
 
     private void createCalendarActivity(List<CalendarActivity> calendarActivities, double rectangleHeight, double rectangleWidth, StackPane stackPane) {
         VBox calendarActivityBox = new VBox();
+        calendarActivityBox.setPadding(new Insets(2));
+        calendarActivityBox.setStyle("-fx-background-radius: 10px;");
         for (int k = 0; k < calendarActivities.size(); k++) {
             if(k >= 2) {
                 Text moreActivities = new Text("...");
@@ -219,7 +225,7 @@ public class CalendarController {
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
         calendarActivityBox.setMaxWidth(rectangleWidth * 0.8);
         calendarActivityBox.setMaxHeight(rectangleHeight * 0.65);
-        calendarActivityBox.setStyle("-fx-background-color:GRAY");
+        calendarActivityBox.setStyle("-fx-background-color: white");
         stackPane.getChildren().add(calendarActivityBox);
     }
 
@@ -243,20 +249,21 @@ public class CalendarController {
 
     private Map<Integer, List<CalendarActivity>> getCalendarActivitiesMonth(ZonedDateTime dateFocus) {
         List<CalendarActivity> calendarActivities = new ArrayList<>();
-        Random random = new Random();
+
+
         if(calendarViewModel.getMeetings() != null)
         {
             ArrayList<Meeting> meetings = calendarViewModel.getMeetings();
-            for (Meeting meeting : meetings)
-            {
-                LocalDate date = meeting.date().toLocalDate();
-                LocalTime time = meeting.startTime().toLocalTime();
-                LocalDateTime localDateTime = LocalDateTime.of(date, time);
-                ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, dateFocus.getZone());
-                System.out.println(zonedDateTime);
-                calendarActivities.add(
-                    new CalendarActivity(zonedDateTime, meeting.title(),
-                        random.nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE)));
+            for (Meeting meeting : meetings) {
+                LocalDateTime localDateTime = LocalDateTime.of(meeting.date().toLocalDate(), meeting.startTime().toLocalTime());
+                ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(),
+                    localDateTime.getDayOfMonth(), localDateTime.getHour(),
+                    localDateTime.getMinute(), 0,0,dateFocus.getZone());
+                if(localDateTime.getYear() == time.getYear() && localDateTime.getMonth().getValue() == time.getMonthValue() &&
+                    localDateTime.getDayOfMonth() == time.getDayOfMonth() && localDateTime.getHour() == time.getHour() && localDateTime.getMinute() == time.getMinute())
+                {
+                    calendarActivities.add(new CalendarActivity(time, "Hans", 111111));
+                }
             }
         }
 
