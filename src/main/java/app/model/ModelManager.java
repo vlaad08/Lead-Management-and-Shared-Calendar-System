@@ -3,13 +3,9 @@ package app.model;
 import app.JDBC.SQLConnection;
 import app.shared.Communicator;
 import app.shared.Meeting;
-
-<<<<<<< Updated upstream
-=======
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
->>>>>>> Stashed changes
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -18,21 +14,9 @@ import java.util.List;
 
 public class ModelManager implements Model
 {
-<<<<<<< Updated upstream
-  private ClientListener clientListener;
-  public ModelManager(ClientListener clientListener){
-    this.clientListener = clientListener;
-  }
-
-  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email) {
-   try{
-     clientListener.addMeeting(new Meeting(title, description, date, startTime, endTime, email));
-   }catch (Exception e){
-     e.printStackTrace();
-   }
-=======
-  private User user;
   private Communicator communicator;
+
+  private User user;
 
   private ArrayList<Meeting> meetings;
 
@@ -47,24 +31,18 @@ public class ModelManager implements Model
     user=new User("employee-1", "password", "wasdwasd@1234.com","Craig","Larhman", false);
   }
 
-  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email) {
-
-      try{
-        communicator.createMeeting(new Meeting(title, description, date, startTime, endTime, email));
-      }catch (Exception e){
-        e.printStackTrace();
-      }
-
-
+  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email)
+      throws SQLException, RemoteException
+  {
+    communicator.createMeeting(new Meeting(title, description, date, startTime, endTime, email));
   }
 
   public void setUser()
   {
     user.setManager(true);
->>>>>>> Stashed changes
   }
 
-  @Override public void meetingAddedFromServer(Meeting meeting)
+  @Override public void meetingAddedFromServer()
       throws SQLException, RemoteException
   {
     reloadMeetings();
@@ -104,5 +82,10 @@ public class ModelManager implements Model
       ArrayList<User> employees)
   {
 
+  }
+
+  @Override public boolean checkUser()
+  {
+    return false;
   }
 }

@@ -19,25 +19,13 @@ public class ServerImplementation implements Communicator
 
   private SQLConnection connection;
 
-<<<<<<< Updated upstream
-  public ServerImplementation(){
-    meetingList = new ArrayList<>();
-    support = new RemotePropertyChangeSupport<>();
-    try{
-      this.connection = SQLConnection.getInstance();
-    }catch (SQLException e){
-      e.printStackTrace();
-    }
-=======
+
 
   public ServerImplementation() throws SQLException
   {
     meetingSupport = new RemotePropertyChangeSupport<>();
 
->>>>>>> Stashed changes
   }
-
-
 
 
   @Override public void createMeeting(Meeting meeting) throws SQLException, RemoteException
@@ -48,47 +36,24 @@ public class ServerImplementation implements Communicator
     meetingSupport.firePropertyChange("Meeting Created", null, meeting);
   }
 
-  @Override public void createTask(Task task) throws SQLException, RemoteException
-  {
-<<<<<<< Updated upstream
-    try{
-      connection.createMeeting(meeting.title(), meeting.description()
-          ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
-      System.out.println("----------------");
-    }catch (SQLException e){
-      e.printStackTrace();
-    }
-
-    meetingList.add(meeting);
-    support.firePropertyChange("meeting",null,meeting.toString());
-=======
-
->>>>>>> Stashed changes
-  }
-
-  @Override public void createLead(Lead lead) throws SQLException, RemoteException
+  @Override public void createTask(Task task)
+      throws SQLException, RemoteException
   {
 
   }
 
-  @Override public void removeMeeting(Meeting meeting) throws RemoteException
+  @Override public void createLead(Lead lead)
+      throws SQLException, RemoteException
   {
+
   }
 
-<<<<<<< Updated upstream
-  @Override
-  public ArrayList<Meeting> getMeetings() throws RemoteException
+  @Override public void removeMeeting(Meeting meeting)
+      throws SQLException, RemoteException
   {
-    try{
-      return connection.getMeetings();
-    }catch (SQLException e){
-      e.printStackTrace();
-    }
-    return null;
+
   }
 
-  //We don't need the code that is bellow right know.
-=======
   @Override public void removeTask(Task task) throws SQLException
   {
 
@@ -126,9 +91,6 @@ public class ServerImplementation implements Communicator
   //Syncronization of Users
 
 
-
-
->>>>>>> Stashed changes
   /*
   @Override public void addTask(Task task) throws RemoteException
   {

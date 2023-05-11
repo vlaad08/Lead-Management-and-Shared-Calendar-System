@@ -24,11 +24,9 @@ public class MyApplication extends Application
 
   @Override public void start(Stage primaryStage) throws Exception
   {
-<<<<<<< Updated upstream
-    primaryStage.setTitle("Calendar");
-=======
     Registry registry = LocateRegistry.getRegistry(7430);
     Communicator communicator = (Communicator) registry.lookup("communicator");
+
     Model model = new ModelManager(communicator);
 
 
@@ -41,14 +39,12 @@ public class MyApplication extends Application
 
 
 
->>>>>>> Stashed changes
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("Calendar.fxml"));
     Scene scene= new Scene(loader.load());
-<<<<<<< Updated upstream
     primaryStage.setResizable(false);
-=======
->>>>>>> Stashed changes
+
+
     primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.setScene(scene);
     primaryStage.show();

@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class MeetingViewModel implements PropertyChangeListener
 {
   private final Model model;
 
-  private PropertyChangeSupport support;
+  private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Meeting>> meetings;
 
   public MeetingViewModel(Model model){
@@ -44,10 +45,10 @@ public class MeetingViewModel implements PropertyChangeListener
     property.bindBidirectional(meetings);
   }
 
-  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime,String email) throws SQLException
+  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime,String email)
+      throws SQLException, RemoteException
   {
     model.addMeeting(title,description,date,startTime,endTime,email);
-
   }
 
 
@@ -69,8 +70,7 @@ public class MeetingViewModel implements PropertyChangeListener
         startDate, endDate, description, employees);
   }
 
-<<<<<<< Updated upstream
-=======
+
   public boolean checkUser()
   {
     return model.checkUser();
@@ -86,5 +86,4 @@ public class MeetingViewModel implements PropertyChangeListener
       support.firePropertyChange("reloadMeetings", false, true);
     }
   }
->>>>>>> Stashed changes
 }

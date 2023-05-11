@@ -1,12 +1,9 @@
 package app.model;
 
-import app.shared.Communicator;
 
 import app.shared.Meeting;
 import dk.via.remote.observer.RemotePropertyChangeEvent;
 import dk.via.remote.observer.RemotePropertyChangeListener;
-
-import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -14,7 +11,7 @@ import java.sql.SQLException;
 public class MessageListener extends UnicastRemoteObject implements
     RemotePropertyChangeListener<Meeting>
 {
-  private Model model;
+  private final Model model;
 
   public MessageListener(Model model) throws RemoteException{
     this.model = model;
@@ -29,8 +26,7 @@ public class MessageListener extends UnicastRemoteObject implements
     {
       try
       {
-        Meeting meeting = remotePropertyChangeEvent.getNewValue();
-        model.meetingAddedFromServer(meeting);
+        model.meetingAddedFromServer();
       }
       catch (SQLException e)
       {

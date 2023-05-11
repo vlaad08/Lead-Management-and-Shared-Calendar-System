@@ -7,8 +7,6 @@ import app.shared.Lead;
 import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,19 +20,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.sql.Date;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 
-public class MeetingController implements PropertyChangeListener
+public class MeetingController
 {
 
   private Region root;
@@ -99,7 +94,6 @@ public class MeetingController implements PropertyChangeListener
       tilePane.getChildren().add(
           createMeetingTile(meeting.title(),datePicker,startTime,endTime,
               meeting.description(), null));
-
     }
   }
 
@@ -279,7 +273,7 @@ public class MeetingController implements PropertyChangeListener
         {
           meetingViewModel.addMeeting(title,description,date,Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),null);
         }
-        catch (SQLException e)
+        catch (SQLException | RemoteException e)
         {
           throw new RuntimeException(e);
         }
@@ -378,19 +372,5 @@ public class MeetingController implements PropertyChangeListener
     return meeting;
   }
 
-  @Override public void propertyChange(PropertyChangeEvent evt)
-  {
-    if(evt.getPropertyName().equals("reloadMeetings"))
-    {
-      try
-      {
-        drawExistingMeetings();
-      }
-      catch (SQLException e)
-      {
-        throw new RuntimeException(e);
-      }
-    }
-  }
 }
 
