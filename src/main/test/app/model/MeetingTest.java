@@ -1,6 +1,5 @@
 package app.model;
 
-import app.server.Server;
 import app.JDBC.SQLConnection;
 import app.model.ClientListener;
 import app.model.Model;

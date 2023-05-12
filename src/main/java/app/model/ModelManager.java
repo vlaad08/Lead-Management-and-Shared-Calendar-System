@@ -3,6 +3,8 @@ package app.model;
 import app.JDBC.SQLConnection;
 import app.shared.Communicator;
 import app.shared.Meeting;
+import app.shared.Task;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
@@ -19,15 +21,21 @@ public class ModelManager implements Model
   private User user;
 
   private ArrayList<Meeting> meetings;
+  private ArrayList<Task> tasks;
 
-  private PropertyChangeSupport support;
+  private final PropertyChangeSupport support;
 
   public ModelManager(Communicator communicator)
       throws SQLException, RemoteException
   {
     this.communicator = communicator;
+
     meetings = communicator.getMeetings();
+    tasks = communicator.getTasks();
+
+
     support = new PropertyChangeSupport(this);
+
     user=new User("employee-1", "password", "wasdwasd@1234.com","Craig","Larhman", false);
   }
 
@@ -45,7 +53,7 @@ public class ModelManager implements Model
   @Override public void meetingAddedFromServer()
       throws SQLException, RemoteException
   {
-    reloadMeetings();
+    reloadLists();
     support.firePropertyChange("reloadMeetings", false, true);
   }
 
@@ -57,9 +65,11 @@ public class ModelManager implements Model
     support.addPropertyChangeListener(listener);
   }
 
-  @Override public void reloadMeetings() throws SQLException, RemoteException
+  @Override public void taskAddedFromServer()
+      throws SQLException, RemoteException
   {
-    meetings = communicator.getMeetings();
+    reloadLists();
+    support.firePropertyChange("reloadTasks", false, true);
   }
 
   @Override public void removeMeeting(Meeting meeting)
@@ -69,7 +79,7 @@ public class ModelManager implements Model
 
   @Override public ArrayList<Meeting> getMeetings() {
     try{
-      reloadMeetings();
+      reloadLists();
       return meetings;
     }catch (Exception e){
       e.printStackTrace();
@@ -84,8 +94,32 @@ public class ModelManager implements Model
 
   }
 
+  @Override public void addTask(String title, String description,
+      java.sql.Date date, String status, int business_id)
+      throws SQLException, RemoteException
+  {
+    communicator.createTask(new Task(title, description, date, status, business_id));
+  }
+
+  @Override public ArrayList<Task> getTasks()
+  {
+    try{
+      reloadLists();
+      return tasks;
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   @Override public boolean checkUser()
   {
     return false;
+  }
+
+  private void reloadLists() throws SQLException, RemoteException
+  {
+    meetings = communicator.getMeetings();
+    tasks = communicator.getTasks();
   }
 }
