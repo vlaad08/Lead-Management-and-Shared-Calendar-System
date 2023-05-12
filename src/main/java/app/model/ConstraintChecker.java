@@ -1,5 +1,7 @@
 package app.model;
 
+import javafx.scene.control.TextField;
+
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -47,4 +49,12 @@ public class ConstraintChecker
     return false;
   }
 
+  public static boolean checkFillout(TextField textField)
+  {
+    if (textField.getText().equals(""))
+    {
+      return false;
+    }
+    return true;
+  }
 }

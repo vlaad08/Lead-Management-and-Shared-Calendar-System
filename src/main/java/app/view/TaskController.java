@@ -35,10 +35,6 @@ public class TaskController implements PropertyChangeListener
     this.tasksViewModel = tasksViewModel;
     this.root = root;
 
-
-
-
-
     tilePane.setHgap(40);
     tilePane.setVgap(50);
     tilePane.setPrefTileWidth(300);

@@ -275,6 +275,7 @@ public class Draw
     HBox title = new HBox();
     Label titleLabel = new Label("Title: ");
     TextField titleTextField = new TextField();
+    titleTextField.setText("");
     title.setSpacing(65);
     title.setPadding(new Insets(20, 0, 0, 20));
     title.getChildren().addAll(titleLabel, titleTextField);
@@ -327,17 +328,26 @@ public class Draw
 
 
     create.setOnAction(event -> {
-      if(ConstraintChecker.checkDate(datePicker.getValue()))
+      if (ConstraintChecker.checkFillout(titleTextField))
       {
-        createTaskObject(tilePane, tasksViewModel, titleTextField.getText(), descrTextField.getText(), datePicker, statuses.getValue());
-        stage.close();
-      }
-      else
+        if(ConstraintChecker.checkDate(datePicker.getValue()))
+        {
+          createTaskObject(tilePane, tasksViewModel, titleTextField.getText(), descrTextField.getText(), datePicker, statuses.getValue());
+          stage.close();
+        }
+        else
+        {
+          Alert A = new Alert(Alert.AlertType.ERROR);
+          A.setContentText("Check date input");
+          A.show();
+        }
+      }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Check date input");
+        A.setContentText("Title must not be empty");
         A.show();
       }
+
     });
 
 
