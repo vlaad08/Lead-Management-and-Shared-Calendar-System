@@ -278,7 +278,7 @@ public class MeetingController implements PropertyChangeListener
 
     Platform.runLater(()->{
     create.setOnAction(event -> {
-    if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
+    if (ConstraintChecker.checkDateAndTime(datePicker.getValue(),startTime.getText(),endTime.getText()))
     {
       createMeetingObject(titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), attendance);
       stage.close();
