@@ -21,8 +21,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -167,7 +173,14 @@ public class MeetingController implements PropertyChangeListener
   }
 
 
-  public void addMeeting(){
+  public void addMeeting()
+      throws LineUnavailableException, UnsupportedAudioFileException,
+      IOException
+  {
+    File file= new File("src/main/resources/app/Bing Chilling.wav");
+    Clip c= AudioSystem.getClip();
+    c.open(AudioSystem.getAudioInputStream(file));
+    c.start();
     Stage stage = new Stage();
 
     VBox parent = new VBox();
