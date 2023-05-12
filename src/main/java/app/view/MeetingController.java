@@ -102,7 +102,6 @@ public class MeetingController implements PropertyChangeListener
 
     for(Meeting meeting : meetings.getItems())
     {
-      System.out.println(meeting.title());
       LocalDate date = meeting.date().toLocalDate();
       DatePicker datePicker=new DatePicker(date);
       String startTime=meeting.startTime().toString();
