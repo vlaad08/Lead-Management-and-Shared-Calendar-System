@@ -26,4 +26,25 @@ public class ConstraintChecker
     return false;
   }
 
+  public static boolean checkDateAndTime(LocalDate date, String startTime, String endTime){
+    if(!checkDate(date)){
+      return false;
+    }
+    try{
+      Time start=Time.valueOf(LocalTime.parse(startTime));
+      Time end=Time.valueOf(LocalTime.parse(endTime));
+    }catch (Exception e){
+      return false;
+    }
+
+    if(LocalDate.now().isEqual(date)){
+      if(LocalTime.parse(startTime).isAfter(LocalTime.now())){
+        return true;
+      }else return false;
+    }else if(LocalDate.now().isBefore(date) && checkTime(startTime, endTime)){
+      return true;
+    }
+    return false;
+  }
+
 }
