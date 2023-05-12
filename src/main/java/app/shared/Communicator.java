@@ -22,4 +22,6 @@ public interface Communicator extends Remote
   void addLeadListener(RemotePropertyChangeListener<Lead> listener) throws RemoteException;
 
   ArrayList<Meeting> getMeetings() throws RemoteException, SQLException;
+
+  ArrayList<Task> getTasks() throws RemoteException, SQLException;
 }

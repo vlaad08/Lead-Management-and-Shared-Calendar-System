@@ -52,29 +52,29 @@ public class SQLConnection
     }
   }
 
-  public void createMeeting(String title, String description, Date date, Time startTime, Time endTime, String email) throws SQLException
+  public void createMeeting(Meeting meeting) throws SQLException
   {
     try(Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("INSERT INTO Meeting(title, description, date, startTime, endTime, email) VALUES(?, ?, ?, ?, ?, ?)"))   {
-      statement.setString(1, title);
-      statement.setString(2, description);
-      statement.setDate(3, date);
-      statement.setTime(4, startTime);
-      statement.setTime(5, endTime);
-      statement.setString(6, email);
+      statement.setString(1, meeting.title());
+      statement.setString(2, meeting.description());
+      statement.setDate(3, meeting.date());
+      statement.setTime(4, meeting.startTime());
+      statement.setTime(5, meeting.endTime());
+      statement.setString(6, meeting.email());
       statement.executeUpdate();
     }
   }
 
-  public void addTask(Task task) throws SQLException{
+  public void createTask(Task task) throws SQLException{
     try(
       Connection connection = getConnection();
       PreparedStatement statement = connection.prepareStatement("INSERT INTO Task(title, description, dueDate, status, business_id) VALUES (?, ?, ?, ?, ?)")) {
-        statement.setString(1, task.getTitle());
-        statement.setString(2, task.getDescription());
-        statement.setDate(3,task.getDate());
-        statement.setString(4,task.getStatus());
-        statement.setInt(5,task.getBusinessId());
+        statement.setString(1, task.title());
+        statement.setString(2, task.description());
+        statement.setDate(3,task.date());
+        statement.setString(4,task.status());
+        statement.setInt(5,task.business_id());
         statement.executeUpdate();
       }
   }

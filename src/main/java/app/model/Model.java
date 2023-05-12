@@ -1,6 +1,7 @@
 package app.model;
 
 import app.shared.Meeting;
+import app.shared.Task;
 
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
@@ -17,12 +18,16 @@ public interface Model
   ArrayList<Meeting> getMeetings();
   void editMeeting(Date oldStartDate, Date oldEndDate,
       Date startDate, Date endDate, String description, ArrayList<User> employees);
+
+  void addTask(String title, String description, java.sql.Date date, String status, int business_id)
+      throws SQLException, RemoteException;
+
+  ArrayList<Task> getTasks();
   boolean checkUser();
   void setUser();
   void meetingAddedFromServer()
       throws SQLException, RemoteException;
 
   void addPropertyChangeListener(PropertyChangeListener listener);
-
-  void reloadMeetings() throws SQLException, RemoteException;
+  void taskAddedFromServer() throws SQLException, RemoteException;
 }

@@ -1,16 +1,5 @@
 package app;
 
-import app.JDBC.SQLConnection;
-import app.server.Server;
-import app.server.ServerImplementation;
-import app.model.MessageListener;
-import app.model.ModelManager;
-import app.shared.Communicator;
-import app.viewmodel.MeetingViewModel;
-
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
 public class TestClass
 {
   public static void main(String[] args) throws Exception

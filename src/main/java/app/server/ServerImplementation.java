@@ -16,30 +16,32 @@ import java.util.ArrayList;
 public class ServerImplementation implements Communicator
 {
   private final RemotePropertyChangeSupport<Meeting> meetingSupport;
+  private final RemotePropertyChangeSupport<Task> taskSupport;
 
   private SQLConnection connection;
 
 
 
-  public ServerImplementation() throws SQLException
+  public ServerImplementation()
   {
     meetingSupport = new RemotePropertyChangeSupport<>();
-
+    taskSupport = new RemotePropertyChangeSupport<>();
   }
 
 
   @Override public void createMeeting(Meeting meeting) throws SQLException, RemoteException
   {
      connection = SQLConnection.getInstance();
-    connection.createMeeting(meeting.title(), meeting.description()
-        ,meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+    connection.createMeeting(meeting);
     meetingSupport.firePropertyChange("Meeting Created", null, meeting);
   }
 
   @Override public void createTask(Task task)
       throws SQLException, RemoteException
   {
-
+    connection = SQLConnection.getInstance();
+    connection.createTask(task);
+    taskSupport.firePropertyChange("Task Created", null, task);
   }
 
   @Override public void createLead(Lead lead)
@@ -86,6 +88,13 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     return connection.getMeetings();
+  }
+
+  @Override public ArrayList<Task> getTasks()
+      throws RemoteException, SQLException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getTasks();
   }
 
   //Syncronization of Users
