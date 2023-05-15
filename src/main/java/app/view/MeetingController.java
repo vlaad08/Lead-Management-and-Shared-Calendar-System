@@ -4,6 +4,9 @@ package app.view;
 import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -33,7 +36,7 @@ public class MeetingController implements PropertyChangeListener
   @FXML private StackPane addRectangle;
 
 
-  private final ListView<Meeting> meetings = new ListView<>();
+  private final ObjectProperty<ObservableList<Meeting>> meetings = new SimpleObjectProperty<>();
 
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root)
       throws SQLException
@@ -44,7 +47,6 @@ public class MeetingController implements PropertyChangeListener
     this.root = root;
 
     meetingViewModel.addPropertyChangeListener(this);
-
 
 
     //bs comes below
@@ -64,10 +66,10 @@ public class MeetingController implements PropertyChangeListener
     tilePane.setTileAlignment(Pos.CENTER_LEFT);
 
 
-    meetingViewModel.bindMeetings(meetings.itemsProperty());
+    meetingViewModel.bindMeetings(meetings);
 
 
-    Draw.drawMeetings(tilePane, meetings, meetingViewModel);
+    Draw.drawMeetings(tilePane, meetings.get(), meetingViewModel);
   }
 
 
@@ -141,7 +143,7 @@ public class MeetingController implements PropertyChangeListener
 
 
 
-            Draw.drawMeetings(tilePane, meetings, meetingViewModel);
+            Draw.drawMeetings(tilePane, meetings.get(), meetingViewModel);
 
         });
 

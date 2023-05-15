@@ -2,6 +2,7 @@ package app.model;
 
 import app.shared.Meeting;
 import app.shared.Task;
+import app.shared.User;
 
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
@@ -31,4 +32,6 @@ public interface Model
 
   void addPropertyChangeListener(PropertyChangeListener listener);
   void taskAddedFromServer() throws SQLException, RemoteException;
+  void reloadUsers() throws SQLException, RemoteException;
+  ArrayList<User> getUsers() throws SQLException, RemoteException;
 }

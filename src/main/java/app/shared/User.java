@@ -1,6 +1,9 @@
 package app.shared;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable
+{
 
   private String firstName;
   private String middleName;

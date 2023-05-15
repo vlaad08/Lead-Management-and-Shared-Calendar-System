@@ -8,6 +8,7 @@ import app.shared.Task;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -732,9 +733,9 @@ public class Draw
     });
   }
 
-  public static void drawMeetings(TilePane tilePane, ListView<Meeting> meetings, MeetingViewModel meetingViewModel)
+  public static void drawMeetings(TilePane tilePane, ObservableList<Meeting> meetings, MeetingViewModel meetingViewModel)
   {
-    if(meetings.getItems() != null)
+    if(!meetings.isEmpty())
     {
       for(Node node : tilePane.getChildren())
       {
@@ -744,7 +745,7 @@ public class Draw
         }
       }
 
-      for(Meeting meeting : meetings.getItems())
+      for(Meeting meeting : meetings)
       {
         LocalDate date = meeting.date().toLocalDate();
         DatePicker datePicker=new DatePicker(date);
@@ -767,9 +768,9 @@ public class Draw
     }
   }
 
-  public static void drawTasks(TilePane tilePane, TasksViewModel viewModel, ListView<Task> tasks)
+  public static void drawTasks(TilePane tilePane, TasksViewModel viewModel, ObservableList<Task> tasks)
   {
-    if(tasks.getItems() != null)
+    if(!tasks.isEmpty())
     {
       for(Node node : tilePane.getChildren())
       {
@@ -779,7 +780,7 @@ public class Draw
         }
       }
 
-      for(Task task : tasks.getItems())
+      for(Task task : tasks)
       {
         LocalDate date = task.date().toLocalDate();
         DatePicker datePicker=new DatePicker(date);

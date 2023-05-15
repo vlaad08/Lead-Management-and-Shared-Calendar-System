@@ -73,13 +73,9 @@ public class CalendarController {
         drawCalendar();
 
 
-        hoverButtonNavbar(availableClientsButton);
-        hoverButtonNavbar(leadButton);
-        hoverButtonNavbar(meetingButton);
-        hoverButtonNavbar(tasksButton);
-        hoverButtonNavbar(clientsButton);
-        hoverButtonNavbar(manageLeadsButton);
-        hoverButtonNavbar(closeButton);
+
+        Draw.hoverButtonNavbar(availableClientsButton, leadButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
+
     }
 
     public void hoverButtonNavbar(Button b)

@@ -20,6 +20,7 @@ public class ModelManager implements Model
 
   private ArrayList<Meeting> meetings;
   private ArrayList<Task> tasks;
+  private ArrayList<User> users;
 
   private final PropertyChangeSupport support;
 
@@ -30,11 +31,12 @@ public class ModelManager implements Model
 
     meetings = communicator.getMeetings();
     tasks = communicator.getTasks();
+    users = communicator.getUsers();
 
 
     support = new PropertyChangeSupport(this);
 
-    user=new User("Craig", "", "Larhman", "vaoiodiw@gmail.com", "40182241", true, "Stefan Cel Mare", 8700);
+    user  =new User("Craig", "", "Larhman", "vaoiodiw@gmail.com", "40182241", true, "Stefan Cel Mare", 8700);
   }
 
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email)
@@ -51,10 +53,9 @@ public class ModelManager implements Model
   @Override public void meetingAddedFromServer()
       throws SQLException, RemoteException
   {
-    reloadLists();
+    meetings = communicator.getMeetings();
     support.firePropertyChange("reloadMeetings", false, true);
   }
-
 
 
   @Override public void addPropertyChangeListener(
@@ -66,8 +67,21 @@ public class ModelManager implements Model
   @Override public void taskAddedFromServer()
       throws SQLException, RemoteException
   {
-    reloadLists();
+    tasks = communicator.getTasks();
     support.firePropertyChange("reloadTasks", false, true);
+  }
+
+  @Override public void reloadUsers() throws SQLException, RemoteException
+  {
+    users = communicator.getUsers();
+    support.firePropertyChange("reloadUsers", false, true);
+  }
+
+  @Override public ArrayList<User> getUsers()
+      throws SQLException, RemoteException
+  {
+    reloadUsers();
+    return users;
   }
 
   @Override public void removeMeeting(Meeting meeting)
@@ -77,7 +91,7 @@ public class ModelManager implements Model
 
   @Override public ArrayList<Meeting> getMeetings() {
     try{
-      reloadLists();
+      meetings = communicator.getMeetings();
       return meetings;
     }catch (Exception e){
       e.printStackTrace();
@@ -106,7 +120,7 @@ public class ModelManager implements Model
   @Override public ArrayList<Task> getTasks()
   {
     try{
-      reloadLists();
+      tasks = communicator.getTasks();
       return tasks;
     }catch (Exception e){
       e.printStackTrace();
@@ -119,9 +133,5 @@ public class ModelManager implements Model
     return false;
   }
 
-  private void reloadLists() throws SQLException, RemoteException
-  {
-    meetings = communicator.getMeetings();
-    tasks = communicator.getTasks();
-  }
+
 }

@@ -1,5 +1,6 @@
-package app.model;
+package app.model.listeners;
 
+import app.model.Model;
 import app.shared.Task;
 import dk.via.remote.observer.RemotePropertyChangeEvent;
 import dk.via.remote.observer.RemotePropertyChangeListener;

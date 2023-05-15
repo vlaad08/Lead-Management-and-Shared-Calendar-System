@@ -1,9 +1,10 @@
 package app;
 
-import app.model.MessageListener;
+import app.model.listeners.MessageListener;
 import app.model.Model;
 import app.model.ModelManager;
-import app.model.TaskListener;
+import app.model.listeners.TaskListener;
+import app.model.listeners.UserListener;
 import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
@@ -33,6 +34,7 @@ public class MyApplication extends Application
 
     MessageListener messageListener = new MessageListener(model);
     TaskListener taskListener = new TaskListener(model);
+    UserListener userListener = new UserListener(model);
     //LeadListener
 
 

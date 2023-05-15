@@ -141,16 +141,34 @@ public class SQLConnection
 
   }
 
-  public ArrayList<User> getEmployees() throws SQLException
+  public ArrayList<User> getUsers() throws SQLException
   {
     try(Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("select * from \"user\"");)
     {
       ArrayList<User> users = new ArrayList<>();
-      ResultSet set = statement.getResultSet();
+      ResultSet set = statement.executeQuery();
       while(set.next())
       {
+        boolean manager = false;
 
+        String firstname = set.getString("firstname");
+        String middleName = set.getString("middlename");
+        String lastname = set.getString("lastname");
+        String email = set.getString("email");
+        String phone = set.getString("phone");
+        String role = set.getString("role");
+
+        if(role.equals("manager"))
+        {
+          manager = true;
+        }
+
+        String street = set.getString("street");
+        int postalCode = set.getInt("postalcode");
+
+
+        users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode));
       }
       if(!users.isEmpty())
       {
@@ -172,18 +190,18 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       + " set date = ?, set startTime = ?, set endTime = ?, set email = ? where title = ?, description = ?, date = ?, startTime = ?, endTime = ?, email = ?");
 
   statement.setString(1, newMeeting.title());
-  statement.setString(1, newMeeting.description());
-  statement.setDate(1, newMeeting.date());
-  statement.setTime(1, newMeeting.startTime());
-  statement.setTime(1, newMeeting.endTime());
-  statement.setString(1, newMeeting.email());
+  statement.setString(2, newMeeting.description());
+  statement.setDate(3, newMeeting.date());
+  statement.setTime(4, newMeeting.startTime());
+  statement.setTime(5, newMeeting.endTime());
+  statement.setString(6, newMeeting.email());
 
-  statement.setString(1, oldMeeting.title());
-  statement.setString(1, oldMeeting.description());
-  statement.setDate(1, oldMeeting.date());
-  statement.setTime(1, oldMeeting.startTime());
-  statement.setTime(1, oldMeeting.endTime());
-  statement.setString(1, oldMeeting.email());
+  statement.setString(7, oldMeeting.title());
+  statement.setString(8, oldMeeting.description());
+  statement.setDate(9, oldMeeting.date());
+  statement.setTime(10, oldMeeting.startTime());
+  statement.setTime(11, oldMeeting.endTime());
+  statement.setString(12, oldMeeting.email());
 
   statement.executeUpdate();
 

@@ -1,11 +1,8 @@
 package app.server;
 
 import app.JDBC.SQLConnection;
-import app.shared.Communicator;
-import app.shared.Lead;
-import app.shared.Meeting;
+import app.shared.*;
 
-import app.shared.Task;
 import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
 
@@ -17,6 +14,7 @@ public class ServerImplementation implements Communicator
 {
   private final RemotePropertyChangeSupport<Meeting> meetingSupport;
   private final RemotePropertyChangeSupport<Task> taskSupport;
+  private final RemotePropertyChangeSupport<User> userSupport;
 
   private SQLConnection connection;
 
@@ -26,6 +24,7 @@ public class ServerImplementation implements Communicator
   {
     meetingSupport = new RemotePropertyChangeSupport<>();
     taskSupport = new RemotePropertyChangeSupport<>();
+    userSupport = new RemotePropertyChangeSupport<>();
   }
 
 
@@ -33,7 +32,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createMeeting(meeting);
-    meetingSupport.firePropertyChange("Meeting Created", null, meeting);
+    meetingSupport.firePropertyChange("reloadMeeting", null, meeting);
   }
 
   @Override public void createTask(Task task)
@@ -91,6 +90,12 @@ public class ServerImplementation implements Communicator
 
   }
 
+  @Override public void addUserListener(
+      RemotePropertyChangeListener<User> listener) throws RemoteException
+  {
+    userSupport.addPropertyChangeListener(listener);
+  }
+
   @Override public ArrayList<Meeting> getMeetings() throws SQLException
   {
     connection = SQLConnection.getInstance();
@@ -102,6 +107,13 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     return connection.getTasks();
+  }
+
+  @Override public ArrayList<User> getUsers()
+      throws RemoteException, SQLException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getUsers();
   }
 
   //Syncronization of Users
