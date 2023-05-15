@@ -1,9 +1,9 @@
 package app.model;
 
-import app.JDBC.SQLConnection;
 import app.shared.Communicator;
 import app.shared.Meeting;
 import app.shared.Task;
+import app.shared.User;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -11,8 +11,6 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ModelManager implements Model
 {
@@ -36,7 +34,7 @@ public class ModelManager implements Model
 
     support = new PropertyChangeSupport(this);
 
-    user=new User("employee-1", "password", "wasdwasd@1234.com","Craig","Larhman", false);
+    user=new User("Craig", "", "Larhman", "vaoiodiw@gmail.com", "40182241", true, "Stefan Cel Mare", 8700);
   }
 
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email)

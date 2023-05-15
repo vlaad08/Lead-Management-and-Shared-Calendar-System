@@ -2,12 +2,9 @@ package app.shared;
 
 
 
-import app.model.User;
-
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.List;
 
 public record Meeting(String title, String description, Date date, Time startTime, Time endTime, String email) implements Serializable
 {

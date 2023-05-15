@@ -1,12 +1,8 @@
 package app.viewmodel;
 
 import app.model.Model;
-import app.model.User;
 import app.shared.Meeting;
-import app.shared.Task;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.sql.Date;
-import java.util.List;
 
 public class MeetingViewModel implements PropertyChangeListener
 {

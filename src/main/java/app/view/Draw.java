@@ -1,7 +1,7 @@
 package app.view;
 
 import app.model.ConstraintChecker;
-import app.model.User;
+import app.shared.User;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;

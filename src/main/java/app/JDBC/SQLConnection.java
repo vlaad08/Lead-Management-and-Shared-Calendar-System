@@ -2,6 +2,7 @@ package app.JDBC;
 
 import app.shared.Meeting;
 import app.shared.Task;
+import app.shared.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -117,24 +118,46 @@ public class SQLConnection
   public void editTask(Task newTask, Task oldTask) throws SQLException
   {
 
-    Connection connection = getConnection();
-    PreparedStatement statement = connection.prepareStatement(
-        "update task set title = ?, description = ?, duedate = ?, status = ?, business_id = ? "
-            + "where title = ? and description = ? and duedate = ? and status = ? and business_id = ?");
+    try(Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+            "update task set title = ?, description = ?, duedate = ?, status = ?, business_id = ? "
+                + "where title = ? and description = ? and duedate = ? and status = ? and business_id = ?");)
+    {
 
-    statement.setString(1, newTask.title());
-    statement.setString(2, newTask.description());
-    statement.setDate(3, newTask.date());
-    statement.setString(4, newTask.status());
-    statement.setInt(5, newTask.business_id());
+      statement.setString(1, newTask.title());
+      statement.setString(2, newTask.description());
+      statement.setDate(3, newTask.date());
+      statement.setString(4, newTask.status());
+      statement.setInt(5, newTask.business_id());
 
-    statement.setString(6, oldTask.title());
-    statement.setString(7, oldTask.description());
-    statement.setDate(8, oldTask.date());
-    statement.setString(9, oldTask.status());
-    statement.setInt(10, oldTask.business_id());
+      statement.setString(6, oldTask.title());
+      statement.setString(7, oldTask.description());
+      statement.setDate(8, oldTask.date());
+      statement.setString(9, oldTask.status());
+      statement.setInt(10, oldTask.business_id());
 
-    statement.executeUpdate();
+      statement.executeUpdate();
+    }
+
+  }
+
+  public ArrayList<User> getEmployees() throws SQLException
+  {
+    try(Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from \"user\"");)
+    {
+      ArrayList<User> users = new ArrayList<>();
+      ResultSet set = statement.getResultSet();
+      while(set.next())
+      {
+
+      }
+      if(!users.isEmpty())
+      {
+        return users;
+      }
+      return new ArrayList<>();
+    }
 
   }
 
@@ -165,5 +188,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
   statement.executeUpdate();
 
   }
+
+
 
 }

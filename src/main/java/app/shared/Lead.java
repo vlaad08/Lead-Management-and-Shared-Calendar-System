@@ -1,7 +1,5 @@
 package app.shared;
 
-import app.model.User;
-
 import java.io.Serializable;
 
 public class Lead implements Serializable
