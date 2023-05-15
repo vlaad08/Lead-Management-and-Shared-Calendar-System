@@ -87,9 +87,7 @@ public class ModelManager implements Model
     return null;
   }
 
-  @Override public void editMeeting(Date oldStartDate, Date oldEndDate,
-      Date startDate, Date endDate, String description,
-      ArrayList<User> employees)
+  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
   {
 
   }
