@@ -1,16 +1,15 @@
 package app;
 
-import app.model.ClientListener;
+import app.model.MessageListener;
 import app.model.Model;
 import app.model.ModelManager;
-import app.server.Server;
+import app.model.TaskListener;
+import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -26,23 +25,39 @@ public class MyApplication extends Application
 
   @Override public void start(Stage primaryStage) throws Exception
   {
-    primaryStage.setTitle("SelectRole");
+    Registry registry = LocateRegistry.getRegistry(5168);
+    Communicator communicator = (Communicator) registry.lookup("communicator");
+
+    Model model = new ModelManager(communicator);
+
+
+    MessageListener messageListener = new MessageListener(model);
+    TaskListener taskListener = new TaskListener(model);
+    //LeadListener
+
+
+    communicator.addMeetingListener(messageListener);
+    communicator.addTaskListener(taskListener);
+
+
+
     FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("SelectRole.fxml"));
+    loader.setLocation(getClass().getResource("Calendar.fxml"));
     Scene scene= new Scene(loader.load());
-//    primaryStage.setResizable(false);
+    primaryStage.setResizable(false);
+
+
     primaryStage.initStyle(StageStyle.UNDECORATED);
     primaryStage.setScene(scene);
     primaryStage.show();
 
     //For creating connection with the server
-    Registry registry = LocateRegistry.getRegistry(1099);
-    Server server = (Server) registry.lookup("communicator");
-    ClientListener listener = new ClientListener(server);
 
-    Model model = new ModelManager(listener);
     ViewModelFactory viewModelFactory = new ViewModelFactory(model);
     ViewHandler viewHandler = new ViewHandler(viewModelFactory);
     viewHandler.start(primaryStage);
+
+
+
   }
 }

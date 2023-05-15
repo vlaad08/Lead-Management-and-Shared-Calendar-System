@@ -1,11 +1,11 @@
 package app.model;
 
 import app.JDBC.SQLConnection;
-import app.model.ClientListener;
 import app.model.Model;
 import app.model.ModelManager;
 import app.model.User;
-import app.server.Server;
+import app.server.ServerImplementation;
+import app.shared.Communicator;
 import app.shared.Meeting;
 import app.view.MeetingController;
 import app.viewmodel.MeetingViewModel;
@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.SQLException;
@@ -38,14 +39,12 @@ public class MeetingTest {
 
   //@InjectMocks
   //private MeetingController meetingController;
-  private ClientListener listener;
 
 
   @BeforeEach
   public void setUp() throws Exception{
     Registry registry = LocateRegistry.getRegistry(1099);
-    Server server = (Server) registry.lookup("communicator");
-    ClientListener listener = new ClientListener(server);
+    Communicator listener = new ServerImplementation();
 
     ModelManager model = new ModelManager(listener);
     this.meetingViewModel = new MeetingViewModel(model);
@@ -76,7 +75,8 @@ public class MeetingTest {
 
   /*-------------------------------------------------------BUTTON FUNCTIONALITY-------------------------------------------------------*/
   @Test
-  void test_if_add_meeting_adds_a_meeting_in_real_database() throws SQLException
+  void test_if_add_meeting_adds_a_meeting_in_real_database()
+      throws SQLException, RemoteException
   {
     Meeting meeting = new Meeting("Meeting2","test",
         Date.valueOf(LocalDate.of(2023,6,5)),
@@ -122,7 +122,8 @@ public class MeetingTest {
 
 
   @Test
-  void when_a_meeting_is_created_size_is_increasing_and_database_is_returning_that_object() throws SQLException
+  void when_a_meeting_is_created_size_is_increasing_and_database_is_returning_that_object()
+      throws SQLException, RemoteException
   {
     int i = meetingViewModel.getMeetings().size();
     Random random = new Random();
