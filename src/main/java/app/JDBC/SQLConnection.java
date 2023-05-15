@@ -138,7 +138,6 @@ public class SQLConnection
         statement.setString(6, lead.title());
         statement.setInt(7, lead.businessID());
         statement.executeUpdate();
-
     }
   }
 

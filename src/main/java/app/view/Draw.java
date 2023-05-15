@@ -724,9 +724,12 @@ public class Draw
 
 
     create.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(firstNameTextField))
+      if (ConstraintChecker.checkFillout(firstNameTextField) &&
+          ConstraintChecker.checkFillout(middleNameTextField))
       {
 
+          //createTaskObject(tilePane, tasksViewModel, titleTextField.getText(), descrTextField.getText(), datePicker, statuses.getValue());
+          stage.close();
         {
           Alert A = new Alert(Alert.AlertType.ERROR);
           A.setContentText("Check date input");
