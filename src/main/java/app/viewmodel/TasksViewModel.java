@@ -37,8 +37,7 @@ public class TasksViewModel implements PropertyChangeListener
   }
 
   public void bindTask(ObjectProperty<ObservableList<Task>> property)
-  {
-
+  {//sdadwa
     property.bindBidirectional(tasks);
   }
 
