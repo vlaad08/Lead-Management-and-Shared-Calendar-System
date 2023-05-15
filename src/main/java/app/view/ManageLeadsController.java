@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -20,9 +21,10 @@ public class ManageLeadsController
   @FXML private Button meetingButton;
   @FXML private Button plansButton;
   @FXML private Button closeButton;
+  @FXML private TilePane tilePane;
 
   //Experimental Code
-  @FXML private VBox printLead;
+  @FXML private VBox leadVBox;
   //
 
 
@@ -47,15 +49,7 @@ public class ManageLeadsController
     hoverButtonNavbar(closeButton);
 
     //Experimental Code
-    Node[] nodes = new Node[10];
-    for(Node element: nodes){
-      try{
-        element = (Node) FXMLLoader.load(getClass().getResource("/app/lead.fxml"));
-        printLead.getChildren().add(element);
-      }catch (IOException e){
-        e.printStackTrace();
-      }
-    }
+
     //Close of experimental code
   }
 
@@ -99,5 +93,12 @@ public class ManageLeadsController
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }
+  }
+
+  public void addLead(){
+    Draw.drawLeadPopUp(tilePane, leadsViewModel);
+  }
+  private void dorwMeetingObject(){
+
   }
 }

@@ -2,6 +2,7 @@ package app.model;
 
 import app.JDBC.SQLConnection;
 import app.shared.Communicator;
+import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
 
@@ -114,6 +115,16 @@ public class ModelManager implements Model
       e.printStackTrace();
     }
     return null;
+  }
+
+  @Override public void addLead(Lead lead) throws SQLException, RemoteException
+  {
+    communicator.createLead(lead);
+  }
+
+  @Override public ArrayList<Lead> getLeads() throws SQLException, RemoteException
+  {
+    return communicator.getLeads();
   }
 
   @Override public boolean checkUser()

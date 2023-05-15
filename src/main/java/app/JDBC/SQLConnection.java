@@ -1,5 +1,6 @@
 package app.JDBC;
 
+import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
 
@@ -25,7 +26,7 @@ public class SQLConnection
 
   private Connection getConnection() throws SQLException
   {
-    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "1945");
+    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "7319");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException{
@@ -124,5 +125,48 @@ public class SQLConnection
       statement.executeUpdate();
 
   }
+
+  public void addLead(Lead lead) throws SQLException {
+    try(
+      Connection connection = getConnection();
+      PreparedStatement statement = connection.prepareStatement("INSERT INTO lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")) {
+        statement.setString(1, lead.firstName());
+        statement.setString(2, lead.middleName());
+        statement.setString(3, lead.lastName());
+        statement.setString(4, lead.email());
+        statement.setString(5, lead.phone());
+        statement.setString(6, lead.title());
+        statement.setInt(7, lead.businessID());
+        statement.executeUpdate();
+
+    }
+  }
+
+  public ArrayList<Lead> getLeads() throws SQLException {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from lead")) {
+      ArrayList<Lead> leads = new ArrayList<>();
+      ResultSet resultSet = statement.executeQuery();
+      while(resultSet.next())
+      {
+       //firstName, middleName, lastName, email, phone, title, business_id
+        String firstName = resultSet.getString("firstName");
+        String middleName = resultSet.getString("middleName");
+        String lastName = resultSet.getString("lastName");
+        String email = resultSet.getString("email");
+        String phone = resultSet.getString("phone");
+        String title = resultSet.getString("title");
+        int businessId = resultSet.getInt("business_id");
+        leads.add(new Lead(firstName,middleName,lastName,email,phone,title,businessId));
+      }
+      if(!leads.isEmpty())
+      {
+        return leads;
+      }
+      return null;
+    }
+  }
+
 }
 

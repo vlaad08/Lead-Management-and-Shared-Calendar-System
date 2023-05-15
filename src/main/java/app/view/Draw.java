@@ -5,6 +5,7 @@ import app.model.User;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
+import app.viewmodel.LeadsViewModel;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
@@ -642,4 +643,117 @@ public class Draw
       button.setOnMouseExited(event -> button.setStyle("-fx-background-color: none"));
     }
   }
+
+  //All the Code that is bellow is Experimental
+  //is used for Manage Leads
+
+  public static void drawLeadPopUp(TilePane tilePane, LeadsViewModel leadsViewModel)
+  {
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+
+    HBox name = new HBox();
+    Label firstNameLabel = new Label("First Name: ");
+    firstNameLabel.setPrefWidth(65);
+    TextField firstNameTextField = new TextField();
+    firstNameTextField.setText("");
+    Label middleNameLabel = new Label("Last Name: ");
+    TextField middleNameTextField = new TextField();
+    middleNameTextField.setText("");
+    name.setSpacing(20);
+    name.setPadding(new Insets(20, 0, 0, 20));
+    name.getChildren().addAll(firstNameLabel, firstNameTextField,middleNameLabel,middleNameTextField);
+
+    HBox email = new HBox();
+    Label emailLabel = new Label("Email: ");
+    emailLabel.setPrefWidth(65);
+    TextField emailField = new TextField();
+    emailField.setText("");
+    email.setSpacing(20);
+    email.setPadding(new Insets(20,0,0,20));
+    email.getChildren().addAll(emailLabel,emailField);
+
+    HBox phone = new HBox();
+    Label phoneLabel = new Label("Phone: ");
+    phoneLabel.setPrefWidth(65);
+    TextField phoneField = new TextField();
+    emailField.setText("");
+    phone.setSpacing(20);
+    phone.setPadding(new Insets(20,0,0,20));
+    phone.getChildren().addAll(phoneLabel,phoneField);
+
+    HBox title = new HBox();
+    Label titleLabel = new Label("Title: ");
+    titleLabel.setPrefWidth(65);
+    TextField titleTextField = new TextField();
+    titleTextField.setText("");
+    title.setSpacing(20);
+    title.setPadding(new Insets(20, 0, 0, 20));
+    title.getChildren().addAll(titleLabel, titleTextField);
+
+    HBox businessID = new HBox();
+    businessID.setPadding(new Insets(5));
+    businessID.setSpacing(20);
+    Label businessLabel = new Label("Business ID:");
+    businessLabel.setPrefWidth(65);
+    TextField businessField = new TextField();
+    businessField.setText("");
+
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+
+    businessID.getChildren().add(businessLabel);
+    businessID.getChildren().add(businessField);
+    businessID.getChildren().add(create);
+
+    businessID.setPadding(new Insets(20, 0, 0, 20));
+
+    insert.addAll(topBar, name,email, phone, title,businessID);
+
+
+    create.setOnAction(event -> {
+      if (ConstraintChecker.checkFillout(firstNameTextField))
+      {
+
+        {
+          Alert A = new Alert(Alert.AlertType.ERROR);
+          A.setContentText("Check date input");
+          A.show();
+        }
+      }else
+      {
+        Alert A = new Alert(Alert.AlertType.ERROR);
+        A.setContentText("Title must not be empty");
+        A.show();
+      }
+
+    });
+
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
+  }
+
+
+
+
 }
+
+
+
+

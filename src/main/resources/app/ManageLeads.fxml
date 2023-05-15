@@ -104,7 +104,7 @@
                <bottom>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Label alignment="CENTER" prefHeight="37.0" prefWidth="300.0" text="Name">
+                        <Label alignment="CENTER" prefHeight="37.0" prefWidth="264.0" text="Name">
                            <HBox.margin>
                               <Insets left="50.0" />
                            </HBox.margin>
@@ -112,7 +112,7 @@
                               <Font name="Arial Black" size="24.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="37.0" prefWidth="300.0" text="Company">
+                        <Label alignment="CENTER" prefHeight="37.0" prefWidth="246.0" text="Company">
                            <font>
                               <Font name="Arial Black" size="24.0" />
                            </font>
@@ -120,7 +120,7 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="37.0" prefWidth="300.0" text="Title">
+                        <Label alignment="CENTER" prefHeight="37.0" prefWidth="247.0" text="Title">
                            <font>
                               <Font name="Arial Black" size="24.0" />
                            </font>
@@ -128,13 +128,26 @@
                               <Insets />
                            </HBox.margin>
                         </Label>
+                        <Button mnemonicParsing="false" onAction="#addLead" prefHeight="36.0" prefWidth="71.0" text="Create" textFill="#26aa36">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="71.0" text="Edit">
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
                      </children>
                   </HBox>
                </bottom>
                 </BorderPane>
             </top>
          <center>
-            <VBox fx:id="printLead" prefHeight="720.0" prefWidth="1130.0" BorderPane.alignment="CENTER" />
+            <VBox fx:id="leadVBox" prefHeight="720.0" prefWidth="1130.0" BorderPane.alignment="CENTER" />
          </center>
         </BorderPane>
     </center>
