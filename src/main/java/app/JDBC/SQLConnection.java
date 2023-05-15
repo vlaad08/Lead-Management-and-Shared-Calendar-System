@@ -76,7 +76,7 @@ public class SQLConnection
         statement.setString(4,task.status());
         statement.setInt(5,task.business_id());
         statement.executeUpdate();
-      }
+    }
   }
 
   public ArrayList<Task> getTasks() throws SQLException{
