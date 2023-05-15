@@ -15,6 +15,7 @@ import javafx.scene.layout.*;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 public class MeetingController implements PropertyChangeListener
@@ -118,7 +119,8 @@ public class MeetingController implements PropertyChangeListener
   }
 
 
-  public void addMeeting(){
+  public void addMeeting() throws SQLException, RemoteException
+  {
     Draw.drawMeetingPopUp(tilePane, meetingViewModel);
   }
 

@@ -12,4 +12,7 @@ module cl.sep2 {
   opens app.shared to java.rmi;
 
   exports app;
+  exports app.view;
+  exports app.viewmodel;
+  exports app.shared;
 }

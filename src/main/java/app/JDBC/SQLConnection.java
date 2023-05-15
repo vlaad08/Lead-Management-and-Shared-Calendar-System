@@ -154,6 +154,12 @@ public class SQLConnection
 
         String firstname = set.getString("firstname");
         String middleName = set.getString("middlename");
+
+        if(middleName == null)
+        {
+          middleName = "";
+        }
+
         String lastname = set.getString("lastname");
         String email = set.getString("email");
         String phone = set.getString("phone");

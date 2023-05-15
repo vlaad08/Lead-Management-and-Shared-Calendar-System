@@ -40,6 +40,7 @@ public class MyApplication extends Application
 
     communicator.addMeetingListener(messageListener);
     communicator.addTaskListener(taskListener);
+    communicator.addUserListener(userListener);
 
 
 
