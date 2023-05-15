@@ -16,7 +16,6 @@ public interface Model
       throws SQLException, RemoteException;
   void removeMeeting(Meeting meeting);
   ArrayList<Meeting> getMeetings();
-  void editMeeting(Meeting oldMeeting, Meeting newMeeting);
 
   void addTask(String title, String description, java.sql.Date date, String status, int business_id)
       throws SQLException, RemoteException;
