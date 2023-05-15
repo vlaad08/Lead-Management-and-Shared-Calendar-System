@@ -29,6 +29,7 @@ public class TasksViewModel implements PropertyChangeListener
     support = new PropertyChangeSupport(this);
 
     this.model = model;
+
     model.addPropertyChangeListener(this);
 
     tasks = new SimpleObjectProperty<>();
@@ -42,10 +43,21 @@ public class TasksViewModel implements PropertyChangeListener
   }
 
 
+  public void addPropertyChangeListener(PropertyChangeListener listener)
+  {
+    support.addPropertyChangeListener(listener);
+  }
+
   public void addTask(String title, String description, Date date, String status, int business_id)
       throws SQLException, RemoteException
   {
     model.addTask(title, description, date, status, business_id);
+  }
+
+  public void editTask(Task newTask, Task oldTask)
+      throws SQLException, RemoteException
+  {
+    model.editTask(newTask, oldTask);
   }
 
   public ArrayList<Task> getTasks(){
@@ -54,8 +66,6 @@ public class TasksViewModel implements PropertyChangeListener
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
-
-
     if(evt.getPropertyName().equals("reloadTasks"))
     {
       ArrayList<Task> list = model.getTasks();

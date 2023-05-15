@@ -22,6 +22,8 @@ public interface Model
   void addTask(String title, String description, java.sql.Date date, String status, int business_id)
       throws SQLException, RemoteException;
 
+  void editTask(Task newTask, Task oldTask) throws SQLException, RemoteException;
+
   ArrayList<Task> getTasks();
   boolean checkUser();
   void setUser();

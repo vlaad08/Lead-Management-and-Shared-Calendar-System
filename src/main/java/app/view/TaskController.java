@@ -6,9 +6,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -45,11 +47,12 @@ public class TaskController implements PropertyChangeListener
 
     tasksViewModel.bindTask(taskListView.itemsProperty());
 
+    tasksViewModel.addPropertyChangeListener(this);
 
     //bs comes below
     Draw.hoverButtonNavbar(plansButton, meetingButton, leadButton, availableButton, clientsButton, manageLeadsButton, closeButton);
 
-    Draw.drawTasks(tilePane, taskListView);
+    Draw.drawTasks(tilePane, tasksViewModel, taskListView);
   }
 
 
@@ -97,7 +100,8 @@ public class TaskController implements PropertyChangeListener
     {
       Platform.runLater(()->
       {
-        Draw.drawTasks(tilePane, taskListView);
+
+        Draw.drawTasks(tilePane, tasksViewModel, taskListView);
       });
     }
   }

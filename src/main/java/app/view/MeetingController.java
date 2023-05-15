@@ -139,7 +139,7 @@ public class MeetingController implements PropertyChangeListener
     {
         Platform.runLater(()->{
 
-            Draw.drawMeetings(tilePane, meetings);
+            Draw.drawMeetings(tilePane,  meetings);
         });
 
     }

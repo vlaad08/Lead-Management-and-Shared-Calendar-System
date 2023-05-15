@@ -22,7 +22,7 @@ public class TaskListener extends UnicastRemoteObject implements
       RemotePropertyChangeEvent<Task> remotePropertyChangeEvent)
       throws RemoteException
   {
-    if(remotePropertyChangeEvent.getPropertyName().equals("Task Created"))
+    if(remotePropertyChangeEvent.getPropertyName().equals("reloadTask"))
     {
       try
       {

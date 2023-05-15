@@ -358,25 +358,9 @@ public class Draw
 
   }
 
-  public static void createTaskObject(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker dueDate, String status){
 
-    tilePane.getChildren().add(
-        drawTaskTile(title,  description, dueDate, status));
-    Date date=Date.valueOf(dueDate.getValue());
-    Platform.runLater(()->{
-      try
-      {
-        tasksViewModel.addTask(title, description, date, status, 7456);
-      }
-      catch (SQLException | RemoteException e)
-      {
-          throw new RuntimeException(e);
-      }
-    });
 
-  }
-
-  public static VBox drawTaskTile(String title, String description, DatePicker datePicker, String status)
+  public static VBox drawTaskTile(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker datePicker, String status)
   {
     VBox task = new VBox();
 
@@ -388,6 +372,7 @@ public class Draw
 
     datePicker.setDisable(true);
     ComboBox<String> statusChoice = new ComboBox<>();
+    statusChoice.setDisable(true);
     ObservableList<String> statusChoices = FXCollections.observableArrayList("To do", "In Progress", "Ready", "Complete", "Incomplete");
     statusChoice.getItems().setAll(statusChoices);
     statusChoice.setValue(status);
@@ -422,7 +407,6 @@ public class Draw
 
 
 
-
     titleRow.getChildren().addAll(titleLabel, titleTextField);
     date.getChildren().addAll(dateLabel, datePicker);
     descr.getChildren().add(descTextField);
@@ -436,17 +420,155 @@ public class Draw
 
     task.getChildren().addAll(titleRow, descr ,date, statusBox);
 
+    task.setOnMouseClicked(event -> {
+      drawManageTaskPopUp( tilePane, tasksViewModel,  title, description, datePicker.getValue(), status);
+    });
+
 
     return task;
   }
 
-  public static void hoverButtonNavbar(Button... b)
+  public static void drawManageTaskPopUp(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, LocalDate date, String status)
   {
-    for(Button button : b)
-    {
-      button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #786FAC;"));
-      button.setOnMouseExited(event -> button.setStyle("-fx-background-color: none"));
-    }
+
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+    HBox titleBox = new HBox();
+    Label titleLabel = new Label("Title: ");
+    TextField titleTextField = new TextField(title);
+    titleBox.setSpacing(65);
+    titleBox.setPadding(new Insets(20, 0, 0, 20));
+    titleBox.getChildren().addAll(titleLabel, titleTextField);
+
+    HBox descr = new HBox();
+    descr.setSpacing(20);
+    Label descriptionLabel = new Label("Description:");
+    descriptionLabel.setPrefWidth(75);
+    TextField descrTextField = new TextField(description);
+    descrTextField.setAlignment(Pos.TOP_LEFT);
+    descrTextField.setPrefWidth(330);
+    descrTextField.setPrefHeight(100);
+    descr.getChildren().add(descriptionLabel);
+    descr.getChildren().add(descrTextField);
+    descr.setLayoutY(10);
+
+
+    HBox dueDate = new HBox();
+    dueDate.setPadding(new Insets(5));
+    dueDate.setSpacing(20);
+    Label dueDateLabel = new Label("Due date:");
+    dueDateLabel.setPrefWidth(75);
+    DatePicker datePicker = new DatePicker(LocalDate.now());
+    datePicker.setPrefWidth(170);
+    Button update = new Button("Update");
+    update.setPrefWidth(60);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color:  #348e2f");
+
+    dueDate.getChildren().add(dueDateLabel);
+    dueDate.getChildren().add(datePicker);
+    dueDate.getChildren().add(update);
+
+
+    HBox statusBox = new HBox();
+    Label statusLabel = new Label("Status");
+    ComboBox<String> statuses = new ComboBox<>();
+    ObservableList<String> statusChoices = FXCollections.observableArrayList("To do", "In progress", "Ready", "Complete", "Incomplete");
+    statuses.getItems().setAll(statusChoices);
+    statuses.setValue(status);
+    statusBox.setSpacing(60);
+    statusBox.getChildren().addAll(statusLabel, statuses);
+
+
+    dueDate.setPadding(new Insets(20, 0, 0, 20));
+    descr.setPadding(new Insets(20, 0, 0, 20));
+    statusBox.setPadding(new Insets(20, 0, 10, 20));
+
+    insert.addAll(topBar, titleBox, descr, dueDate,  statusBox);
+
+
+    update.setOnAction(event -> {
+      if (ConstraintChecker.checkFillout(titleTextField))
+      {
+        if(ConstraintChecker.checkDate(datePicker.getValue()))
+        {
+          Task newTask = new Task(titleTextField.getText(), descrTextField.getText(), Date.valueOf(datePicker.getValue()), statuses.getValue(), 7456);
+          Task oldTask = new Task(title, description, Date.valueOf(date),
+              status, 7456);
+          updateTaskObject(tasksViewModel, newTask, oldTask);
+          stage.close();
+        }
+        else
+        {
+          Alert A = new Alert(Alert.AlertType.ERROR);
+          A.setContentText("Check date input");
+          A.show();
+        }
+      }else
+      {
+        Alert A = new Alert(Alert.AlertType.ERROR);
+        A.setContentText("Title must not be empty");
+        A.show();
+      }
+
+    });
+
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
+  }
+
+  public static void createTaskObject(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker dueDate, String status){
+
+    tilePane.getChildren().add(
+        drawTaskTile(tilePane, tasksViewModel, title,  description, dueDate, status));
+    Date date=Date.valueOf(dueDate.getValue());
+    Platform.runLater(()->{
+      try
+      {
+        tasksViewModel.addTask(title, description, date, status, 7456);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+
+  }
+
+  private static void updateTaskObject(TasksViewModel tasksViewModel, Task newTask, Task oldTask)
+  {
+    Platform.runLater(()->{
+      try
+      {
+        tasksViewModel.editTask(newTask, oldTask);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
   }
 
   public static void drawMeetings(TilePane tilePane, ListView<Meeting> meetings)
@@ -484,7 +606,7 @@ public class Draw
     }
   }
 
-  public static void drawTasks(TilePane tilePane, ListView<Task> tasks)
+  public static void drawTasks(TilePane tilePane, TasksViewModel viewModel, ListView<Task> tasks)
   {
     if(tasks.getItems() != null)
     {
@@ -502,11 +624,22 @@ public class Draw
         DatePicker datePicker=new DatePicker(date);
         Platform.runLater(()->{
           tilePane.getChildren().add(
-              drawTaskTile(task.title(), task.description(), datePicker,
+              drawTaskTile(tilePane, viewModel, task.title(), task.description(), datePicker,
                   task.status()));
 
         });
       }
+    }
+  }
+
+
+
+  public static void hoverButtonNavbar(Button... b)
+  {
+    for(Button button : b)
+    {
+      button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: #786FAC;"));
+      button.setOnMouseExited(event -> button.setStyle("-fx-background-color: none"));
     }
   }
 }

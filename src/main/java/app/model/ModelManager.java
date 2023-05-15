@@ -101,6 +101,12 @@ public class ModelManager implements Model
     communicator.createTask(new Task(title, description, date, status, business_id));
   }
 
+  @Override public void editTask(Task newTask, Task oldTask)
+      throws SQLException, RemoteException
+  {
+    communicator.editTask(newTask, oldTask);
+  }
+
   @Override public ArrayList<Task> getTasks()
   {
     try{

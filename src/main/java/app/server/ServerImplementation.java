@@ -41,7 +41,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createTask(task);
-    taskSupport.firePropertyChange("Task Created", null, task);
+    taskSupport.firePropertyChange("reloadTask", null, task);
   }
 
   @Override public void createLead(Lead lead)
@@ -66,6 +66,13 @@ public class ServerImplementation implements Communicator
 
   }
 
+  @Override public void editTask(Task newTask, Task oldTask) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.editTask(newTask, oldTask);
+    taskSupport.firePropertyChange("reloadTask", oldTask, newTask);
+  }
+
   @Override public void addMeetingListener(
       RemotePropertyChangeListener<Meeting> listener) throws RemoteException
   {
@@ -75,7 +82,7 @@ public class ServerImplementation implements Communicator
   @Override public void addTaskListener(
       RemotePropertyChangeListener<Task> listener) throws RemoteException
   {
-
+    taskSupport.addPropertyChangeListener(listener);
   }
 
   @Override public void addLeadListener(

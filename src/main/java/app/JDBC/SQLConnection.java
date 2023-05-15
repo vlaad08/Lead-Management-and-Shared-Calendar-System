@@ -25,7 +25,7 @@ public class SQLConnection
 
   private Connection getConnection() throws SQLException
   {
-    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "password");
+    return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow", "postgres", "1945");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException{
@@ -100,6 +100,29 @@ public class SQLConnection
       }
       return null;
     }
+  }
+
+  public void editTask(Task newTask, Task oldTask) throws SQLException
+  {
+
+      Connection connection = getConnection();
+      PreparedStatement statement = connection.prepareStatement("update task set title = ?, description = ?, duedate = ?, status = ?, business_id = ? "
+          + "where title = ? and description = ? and duedate = ? and status = ? and business_id = ?");
+
+      statement.setString(1, newTask.title());
+      statement.setString(2, newTask.description());
+      statement.setDate(3, newTask.date());
+      statement.setString(4, newTask.status());
+      statement.setInt(5, newTask.business_id());
+
+      statement.setString(6, oldTask.title());
+      statement.setString(7, oldTask.description());
+      statement.setDate(8, oldTask.date());
+      statement.setString(9, oldTask.status());
+      statement.setInt(10, oldTask.business_id());
+
+      statement.executeUpdate();
+
   }
 }
 
