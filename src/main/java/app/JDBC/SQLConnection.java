@@ -50,7 +50,11 @@ public class SQLConnection
         meetings.add(
             new Meeting(title, description, date, startTime, endTime, email));
       }
-      return meetings;
+      if(!meetings.isEmpty())
+      {
+        return meetings;
+      }
+      return new ArrayList<>();
     }
   }
 
@@ -102,7 +106,11 @@ public class SQLConnection
         int businessId = resultSet.getInt("business_id");
         tasks.add(new Task(title, description, date, status, businessId));
       }
-      return tasks;
+      if (!tasks.isEmpty())
+      {
+        return tasks;
+      }
+      return new ArrayList<>();
     }
   }
 
