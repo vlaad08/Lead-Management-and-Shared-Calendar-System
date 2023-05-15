@@ -37,5 +37,10 @@ public class ManageTask_TaskViewModel
     //Mockito.verify(model, Mockito.times(1)).removeTask(task);
   }
 
+  @Test void getTask() throws Exception{
+    viewModel.getTasks();
+    Mockito.verify(model, Mockito.times(2)).getTasks();
+  }
+
 
 }

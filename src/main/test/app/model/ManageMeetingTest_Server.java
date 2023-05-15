@@ -41,4 +41,9 @@ public class ManageMeetingTest_Server
     server.removeMeeting(meeting);
     //Mockito.verify(connection,Mockito.times(1)).removeMeeting(meeting);
   }
+
+  @Test void getMeetings() throws Exception{
+    server.getMeetings();
+    Mockito.verify(connection,Mockito.times(2)).getMeetings();
+  }
 }

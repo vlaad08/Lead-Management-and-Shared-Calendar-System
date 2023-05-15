@@ -39,4 +39,10 @@ public class ManageTask_ModelManager
     //model.removeTask(task);
     Mockito.verify(communicator, Mockito.times(1)).removeTask(task);
   }
+
+  @Test void getTask() throws Exception{
+    model.getTasks();
+    Mockito.verify(communicator, Mockito.times(2)).getTasks();
+  }
+
 }

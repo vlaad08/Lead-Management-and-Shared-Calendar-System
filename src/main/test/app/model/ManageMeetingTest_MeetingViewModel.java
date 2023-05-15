@@ -43,4 +43,9 @@ public class ManageMeetingTest_MeetingViewModel
     viewModel.removeMeeting(meeting);
     Mockito.verify(modelManager,Mockito.times(1)).removeMeeting(meeting);
   }
+
+  @Test void getMeetings(){
+    viewModel.getMeetings();
+    Mockito.verify(modelManager,Mockito.times(2)).getMeetings();
+  }
 }

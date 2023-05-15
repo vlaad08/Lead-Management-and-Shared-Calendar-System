@@ -38,4 +38,11 @@ public class ManageTask_Server
     server.removeTask(task);
     //Mockito.verify(connection, Mockito.times(1)).removeTask(task);
   }
+
+  @Test void getTask() throws Exception{
+    server.getTasks();
+    Mockito.verify(connection, Mockito.times(2)).getTasks();
+  }
+
+
 }
