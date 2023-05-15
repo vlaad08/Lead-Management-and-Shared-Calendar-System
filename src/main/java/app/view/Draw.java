@@ -160,7 +160,7 @@ public class Draw
     try
     {
       tilePane.getChildren().add(
-          drawMeetingTile(title, datePicker, startTime, endTime, description, users));
+          drawMeetingTile(tilePane, meetingViewModel, title, datePicker, startTime, endTime, description, users));
       Date date=Date.valueOf(datePicker.getValue());
       Platform.runLater(()->{
         try
@@ -179,7 +179,7 @@ public class Draw
     }
   }
 
-  private static VBox drawMeetingTile(String title, DatePicker datePicker, String startTime, String endTime, String description, TableView<User> users) throws SQLException
+  private static VBox drawMeetingTile(TilePane tilePane, MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description, TableView<User> users) throws SQLException
   {
     VBox meeting = new VBox();
 
@@ -246,9 +246,170 @@ public class Draw
 
     meeting.getChildren().addAll(titleRow, date, time1, time2, descr);
 
+    meeting.setOnMouseClicked(event -> {
+      System.out.println("dwfaf");
+      drawManageMeetingPopUp(tilePane, meetingViewModel, title, datePicker, startTime, endTime, description, users);
+    });
 
     return meeting;
   }
+
+  public static void drawManageMeetingPopUp(TilePane tilePane, MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description, TableView<User> users){
+    String oldTitle = title;
+    DatePicker oldDatePicker = datePicker;
+    String oldStartTime = startTime;
+    String oldEndTime = endTime;
+    String oldDescription = description;
+    TableView<User> oldUsers = users;
+
+
+    Stage stage = new Stage();
+
+    //container
+    VBox parent = new VBox();
+    parent.setPrefWidth(600);
+    parent.setPrefHeight(400);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+    HBox newTitle = new HBox();
+    Label newTitleLabel = new Label("Title: ");
+    TextField newTitleTextField = new TextField();
+    newTitle.setSpacing(65);
+    newTitle.setPadding(new Insets(20, 0, 0, 20));
+    newTitle.getChildren().addAll(newTitleLabel, newTitleTextField);
+
+    HBox lead=new HBox();
+    Label leadLabel=new Label("Lead: ");
+    ComboBox<Lead> leads=new ComboBox<>();
+    leads.setPrefWidth(150);
+    lead.setSpacing(65);
+    lead.setPadding(new Insets(20,0,0,20));
+    lead.getChildren().addAll(leadLabel,leads);
+
+    HBox dateTime = new HBox();
+    dateTime.setPadding(new Insets(5));
+    dateTime.setSpacing(20);
+    Label startDate = new Label("Date:");
+    startDate.setPrefWidth(75);
+    DatePicker newDatePicker = new DatePicker(LocalDate.now());
+    newDatePicker.setPrefWidth(170);
+    TextField newStartTime = new TextField(
+        LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+    newStartTime.setPrefWidth(60);
+    Label to = new Label("to: ");
+    TextField newEndTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+    newEndTime.setPrefWidth(60);
+    Button update = new Button("Update");
+    update.setPrefWidth(60);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color:  #348e2f");
+
+    dateTime.getChildren().add(startDate);
+    dateTime.getChildren().add(newDatePicker);
+    dateTime.getChildren().add(newStartTime);
+    dateTime.getChildren().add(to);
+    dateTime.getChildren().add(newEndTime);
+    dateTime.getChildren().add(update);
+
+    HBox descr = new HBox();
+    descr.setSpacing(20);
+    Label newDescription = new Label("Description:");
+    newDescription.setPrefWidth(75);
+    TextField descrTextField = new TextField();
+    descrTextField.setAlignment(Pos.TOP_LEFT);
+    descrTextField.setPrefWidth(330);
+    descrTextField.setPrefHeight(100);
+    descr.getChildren().add(newDescription);
+    descr.getChildren().add(descrTextField);
+    descr.setLayoutY(10);
+    HBox employeeAttendance = new HBox();
+    TableView<User> newAttendance = new TableView<>();
+    TableColumn<User, String> firstName = new TableColumn<>("First Name");
+    TableColumn<User, String> lastName = new TableColumn<>("Last Name");
+    TableColumn<User, String> attends = new TableColumn<>("Attends");
+
+    firstName.setCellValueFactory(new PropertyValueFactory<>("firstname"));
+    lastName.setCellValueFactory(new PropertyValueFactory<>("lastname"));
+    attends.setCellFactory(ComboBoxTableCell.forTableColumn(""));
+    attends.setCellValueFactory(new PropertyValueFactory<>("attends"));
+
+    newAttendance.getColumns().setAll(firstName, lastName, attends);
+
+    newAttendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    newAttendance.setPrefWidth(600);
+    newAttendance.setPrefHeight(150);
+    newAttendance.setPadding(Insets.EMPTY);
+    employeeAttendance.getChildren().add(newAttendance);
+
+
+    dateTime.setPadding(new Insets(20, 0, 0, 20));
+    descr.setPadding(new Insets(20, 0, 10, 20));
+
+    insert.addAll(topBar, newTitle,lead, dateTime, descr, employeeAttendance);
+
+
+
+    Platform.runLater(()-> update.setOnAction(event -> {
+      if (ConstraintChecker.checkTime(newStartTime.getText(),newEndTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
+      {
+        try
+        {
+          Meeting oldMeeting = new Meeting(oldTitle, oldDescription, Date.valueOf(oldDatePicker.getValue()), Time.valueOf(oldStartTime), Time.valueOf(oldEndTime), oldUsers.getSelectionModel().getSelectedItem().getEmail());
+          Meeting newMeeting = new Meeting(newTitleTextField.getText(), newDescription.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), newAttendance.getSelectionModel().getSelectedItem().getEmail());
+
+          updateMeetingObject(meetingViewModel,oldMeeting,newMeeting);
+        }
+        catch(NullPointerException e){
+          e.fillInStackTrace();
+          System.out.println("oldUsers are null");
+        }
+
+      }else
+      {
+        Alert A = new Alert(Alert.AlertType.ERROR);
+        A.setContentText("Check time and date inputs");
+        A.show();
+      }
+
+    }));
+
+
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting){
+
+      Platform.runLater(()->{
+        try
+        {
+          meetingViewModel.editMeeting(oldMeeting, newMeeting);
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
+
+  }
+
+
 
   public static void drawTaskPopUp(TilePane tilePane, TasksViewModel tasksViewModel)
   {
@@ -571,7 +732,7 @@ public class Draw
     });
   }
 
-  public static void drawMeetings(TilePane tilePane, ListView<Meeting> meetings)
+  public static void drawMeetings(TilePane tilePane, ListView<Meeting> meetings, MeetingViewModel meetingViewModel)
   {
     if(meetings.getItems() != null)
     {
@@ -593,7 +754,7 @@ public class Draw
           try
           {
             tilePane.getChildren().add(
-                drawMeetingTile(meeting.title(),datePicker,startTime,endTime,
+                drawMeetingTile(tilePane, meetingViewModel, meeting.title(),datePicker,startTime,endTime,
                     meeting.description(), null));
 
           }

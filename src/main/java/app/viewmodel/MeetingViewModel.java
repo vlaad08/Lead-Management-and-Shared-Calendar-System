@@ -3,6 +3,7 @@ package app.viewmodel;
 import app.model.Model;
 import app.model.User;
 import app.shared.Meeting;
+import app.shared.Task;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -51,6 +52,11 @@ public class MeetingViewModel implements PropertyChangeListener
     model.addMeeting(title,description,date,startTime,endTime,email);
   }
 
+  public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
+      throws SQLException, RemoteException
+  {
+    model.editMeeting(oldMeeting, newMeeting);
+  }
 
   public void removeMeeting(Meeting meeting)
   {

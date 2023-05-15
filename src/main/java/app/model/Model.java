@@ -23,6 +23,7 @@ public interface Model
       throws SQLException, RemoteException;
 
   void editTask(Task newTask, Task oldTask) throws SQLException, RemoteException;
+  void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException;
 
   ArrayList<Task> getTasks();
   boolean checkUser();

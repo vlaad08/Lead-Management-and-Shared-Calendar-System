@@ -67,7 +67,7 @@ public class MeetingController implements PropertyChangeListener
     meetingViewModel.bindMeetings(meetings.itemsProperty());
 
 
-    Draw.drawMeetings(tilePane, meetings);
+    Draw.drawMeetings(tilePane, meetings, meetingViewModel);
   }
 
 
@@ -139,7 +139,10 @@ public class MeetingController implements PropertyChangeListener
     {
         Platform.runLater(()->{
 
-            Draw.drawMeetings(tilePane,  meetings);
+
+
+            Draw.drawMeetings(tilePane, meetings, meetingViewModel);
+
         });
 
     }
