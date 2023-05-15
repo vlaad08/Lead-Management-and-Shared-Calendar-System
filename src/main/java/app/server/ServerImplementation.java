@@ -31,7 +31,7 @@ public class ServerImplementation implements Communicator
 
   @Override public void createMeeting(Meeting meeting) throws SQLException, RemoteException
   {
-     connection = SQLConnection.getInstance();
+    connection = SQLConnection.getInstance();
     connection.createMeeting(meeting);
     meetingSupport.firePropertyChange("Meeting Created", null, meeting);
   }
