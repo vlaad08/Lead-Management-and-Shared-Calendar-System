@@ -193,8 +193,8 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
 
 
   Connection connection = getConnection();
-  PreparedStatement statement = connection.prepareStatement("update meeting set title = ?, set description = ?,"
-      + " set date = ?, set startTime = ?, set endTime = ?, set email = ? where title = ?, description = ?, date = ?, startTime = ?, endTime = ?, email = ?");
+  PreparedStatement statement = connection.prepareStatement("update meeting set title = ?, description = ?,"
+      + "  date = ?,  startTime = ?,  endTime = ?,  email = ? where title = ? and description = ? and date = ? and startTime = ? and endTime = ? and email = ?");
 
   statement.setString(1, newMeeting.getTitle());
   statement.setString(2, newMeeting.getDescription());
@@ -271,5 +271,21 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       }
       return emails;
     }
+  }
+
+  public void removeAttendance(Meeting oldMeeting) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from attendance where"
+            + " title = ? and date = ? and starttime = ? and endtime = ? "))
+    {
+      statement.setString(1, oldMeeting.getTitle());
+      statement.setDate(2, oldMeeting.getDate());
+      statement.setTime(3, oldMeeting.getStartTime());
+      statement.setTime(4, oldMeeting.getEndTime());
+      statement.executeUpdate();
+    }
+
   }
 }

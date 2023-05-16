@@ -113,10 +113,15 @@ public class ModelManager implements Model
     return null;
   }
 
-  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
+  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
+    communicator.removeAttendance(oldMeeting);
     communicator.editMeeting(oldMeeting, newMeeting);
+    for(String e : emails)
+    {
+      communicator.attendsMeeting(e, newMeeting);
+    }
   }
 
   @Override public void addTask(String title, String description,

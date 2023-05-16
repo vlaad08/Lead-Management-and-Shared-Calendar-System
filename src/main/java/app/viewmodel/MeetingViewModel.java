@@ -50,10 +50,10 @@ public class MeetingViewModel implements PropertyChangeListener
     model.addMeeting(title,description,date,startTime,endTime, leadEmail, emails);
   }
 
-  public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
+  public void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.editMeeting(oldMeeting, newMeeting);
+    model.editMeeting(oldMeeting, newMeeting, emails);
   }
 
   public void removeMeeting(Meeting meeting)

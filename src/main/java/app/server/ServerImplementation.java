@@ -135,18 +135,19 @@ public class ServerImplementation implements Communicator
     return connection.getAttendance(meeting);
   }
 
-  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
-      throws SQLException
-  {
-    connection = SQLConnection.getInstance();
-    connection.editMeeting(oldMeeting,newMeeting);
-  }
 
   @Override public ArrayList<Lead> getLeads()
       throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
     return connection.getLeads();
+  }
+
+  @Override public void removeAttendance(Meeting oldMeeting)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.removeAttendance(oldMeeting);
   }
 
   //Syncronization of Users

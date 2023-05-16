@@ -5,7 +5,6 @@ import app.shared.*;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -114,7 +113,7 @@ public class Draw
 
     HBox employeeAttendance = new HBox();
 
-    ObservableList<UserTableRow> usersList = FXCollections.observableArrayList();;
+    ObservableList<UserTableRow> usersList = FXCollections.observableArrayList();
 
     TableView<UserTableRow> attendance = new TableView<>();
     attendance.setEditable(true);
@@ -163,17 +162,17 @@ public class Draw
 
     Platform.runLater(()-> create.setOnAction(event -> {
 
-      ArrayList<String> emails = new ArrayList<>();
-      for(UserTableRow row : attendance.getItems())
-      {
-        if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
-        {
-          emails.add(row.getEmail());
-        }
-      }
+
       if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
-
+        ArrayList<String> emails = new ArrayList<>();
+        for(UserTableRow row : attendance.getItems())
+        {
+          if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+          {
+            emails.add(row.getEmail());
+          }
+        }
         createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), emails);
         stage.close();
       }else
@@ -241,6 +240,7 @@ public class Draw
     HBox lead = new HBox();
     Label leadLabel = new Label("Lead email: ");
     TextField leadTextField = new TextField(leadEmail);
+    leadLabel.setTextFill(Paint.valueOf("White"));
     leadTextField.setBackground(null);
     leadTextField.setStyle("-fx-text-fill: white");
     leadTextField.setEditable(false);
@@ -464,6 +464,7 @@ public class Draw
       userTableRows.add(userRow);
     }
 
+
     attendance.setItems(userTableRows);
 
 
@@ -480,16 +481,26 @@ public class Draw
 
 
     Platform.runLater(()-> update.setOnAction(event -> {
+
       if (ConstraintChecker.checkTime(newStartTime.getText(),newEndTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
+        ArrayList<String> emailsUpdated = new ArrayList<>();
+        for(UserTableRow row : attendance.getItems())
+        {
+          if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+          {
+            emailsUpdated.add(row.getEmail());
+          }
+        }
         try
         {
           Meeting oldMeeting = new Meeting(title, description, Date.valueOf(
               datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
-              endTime), null);
-          Meeting newMeeting = new Meeting(newTitleTextField.getText(), newDescription.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), null);
+              endTime), leadEmail);
+          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrTextField.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), leads.getValue().getEmail());
 
-          updateMeetingObject(meetingViewModel,oldMeeting,newMeeting);
+          updateMeetingObject(meetingViewModel,oldMeeting,newMeeting, emailsUpdated);
+          stage.close();
         }
         catch(NullPointerException e){
           e.fillInStackTrace();
@@ -513,12 +524,13 @@ public class Draw
     stage.show();
   }
 
-  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting){
+  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting,  ArrayList<String> emails){
 
       Platform.runLater(()->{
         try
         {
-          meetingViewModel.editMeeting(oldMeeting, newMeeting);
+          System.out.println(emails);
+          meetingViewModel.editMeeting(oldMeeting, newMeeting, emails);
         }
         catch (SQLException | RemoteException e)
         {
