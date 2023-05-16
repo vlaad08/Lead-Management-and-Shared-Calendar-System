@@ -129,7 +129,7 @@ public class SQLConnection
   public void addLead(Lead lead) throws SQLException {
     try(
       Connection connection = getConnection();
-      PreparedStatement statement = connection.prepareStatement("INSERT INTO lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")) {
+      PreparedStatement statement = connection.prepareStatement("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")) {
         statement.setString(1, lead.firstName());
         statement.setString(2, lead.middleName());
         statement.setString(3, lead.lastName());
@@ -159,11 +159,7 @@ public class SQLConnection
         int businessId = resultSet.getInt("business_id");
         leads.add(new Lead(firstName,middleName,lastName,email,phone,title,businessId));
       }
-      if(!leads.isEmpty())
-      {
         return leads;
-      }
-      return null;
     }
   }
 

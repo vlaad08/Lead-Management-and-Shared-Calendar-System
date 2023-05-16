@@ -96,7 +96,7 @@ public class ManageLeadsController
   }
 
   public void addLead(){
-    Draw.drawLeadPopUp(tilePane, leadsViewModel);
+    Draw.drawLeadPopUp(leadVBox, leadsViewModel);
   }
   private void dorwMeetingObject(){
 
