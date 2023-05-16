@@ -23,6 +23,7 @@ public class ModelManager implements Model, ReloadData
 
   private ArrayList<Meeting> meetings;
   private ArrayList<Task> tasks;
+  private ArrayList<Lead> leads;
 
   private final PropertyChangeSupport support;
 
@@ -33,7 +34,7 @@ public class ModelManager implements Model, ReloadData
 
     meetings = communicator.getMeetings();
     tasks = communicator.getTasks();
-
+    leads = communicator.getLeads();
 
     support = new PropertyChangeSupport(this);
 
@@ -58,7 +59,13 @@ public class ModelManager implements Model, ReloadData
     support.firePropertyChange("reloadMeetings", false, true);
   }
 
-
+  @Override public void leadAddedFromServer()
+      throws SQLException, RemoteException
+  {
+    reloadLists();
+    support.firePropertyChange("reloadLead",false,true);
+    System.out.println("Model Manager fire an Event");
+  }
 
   @Override public void addPropertyChangeListener(
       PropertyChangeListener listener)
@@ -124,7 +131,13 @@ public class ModelManager implements Model, ReloadData
 
   @Override public ArrayList<Lead> getLeads() throws SQLException, RemoteException
   {
-    return communicator.getLeads();
+    try{
+      reloadLists();
+      return leads;
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override public boolean checkUser()
@@ -136,5 +149,6 @@ public class ModelManager implements Model, ReloadData
   {
     meetings = communicator.getMeetings();
     tasks = communicator.getTasks();
+    leads = communicator.getLeads();
   }
 }

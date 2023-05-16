@@ -11,9 +11,9 @@ import java.sql.SQLException;
 public class TaskListener extends UnicastRemoteObject implements
     RemotePropertyChangeListener<Task>
 {
-  public Model model;
+  public ReloadData model;
 
-  public TaskListener(Model model) throws RemoteException
+  public TaskListener(ReloadData model) throws RemoteException
   {
     this.model = model;
   }

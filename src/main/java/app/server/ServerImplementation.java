@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class ServerImplementation implements Communicator
 {
-  private final RemotePropertyChangeSupport<Meeting> meetingSupport;
-  private final RemotePropertyChangeSupport<Task> taskSupport;
+  private final RemotePropertyChangeSupport<String> support;
+  //private final RemotePropertyChangeSupport<Task> taskSupport;
 
   private SQLConnection connection;
 
@@ -24,8 +24,8 @@ public class ServerImplementation implements Communicator
 
   public ServerImplementation()
   {
-    meetingSupport = new RemotePropertyChangeSupport<>();
-    taskSupport = new RemotePropertyChangeSupport<>();
+    support = new RemotePropertyChangeSupport<>();
+    //taskSupport = new RemotePropertyChangeSupport<>();
   }
 
 
@@ -33,7 +33,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createMeeting(meeting);
-    meetingSupport.firePropertyChange("Meeting Created", null, meeting);
+    support.firePropertyChange("reloadMeeting", null, "");
   }
 
   @Override public void createTask(Task task)
@@ -41,7 +41,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createTask(task);
-    taskSupport.firePropertyChange("reloadTask", null, task);
+    support.firePropertyChange("reloadTask", null, "");
   }
 
   @Override public void createLead(Lead lead)
@@ -49,6 +49,8 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.addLead(lead);
+    support.firePropertyChange("reloadLead",null,"" );
+
   }
 
   @Override public void removeMeeting(Meeting meeting)
@@ -71,19 +73,19 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.editTask(newTask, oldTask);
-    taskSupport.firePropertyChange("reloadTask", oldTask, newTask);
+    support.firePropertyChange("reloadData",null,"" );
   }
 
-  @Override public void addMeetingListener(
-      RemotePropertyChangeListener<Meeting> listener) throws RemoteException
+  @Override public void addListener(
+      RemotePropertyChangeListener<String> listener) throws RemoteException
   {
-    meetingSupport.addPropertyChangeListener(listener);
+    support.addPropertyChangeListener(listener);
   }
 
   @Override public void addTaskListener(
       RemotePropertyChangeListener<Task> listener) throws RemoteException
   {
-    taskSupport.addPropertyChangeListener(listener);
+    //taskSupport.addPropertyChangeListener(listener);
   }
 
   @Override public void addLeadListener(

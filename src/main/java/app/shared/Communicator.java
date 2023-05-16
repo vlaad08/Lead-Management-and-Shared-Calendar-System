@@ -17,7 +17,7 @@ public interface Communicator extends Remote
   void removeTask(Task task) throws SQLException, RemoteException;
   void removeLead(Lead lead) throws SQLException, RemoteException;
   void editTask(Task newTask, Task oldTask) throws SQLException, RemoteException;
-  void addMeetingListener(RemotePropertyChangeListener<Meeting> listener) throws
+  void addListener(RemotePropertyChangeListener<String> listener) throws
       RemoteException;
   void addTaskListener(RemotePropertyChangeListener<Task> listener) throws RemoteException;
   void addLeadListener(RemotePropertyChangeListener<Lead> listener) throws RemoteException;

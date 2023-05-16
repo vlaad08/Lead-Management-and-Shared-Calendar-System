@@ -31,5 +31,4 @@ public interface Model
   ArrayList<Lead> getLeads() throws SQLException, RemoteException;
 
   void addPropertyChangeListener(PropertyChangeListener listener);
-  void taskAddedFromServer() throws SQLException, RemoteException;
 }

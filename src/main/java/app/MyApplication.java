@@ -30,13 +30,13 @@ public class MyApplication extends Application
     ReloadData data = modelManager ;
 
 
-    MessageListener messageListener = new MessageListener(data);
-    TaskListener taskListener = new TaskListener(model);
+    Listener listener = new Listener(data);
+    //All the liseners are in the Listener class
+    //TaskListener taskListener = new TaskListener(data);
     //LeadListener
 
-
-    communicator.addMeetingListener(messageListener);
-    communicator.addTaskListener(taskListener);
+    communicator.addListener(listener);
+    //communicator.addTaskListener(taskListener);
 
 
 
