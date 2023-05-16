@@ -88,8 +88,9 @@ public class ModelManager implements Model
   }
 
   @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
+      throws SQLException, RemoteException
   {
-
+    communicator.editMeeting(oldMeeting,newMeeting);
   }
 
   @Override public void addTask(String title, String description,

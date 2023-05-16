@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "1945");
+        "postgres", "password");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException
@@ -145,22 +145,22 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
 
 
   Connection connection = getConnection();
-  PreparedStatement statement = connection.prepareStatement("update meeting set title = ?, set description = ?,"
-      + " set date = ?, set startTime = ?, set endTime = ?, set email = ? where title = ?, description = ?, date = ?, startTime = ?, endTime = ?, email = ?");
+  PreparedStatement statement = connection.prepareStatement("update meeting set title = ?, description = ?,"
+      + " date = ?, startTime = ?, endTime = ?, email = ? where title = ? and description = ? and date = ? and startTime = ? and endTime = ? and email = ?");
 
   statement.setString(1, newMeeting.title());
-  statement.setString(1, newMeeting.description());
-  statement.setDate(1, newMeeting.date());
-  statement.setTime(1, newMeeting.startTime());
-  statement.setTime(1, newMeeting.endTime());
-  statement.setString(1, newMeeting.email());
+  statement.setString(2, newMeeting.description());
+  statement.setDate(3, newMeeting.date());
+  statement.setTime(4, newMeeting.startTime());
+  statement.setTime(5, newMeeting.endTime());
+  statement.setString(6, newMeeting.email());
 
-  statement.setString(1, oldMeeting.title());
-  statement.setString(1, oldMeeting.description());
-  statement.setDate(1, oldMeeting.date());
-  statement.setTime(1, oldMeeting.startTime());
-  statement.setTime(1, oldMeeting.endTime());
-  statement.setString(1, oldMeeting.email());
+  statement.setString(7, oldMeeting.title());
+  statement.setString(8, oldMeeting.description());
+  statement.setDate(9, oldMeeting.date());
+  statement.setTime(10, oldMeeting.startTime());
+  statement.setTime(11, oldMeeting.endTime());
+  statement.setString(12, oldMeeting.email());
 
   statement.executeUpdate();
 
