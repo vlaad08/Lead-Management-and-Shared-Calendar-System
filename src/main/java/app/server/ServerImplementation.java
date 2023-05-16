@@ -12,9 +12,7 @@ import java.util.ArrayList;
 
 public class ServerImplementation implements Communicator
 {
-  private final RemotePropertyChangeSupport<Meeting> meetingSupport;
-  private final RemotePropertyChangeSupport<Task> taskSupport;
-  private final RemotePropertyChangeSupport<User> userSupport;
+  private final RemotePropertyChangeSupport<String> support;
 
   private SQLConnection connection;
 
@@ -22,9 +20,7 @@ public class ServerImplementation implements Communicator
 
   public ServerImplementation()
   {
-    meetingSupport = new RemotePropertyChangeSupport<>();
-    taskSupport = new RemotePropertyChangeSupport<>();
-    userSupport = new RemotePropertyChangeSupport<>();
+    support = new RemotePropertyChangeSupport<>();
   }
 
 
@@ -32,7 +28,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createMeeting(meeting);
-    meetingSupport.firePropertyChange("reloadMeeting", null, meeting);
+    support.firePropertyChange("reloadMeeting", null, "");
   }
 
   @Override public void createTask(Task task)
@@ -40,7 +36,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createTask(task);
-    taskSupport.firePropertyChange("reloadTask", null, task);
+    support.firePropertyChange("reloadTask", null, "");
   }
 
   @Override public void createLead(Lead lead)
@@ -61,7 +57,7 @@ public class ServerImplementation implements Communicator
     connection = SQLConnection.getInstance();
     removeAssignedUsers(task);
     connection.removeTask(task);
-    taskSupport.firePropertyChange("reloadTask", null, task);
+    support.firePropertyChange("reloadTask", null, "");
   }
 
   @Override public void removeLead(Lead lead) throws SQLException
@@ -73,38 +69,22 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.editTask(newTask, oldTask);
-    taskSupport.firePropertyChange("reloadTask", oldTask, newTask);
+    support.firePropertyChange("reloadTask", null, "");
   }
   @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
     connection.editMeeting(oldMeeting,newMeeting);
-    meetingSupport.firePropertyChange("reloadMeeting",oldMeeting,newMeeting);
+    support.firePropertyChange("reloadMeeting",null,"");
   }
 
-  @Override public void addMeetingListener(
-      RemotePropertyChangeListener<Meeting> listener) throws RemoteException
+  @Override public void addListener(
+      RemotePropertyChangeListener<String> listener) throws RemoteException
   {
-    meetingSupport.addPropertyChangeListener(listener);
+    support.addPropertyChangeListener(listener);
   }
 
-  @Override public void addTaskListener(
-      RemotePropertyChangeListener<Task> listener) throws RemoteException
-  {
-    taskSupport.addPropertyChangeListener(listener);
-  }
 
-  @Override public void addLeadListener(
-      RemotePropertyChangeListener<Lead> listener) throws RemoteException
-  {
-
-  }
-
-  @Override public void addUserListener(
-      RemotePropertyChangeListener<User> listener) throws RemoteException
-  {
-    userSupport.addPropertyChangeListener(listener);
-  }
 
   @Override public ArrayList<Meeting> getMeetings() throws SQLException
   {

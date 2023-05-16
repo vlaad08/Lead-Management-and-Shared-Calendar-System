@@ -18,12 +18,8 @@ public interface Communicator extends Remote
   void removeLead(Lead lead) throws SQLException, RemoteException;
   void editTask(Task newTask, Task oldTask) throws SQLException, RemoteException;
   void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException;
-  void addMeetingListener(RemotePropertyChangeListener<Meeting> listener) throws
+  void addListener(RemotePropertyChangeListener<String> listener) throws
       RemoteException;
-  void addTaskListener(RemotePropertyChangeListener<Task> listener) throws RemoteException;
-  void addLeadListener(RemotePropertyChangeListener<Lead> listener) throws RemoteException;
-  void addUserListener(RemotePropertyChangeListener<User> listener) throws RemoteException;
-
   ArrayList<Meeting> getMeetings() throws RemoteException, SQLException;
 
   ArrayList<Task> getTasks() throws RemoteException, SQLException;

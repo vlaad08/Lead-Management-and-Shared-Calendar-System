@@ -1,8 +1,8 @@
 package app;
 
+import app.model.Listener;
 import app.model.Model;
 import app.model.ModelManager;
-import app.model.UserListener;
 import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
@@ -29,16 +29,11 @@ public class MyApplication extends Application
 
     Model model = new ModelManager(communicator);
 
-
-    MessageListener messageListener = new MessageListener(model);
-    TaskListener taskListener = new TaskListener(model);
-    UserListener userListener = new UserListener(model);
-    //LeadListener
+    Listener listener = new Listener(model);
 
 
-    communicator.addMeetingListener(messageListener);
-    communicator.addTaskListener(taskListener);
-    communicator.addUserListener(userListener);
+
+    communicator.addListener(listener);
 
 
 
