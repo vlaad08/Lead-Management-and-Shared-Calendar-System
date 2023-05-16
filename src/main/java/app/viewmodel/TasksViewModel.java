@@ -3,6 +3,7 @@ package app.viewmodel;
 import app.model.Model;
 import app.shared.Meeting;
 import app.shared.Task;
+import app.shared.User;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -72,5 +73,10 @@ public class TasksViewModel implements PropertyChangeListener
       tasks.set(observableList);
       support.firePropertyChange("reloadTasks", false, true);
     }
+  }
+
+  public ArrayList<User> getUsers() throws SQLException, RemoteException
+  {
+    return model.getUsers();
   }
 }

@@ -529,7 +529,6 @@ public class Draw
       Platform.runLater(()->{
         try
         {
-          System.out.println(emails);
           meetingViewModel.editMeeting(oldMeeting, newMeeting, emails);
         }
         catch (SQLException | RemoteException e)
@@ -543,6 +542,7 @@ public class Draw
 
 
   public static void drawTaskPopUp(TilePane tilePane, TasksViewModel tasksViewModel)
+      throws SQLException, RemoteException
   {
     Stage stage = new Stage();
 
@@ -567,10 +567,21 @@ public class Draw
     HBox title = new HBox();
     Label titleLabel = new Label("Title: ");
     TextField titleTextField = new TextField();
-    titleTextField.setText("");
     title.setSpacing(65);
     title.setPadding(new Insets(20, 0, 0, 20));
+
+
+
     title.getChildren().addAll(titleLabel, titleTextField);
+
+    HBox employeeChoice = new HBox();
+    Label employee = new Label("Employee: ");
+    ComboBox<User> employees = new ComboBox<>();
+    employees.setItems(FXCollections.observableArrayList(tasksViewModel.getUsers()));
+    employeeChoice.setSpacing(35);
+    employeeChoice.setPadding(new Insets(20, 0, 0, 20));
+
+    employeeChoice.getChildren().addAll(employee, employees);
 
     HBox descr = new HBox();
     descr.setSpacing(20);
@@ -616,7 +627,7 @@ public class Draw
     descr.setPadding(new Insets(20, 0, 0, 20));
     status.setPadding(new Insets(20, 0, 10, 20));
 
-    insert.addAll(topBar, title, descr, dueDate,  status);
+    insert.addAll(topBar, title, employeeChoice, descr, dueDate,  status);
 
 
     create.setOnAction(event -> {

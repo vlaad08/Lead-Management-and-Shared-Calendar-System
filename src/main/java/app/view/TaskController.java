@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class TaskController implements PropertyChangeListener
@@ -93,7 +95,7 @@ public class TaskController implements PropertyChangeListener
     }
   }
 
-  public void addTask()
+  public void addTask() throws SQLException, RemoteException
   {
     Draw.drawTaskPopUp(tilePane, tasksViewModel);
   }

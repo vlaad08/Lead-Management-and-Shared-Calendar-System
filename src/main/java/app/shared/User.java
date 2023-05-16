@@ -105,11 +105,8 @@ public class User implements Serializable
     this.manager = manager;
   }
 
-  @Override public String toString()
+  public String toString()
   {
-    return "User{" + "firstName='" + firstName + '\'' + ", middleName='"
-        + middleName + '\'' + ", lastName='" + lastName + '\'' + ", email='"
-        + email + '\'' + ", phone='" + phone + '\'' + ", manager=" + manager
-        + ", street='" + street + '\'' + ", postalCode=" + postalCode + '}';
+      return firstName + " " + lastName + " | " + email;
   }
 }
