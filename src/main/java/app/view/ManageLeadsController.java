@@ -92,7 +92,5 @@ public class ManageLeadsController
   public void addLead(){
     Draw.drawLeadPopUp(leadVBox, leadsViewModel);
   }
-  private void dorwMeetingObject(){
 
-  }
 }
