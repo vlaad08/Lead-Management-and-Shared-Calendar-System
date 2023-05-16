@@ -121,7 +121,7 @@ public class MeetingController implements PropertyChangeListener
 
   public void addMeeting() throws SQLException, RemoteException
   {
-    Draw.drawMeetingPopUp(tilePane, meetingViewModel);
+    Draw.drawMeetingPopUp(meetingViewModel);
   }
 
 

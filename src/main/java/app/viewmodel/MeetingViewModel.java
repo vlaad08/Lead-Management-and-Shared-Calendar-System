@@ -3,6 +3,7 @@ package app.viewmodel;
 import app.model.Model;
 import app.shared.Meeting;
 import app.shared.User;
+import app.shared.UserTableRow;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -42,10 +43,10 @@ public class MeetingViewModel implements PropertyChangeListener
     property.bindBidirectional(meetings);
   }
 
-  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime,String email)
+  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime, String leadEmail,ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.addMeeting(title,description,date,startTime,endTime,email);
+    model.addMeeting(title,description,date,startTime,endTime, leadEmail, emails);
   }
 
   public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
@@ -66,6 +67,12 @@ public class MeetingViewModel implements PropertyChangeListener
 
   public ArrayList<User> getUsers() throws SQLException, RemoteException
   {return model.getUsers();}
+
+  public ArrayList<String> getAttendance(Meeting meeting)
+      throws SQLException, RemoteException
+  {
+    return model.getAttendance(meeting);
+  }
 
 
   public boolean checkUser()

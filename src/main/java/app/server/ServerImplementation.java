@@ -116,6 +116,26 @@ public class ServerImplementation implements Communicator
     return connection.getUsers();
   }
 
+  @Override public void attendsMeeting(String email, Meeting meeting) throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    connection.setAttendance(email,meeting);
+  }
+
+  @Override public ArrayList<String> getAttendance(Meeting meeting)
+      throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getAttendance(meeting);
+  }
+
+  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
+      throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    connection.editMeeting(oldMeeting,newMeeting);
+  }
+
   //Syncronization of Users
 
 

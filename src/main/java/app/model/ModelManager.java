@@ -1,9 +1,6 @@
 package app.model;
 
-import app.shared.Communicator;
-import app.shared.Meeting;
-import app.shared.Task;
-import app.shared.User;
+import app.shared.*;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -14,9 +11,8 @@ import java.util.ArrayList;
 
 public class ModelManager implements Model
 {
-  private Communicator communicator;
+  private final Communicator communicator;
 
-  private User user;
 
   private ArrayList<Meeting> meetings;
   private ArrayList<Task> tasks;
@@ -36,19 +32,22 @@ public class ModelManager implements Model
 
     support = new PropertyChangeSupport(this);
 
-    user  =new User("Craig", "", "Larhman", "vaoiodiw@gmail.com", "40182241", true, "Stefan Cel Mare", 8700);
+
   }
 
-  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email)
+  @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String leadEmail,ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    communicator.createMeeting(new Meeting(title, description, date, startTime, endTime, email));
+    Meeting meeting = new Meeting(title, description, date, startTime, endTime, leadEmail);
+
+
+    communicator.createMeeting(meeting);
+    for(String email: emails)
+    {
+      communicator.attendsMeeting(email, meeting);
+    }
   }
 
-  public void setUser()
-  {
-    user.setManager(true);
-  }
 
   @Override public void meetingAddedFromServer()
       throws SQLException, RemoteException
@@ -84,6 +83,12 @@ public class ModelManager implements Model
     return users;
   }
 
+  @Override public ArrayList<String> getAttendance(Meeting meeting)
+      throws SQLException, RemoteException
+  {
+    return communicator.getAttendance(meeting);
+  }
+
   @Override public void removeMeeting(Meeting meeting)
   {
 
@@ -100,8 +105,9 @@ public class ModelManager implements Model
   }
 
   @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting)
+      throws SQLException, RemoteException
   {
-
+    communicator.editMeeting(oldMeeting, newMeeting);
   }
 
   @Override public void addTask(String title, String description,

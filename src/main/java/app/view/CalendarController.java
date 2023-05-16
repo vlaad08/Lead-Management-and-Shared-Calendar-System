@@ -251,7 +251,7 @@ public class CalendarController {
         {
             ArrayList<Meeting> meetings = calendarViewModel.getMeetings();
             for (Meeting meeting : meetings) {
-                LocalDateTime localDateTime = LocalDateTime.of(meeting.date().toLocalDate(), meeting.startTime().toLocalTime());
+                LocalDateTime localDateTime = LocalDateTime.of(meeting.getDate().toLocalDate(), meeting.getStartTime().toLocalTime());
                 ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(),
                     localDateTime.getDayOfMonth(), localDateTime.getHour(),
                     localDateTime.getMinute(), 0,0,dateFocus.getZone());

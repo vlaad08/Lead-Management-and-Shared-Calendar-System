@@ -27,4 +27,8 @@ public interface Communicator extends Remote
 
   ArrayList<Task> getTasks() throws RemoteException, SQLException;
   ArrayList<User> getUsers() throws RemoteException, SQLException;
+  void attendsMeeting(String email, Meeting meeting) throws SQLException, RemoteException;
+
+  ArrayList<String> getAttendance(Meeting meeting) throws SQLException, RemoteException;
+  void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException;
 }

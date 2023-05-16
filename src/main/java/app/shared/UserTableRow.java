@@ -1,8 +1,9 @@
-package app.view;
+package app.shared;
 
-import app.shared.User;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+
 
 public class UserTableRow
 {
@@ -12,24 +13,51 @@ public class UserTableRow
 
   private final SimpleStringProperty attends;
 
+
+  private final User user;
+
   public UserTableRow(User user)
   {
+    this.user = user;
     this.firstName = new SimpleStringProperty(user.getFirstName());
     this.lastName = new SimpleStringProperty(user.getLastName());
     this.email = new SimpleStringProperty(user.getEmail());
     this.attends = new SimpleStringProperty("Yes");
   }
 
+  public String getFirstName()
+  {
+    return firstName.get();
+  }
 
   public SimpleStringProperty firstNameProperty()
   {
     return firstName;
   }
 
+  public void setFirstName(String firstName)
+  {
+    this.firstName.set(firstName);
+  }
+
+  public String getLastName()
+  {
+    return lastName.get();
+  }
 
   public SimpleStringProperty lastNameProperty()
   {
     return lastName;
+  }
+
+  public void setLastName(String lastName)
+  {
+    this.lastName.set(lastName);
+  }
+
+  public String getEmail()
+  {
+    return email.get();
   }
 
   public SimpleStringProperty emailProperty()
@@ -37,13 +65,28 @@ public class UserTableRow
     return email;
   }
 
-  public ObservableValue<String> attendsProperty()
+  public void setEmail(String email)
+  {
+    this.email.set(email);
+  }
+
+  public String getAttends()
+  {
+    return attends.get();
+  }
+
+  public SimpleStringProperty attendsProperty()
   {
     return attends;
   }
 
-  public String getEmail()
+  public void setAttends(String attends)
   {
-    return email.getValueSafe();
+    this.attends.set(attends);
+  }
+
+  public User getUser()
+  {
+    return user;
   }
 }

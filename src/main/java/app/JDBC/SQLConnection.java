@@ -65,12 +65,12 @@ public class SQLConnection
         PreparedStatement statement = connection.prepareStatement(
             "INSERT INTO Meeting(title, description, date, startTime, endTime, email) VALUES(?, ?, ?, ?, ?, ?)"))
     {
-      statement.setString(1, meeting.title());
-      statement.setString(2, meeting.description());
-      statement.setDate(3, meeting.date());
-      statement.setTime(4, meeting.startTime());
-      statement.setTime(5, meeting.endTime());
-      statement.setString(6, meeting.email());
+      statement.setString(1, meeting.getTitle());
+      statement.setString(2, meeting.getDescription());
+      statement.setDate(3, meeting.getDate());
+      statement.setTime(4, meeting.getStartTime());
+      statement.setTime(5, meeting.getEndTime());
+      statement.setString(6, meeting.getEmail());
       statement.executeUpdate();
     }
   }
@@ -195,24 +195,57 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
   PreparedStatement statement = connection.prepareStatement("update meeting set title = ?, set description = ?,"
       + " set date = ?, set startTime = ?, set endTime = ?, set email = ? where title = ?, description = ?, date = ?, startTime = ?, endTime = ?, email = ?");
 
-  statement.setString(1, newMeeting.title());
-  statement.setString(2, newMeeting.description());
-  statement.setDate(3, newMeeting.date());
-  statement.setTime(4, newMeeting.startTime());
-  statement.setTime(5, newMeeting.endTime());
-  statement.setString(6, newMeeting.email());
+  statement.setString(1, newMeeting.getTitle());
+  statement.setString(2, newMeeting.getDescription());
+  statement.setDate(3, newMeeting.getDate());
+  statement.setTime(4, newMeeting.getStartTime());
+  statement.setTime(5, newMeeting.getEndTime());
+  statement.setString(6, newMeeting.getEmail());
 
-  statement.setString(7, oldMeeting.title());
-  statement.setString(8, oldMeeting.description());
-  statement.setDate(9, oldMeeting.date());
-  statement.setTime(10, oldMeeting.startTime());
-  statement.setTime(11, oldMeeting.endTime());
-  statement.setString(12, oldMeeting.email());
+  statement.setString(7, oldMeeting.getTitle());
+  statement.setString(8, oldMeeting.getDescription());
+  statement.setDate(9, oldMeeting.getDate());
+  statement.setTime(10, oldMeeting.getStartTime());
+  statement.setTime(11, oldMeeting.getEndTime());
+  statement.setString(12, oldMeeting.getEmail());
 
   statement.executeUpdate();
 
   }
 
+  public void setAttendance(String email, Meeting meeting) throws SQLException
+  {
+    try(Connection connection = getConnection();
+    PreparedStatement statement = connection.prepareStatement("insert into attendance (title, date, starttime, endtime, email) values (?,?,?,?,?)"))
+    {
+      statement.setString(1,meeting.getTitle());
+      statement.setDate(2, meeting.getDate());
+      statement.setTime(3, meeting.getStartTime());
+      statement.setTime(4, meeting.getEndTime());
+      statement.setString(5,email);
+      statement.executeUpdate();
+    }
+  }
 
 
+
+  public ArrayList<String> getAttendance(Meeting meeting) throws SQLException
+  {
+    try(Connection connection = getConnection();
+    PreparedStatement statement = connection.prepareStatement("select * from attendance"
+        + " where title = ? and date = ? and starttime = ? and endtime = ?"))
+    {
+      ArrayList<String> emails = new ArrayList<>();
+      statement.setString(1, meeting.getTitle());
+      statement.setDate(2, meeting.getDate());
+      statement.setTime(3, meeting.getStartTime());
+      statement.setTime(4, meeting.getEndTime());
+      ResultSet set = statement.executeQuery();
+      while (set.next())
+      {
+        emails.add(set.getString("email"));
+      }
+      return emails;
+    }
+  }
 }

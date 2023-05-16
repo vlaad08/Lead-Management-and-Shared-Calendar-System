@@ -3,17 +3,17 @@ package app.model;
 import app.shared.Meeting;
 import app.shared.Task;
 import app.shared.User;
+import app.shared.UserTableRow;
 
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 
 public interface Model
 {
-  void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String email)
+  void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String leadEmail,ArrayList<String> emails)
       throws SQLException, RemoteException;
   void removeMeeting(Meeting meeting);
   ArrayList<Meeting> getMeetings();
@@ -26,7 +26,6 @@ public interface Model
 
   ArrayList<Task> getTasks();
   boolean checkUser();
-  void setUser();
   void meetingAddedFromServer()
       throws SQLException, RemoteException;
 
@@ -34,4 +33,6 @@ public interface Model
   void taskAddedFromServer() throws SQLException, RemoteException;
   void reloadUsers() throws SQLException, RemoteException;
   ArrayList<User> getUsers() throws SQLException, RemoteException;
+  ArrayList<String> getAttendance(Meeting meeting)
+      throws SQLException, RemoteException;
 }

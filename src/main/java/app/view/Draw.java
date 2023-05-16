@@ -1,13 +1,11 @@
 package app.view;
 
 import app.model.ConstraintChecker;
-import app.shared.User;
-import app.shared.Lead;
-import app.shared.Meeting;
-import app.shared.Task;
+import app.shared.*;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -34,7 +32,7 @@ import java.util.ArrayList;
 public class Draw
 {
 
-  public static void drawMeetingPopUp(TilePane tilePane, MeetingViewModel meetingViewModel)
+  public static void drawMeetingPopUp(MeetingViewModel meetingViewModel)
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
@@ -115,7 +113,7 @@ public class Draw
 
     HBox employeeAttendance = new HBox();
 
-    ObservableList<UserTableRow> usersList;
+    ObservableList<UserTableRow> usersList = FXCollections.observableArrayList();;
 
     TableView<UserTableRow> attendance = new TableView<>();
     attendance.setEditable(true);
@@ -139,7 +137,7 @@ public class Draw
 
     ArrayList<User> users = meetingViewModel.getUsers();
 
-    usersList = FXCollections.observableArrayList();
+
     for (User user : users) {
       usersList.add(new UserTableRow(user));
     }
@@ -157,17 +155,25 @@ public class Draw
 
 
 
-
-
     dateTime.setPadding(new Insets(20, 0, 0, 20));
     descr.setPadding(new Insets(20, 0, 10, 20));
 
     insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
 
     Platform.runLater(()-> create.setOnAction(event -> {
+
+      ArrayList<String> emails = new ArrayList<>();
+      for(UserTableRow row : attendance.getItems())
+      {
+        if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+        {
+          emails.add(row.getEmail());
+        }
+      }
       if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
-        createMeetingObject(tilePane, meetingViewModel, titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), usersList);
+
+        createMeetingObject(meetingViewModel, titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), emails);
         stage.close();
       }else
       {
@@ -185,35 +191,33 @@ public class Draw
 
   }
 
-  public static void createMeetingObject(TilePane tilePane,
-      MeetingViewModel meetingViewModel, String title, ComboBox<Lead> lead,
+  public static void createMeetingObject(MeetingViewModel meetingViewModel, String title, ComboBox<Lead> lead,
       DatePicker datePicker, String startTime, String endTime,
-      String description, ObservableList<UserTableRow> users){
-    try
-    {
-      tilePane.getChildren().add(
-          drawMeetingTile(meetingViewModel, title, datePicker, startTime, endTime, description, users));
+      String description, ArrayList<String> emails){
+
       Date date=Date.valueOf(datePicker.getValue());
       Platform.runLater(()->{
+
         try
         {
-          meetingViewModel.addMeeting(title,description,date, Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),null);
+          meetingViewModel.addMeeting(title,description,date, Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),null,emails);
         }
         catch (SQLException | RemoteException e)
         {
           throw new RuntimeException(e);
         }
+
       });
-    }
-    catch (SQLException | NullPointerException e)
-    {
-      throw new RuntimeException(e);
-    }
+
   }
 
-  private static VBox drawMeetingTile(MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description, ObservableList<UserTableRow> users) throws SQLException
+  private static VBox drawMeetingTile(MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description) throws SQLException
   {
+
+
     VBox meeting = new VBox();
+
+
 
     meeting.setPadding(new Insets(10));
 
@@ -279,16 +283,26 @@ public class Draw
     meeting.getChildren().addAll(titleRow, date, time1, time2, descr);
 
     meeting.setOnMouseClicked(event -> {
-      System.out.println("dwfaf");
-      drawManageMeetingPopUp(meetingViewModel, title, datePicker, startTime, endTime, description, users);
+
+      try
+      {
+        drawManageMeetingPopUp(meetingViewModel, title, datePicker, startTime, endTime, description);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
     });
 
     return meeting;
   }
 
-  public static void drawManageMeetingPopUp(MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description, ObservableList<UserTableRow> users){
+  public static void drawManageMeetingPopUp(MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description)
+      throws SQLException, RemoteException
+  {
 
     Stage stage = new Stage();
+
 
     //container
     VBox parent = new VBox();
@@ -331,12 +345,14 @@ public class Draw
     startDate.setPrefWidth(75);
     DatePicker newDatePicker = new DatePicker(LocalDate.now());
     newDatePicker.setPrefWidth(170);
+
     TextField newStartTime = new TextField(
         LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
     newStartTime.setPrefWidth(60);
     Label to = new Label("to: ");
     TextField newEndTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
     newEndTime.setPrefWidth(60);
+
     Button update = new Button("Update");
     update.setPrefWidth(60);
     update.setTextFill(Paint.valueOf("White"));
@@ -361,19 +377,22 @@ public class Draw
     descr.getChildren().add(descrTextField);
     descr.setLayoutY(10);
 
-    HBox employeeAttendance = new HBox();
 
-    TableView<UserTableRow> newAttendance = new TableView<>();
-    newAttendance.setEditable(true);
+
+
+
+    HBox employeeAttendance = new HBox();
+    TableView<UserTableRow> attendance = new TableView<>();
+    attendance.setEditable(true);
     TableColumn<UserTableRow, String> firstName = new TableColumn<>("First Name");
     TableColumn<UserTableRow, String> lastName = new TableColumn<>("Last Name");
     TableColumn<UserTableRow, String> email = new TableColumn<>("Email");
     TableColumn<UserTableRow, String> attends = new TableColumn<>("Attends");
 
-    newAttendance.getColumns().add(firstName);
-    newAttendance.getColumns().add(lastName);
-    newAttendance.getColumns().add(email);
-    newAttendance.getColumns().add(attends);
+    attendance.getColumns().add(firstName);
+    attendance.getColumns().add(lastName);
+    attendance.getColumns().add(email);
+    attendance.getColumns().add(attends);
 
     firstName.setCellValueFactory(cell -> cell.getValue().firstNameProperty());
     lastName.setCellValueFactory(cell -> cell.getValue().lastNameProperty());
@@ -382,23 +401,53 @@ public class Draw
 
     attends.setCellFactory(ComboBoxTableCell.forTableColumn("Yes", "No"));
 
+    attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    attendance.setPrefWidth(600);
+    attendance.setPrefHeight(150);
+    attendance.setPadding(Insets.EMPTY);
 
 
 
-    newAttendance.setItems(users);
+    Time start = Time.valueOf(LocalTime.parse(startTime));
+    Time end = Time.valueOf(LocalTime.parse(endTime));
 
-    newAttendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    newAttendance.setPrefWidth(600);
-    newAttendance.setPrefHeight(150);
-    newAttendance.setPadding(Insets.EMPTY);
-    employeeAttendance.getChildren().add(newAttendance);
+
+    Meeting m = new Meeting(title, description, Date.valueOf(datePicker.getValue()), start, end, null);
+    ArrayList<User> users = meetingViewModel.getUsers();
+    ObservableList<UserTableRow> userTableRows = FXCollections.observableArrayList();
+    ArrayList<String> emails = meetingViewModel.getAttendance(m);
+
+
+    for(User user : users)
+    {
+      UserTableRow userRow = new UserTableRow(user);
+      userRow.setAttends("No");
+      String userEmail = userRow.getEmail();
+      for(String e : emails)
+      {
+        if(e.equalsIgnoreCase(userEmail))
+        {
+          userRow.setAttends("Yes");
+        }
+      }
+
+
+      userTableRows.add(userRow);
+    }
+
+    attendance.setItems(userTableRows);
+
+
+
+    employeeAttendance.getChildren().add(attendance);
+
+
 
 
     dateTime.setPadding(new Insets(20, 0, 0, 20));
     descr.setPadding(new Insets(20, 0, 10, 20));
 
     insert.addAll(topBar, newTitle,lead, dateTime, descr, employeeAttendance);
-
 
 
     Platform.runLater(()-> update.setOnAction(event -> {
@@ -408,8 +457,8 @@ public class Draw
         {
           Meeting oldMeeting = new Meeting(title, description, Date.valueOf(
               datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
-              endTime), users.get(1).getEmail());
-          Meeting newMeeting = new Meeting(newTitleTextField.getText(), newDescription.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), newAttendance.getSelectionModel().getSelectedItem().getEmail());
+              endTime), null);
+          Meeting newMeeting = new Meeting(newTitleTextField.getText(), newDescription.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), null);
 
           updateMeetingObject(meetingViewModel,oldMeeting,newMeeting);
         }
@@ -608,7 +657,6 @@ public class Draw
 
 
 
-
     titleRow.getChildren().addAll(titleLabel, titleTextField);
     date.getChildren().addAll(dateLabel, datePicker);
     descr.getChildren().add(descTextField);
@@ -788,16 +836,16 @@ public class Draw
 
       for(Meeting meeting : meetings)
       {
-        LocalDate date = meeting.date().toLocalDate();
+        LocalDate date = meeting.getDate().toLocalDate();
         DatePicker datePicker=new DatePicker(date);
-        String startTime=meeting.startTime().toString();
-        String endTime=meeting.endTime().toString();
+        String startTime=meeting.getStartTime().toString();
+        String endTime=meeting.getEndTime().toString();
         Platform.runLater(()->{
           try
           {
             tilePane.getChildren().add(
-                drawMeetingTile(meetingViewModel, meeting.title(),datePicker,startTime,endTime,
-                    meeting.description(), null));
+                drawMeetingTile(meetingViewModel, meeting.getTitle(),datePicker,startTime,endTime,
+                    meeting.getDescription()));
 
           }
           catch (SQLException e)
@@ -831,7 +879,6 @@ public class Draw
       }
     }
   }
-
 
 
   public static void hoverButtonNavbar(Button... b)
