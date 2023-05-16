@@ -1,11 +1,8 @@
 package app;
 
-import app.model.ReloadData;
-import app.model.listeners.MessageListener;
 import app.model.Model;
 import app.model.ModelManager;
-import app.model.listeners.TaskListener;
-import app.model.listeners.UserListener;
+import app.model.UserListener;
 import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
