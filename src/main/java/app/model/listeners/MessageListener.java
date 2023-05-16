@@ -1,6 +1,7 @@
-package app.model;
+package app.model.listeners;
 
 
+import app.model.Model;
 import app.shared.Meeting;
 import dk.via.remote.observer.RemotePropertyChangeEvent;
 import dk.via.remote.observer.RemotePropertyChangeListener;
@@ -22,7 +23,7 @@ public class MessageListener extends UnicastRemoteObject implements
       RemotePropertyChangeEvent<Meeting> remotePropertyChangeEvent)
       throws RemoteException
   {
-    if(remotePropertyChangeEvent.getPropertyName().equals("Meeting Created"))
+    if(remotePropertyChangeEvent.getPropertyName().equals("reloadMeeting"))
     {
       try
       {

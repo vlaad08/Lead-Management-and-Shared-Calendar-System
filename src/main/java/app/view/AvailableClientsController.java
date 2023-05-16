@@ -29,25 +29,11 @@ public class AvailableClientsController
     this.availableClientsViewModel = availableClientsViewModel;
     this.root = root;
 
-    //bs comes below
-    hoverButtonNavbar(calendarButton);
-    hoverButtonNavbar(plansButton);
-    hoverButtonNavbar(meetingButton);
-    hoverButtonNavbar(tasksButton);
-    hoverButtonNavbar(clientsButton);
-    hoverButtonNavbar(manageLeadsButton);
-    hoverButtonNavbar(closeButton);
+
+    Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
+
   }
 
-  public void hoverButtonNavbar(Button b)
-  {
-    b.setOnMouseEntered(event -> {
-      b.setStyle("-fx-background-color: #786FAC;");
-    });
-    b.setOnMouseExited(event -> {
-      b.setStyle("-fx-background-color: none");
-    });
-  }
 
   public void onCloseButton()
   {

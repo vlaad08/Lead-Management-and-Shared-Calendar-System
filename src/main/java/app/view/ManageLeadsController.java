@@ -38,15 +38,9 @@ public class ManageLeadsController
     this.leadsViewModel = leadsViewModel;
     this.root = root;
 
-    //bs comes below
-    hoverButtonNavbar(calendarButton);
-    hoverButtonNavbar(availableClientsButton);
-    hoverButtonNavbar(plansButton);
-    hoverButtonNavbar(meetingButton);
-    hoverButtonNavbar(tasksButton);
-    hoverButtonNavbar(clientsButton);
 
-    hoverButtonNavbar(closeButton);
+    Draw.hoverButtonNavbar(calendarButton, availableClientsButton, plansButton, meetingButton, tasksButton, clientsButton, closeButton);
+
 
     //Experimental Code
 

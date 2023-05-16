@@ -73,13 +73,9 @@ public class CalendarController {
         drawCalendar();
 
 
-        hoverButtonNavbar(availableClientsButton);
-        hoverButtonNavbar(leadButton);
-        hoverButtonNavbar(meetingButton);
-        hoverButtonNavbar(tasksButton);
-        hoverButtonNavbar(clientsButton);
-        hoverButtonNavbar(manageLeadsButton);
-        hoverButtonNavbar(closeButton);
+
+        Draw.hoverButtonNavbar(availableClientsButton, leadButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
+
     }
 
     public void hoverButtonNavbar(Button b)
@@ -255,7 +251,7 @@ public class CalendarController {
         {
             ArrayList<Meeting> meetings = calendarViewModel.getMeetings();
             for (Meeting meeting : meetings) {
-                LocalDateTime localDateTime = LocalDateTime.of(meeting.date().toLocalDate(), meeting.startTime().toLocalTime());
+                LocalDateTime localDateTime = LocalDateTime.of(meeting.getDate().toLocalDate(), meeting.getStartTime().toLocalTime());
                 ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(),
                     localDateTime.getDayOfMonth(), localDateTime.getHour(),
                     localDateTime.getMinute(), 0,0,dateFocus.getZone());
