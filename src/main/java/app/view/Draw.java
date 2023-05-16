@@ -1283,7 +1283,7 @@ public class Draw
     Platform.runLater(()->{
       try
       {
-        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.valueOf(businessID)));
+        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.parseInt(businessID)));
       }
       catch (Exception e)
       {
