@@ -1,18 +1,24 @@
 package app.view;
 
+import app.shared.Lead;
+import app.shared.Meeting;
 import app.viewmodel.LeadsViewModel;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 
-public class ManageLeadsController
+public class ManageLeadsController implements PropertyChangeListener
 {
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
@@ -32,19 +38,26 @@ public class ManageLeadsController
   private Region root;
   private ViewHandler viewHandler;
   private LeadsViewModel leadsViewModel;
+  private final ListView<Lead> leads = new ListView<>();
 
   public void init(ViewHandler viewHandler, LeadsViewModel leadsViewModel, Region root){
     this.viewHandler = viewHandler;
     this.leadsViewModel = leadsViewModel;
     this.root = root;
 
+    leadsViewModel.addPropertyChangeListener(this);
 
-    Draw.hoverButtonNavbar(calendarButton, availableClientsButton, plansButton, meetingButton, tasksButton, clientsButton, closeButton);
+    //bs comes below
+    hoverButtonNavbar(calendarButton);
+    hoverButtonNavbar(availableClientsButton);
+    hoverButtonNavbar(plansButton);
+    hoverButtonNavbar(meetingButton);
+    hoverButtonNavbar(tasksButton);
+    hoverButtonNavbar(clientsButton);
+    hoverButtonNavbar(closeButton);
 
-
-    //Experimental Code
-
-    //Close of experimental code
+    leadsViewModel.bind(leads.itemsProperty());
+    Draw.drawLead(leadVBox, leadsViewModel,leads);
   }
 
   public void hoverButtonNavbar(Button b)
@@ -92,5 +105,18 @@ public class ManageLeadsController
   public void addLead(){
     Draw.drawLeadPopUp(leadVBox, leadsViewModel);
   }
+  private void dorwMeetingObject(){
 
+  }
+
+  @Override public void propertyChange(PropertyChangeEvent evt)
+  {
+    if(evt.getPropertyName().equals("reloadLead"))
+    {
+      Platform.runLater(()->{
+        Draw.drawLead(leadVBox, leadsViewModel, leads);
+      });
+
+    }
+  }
 }

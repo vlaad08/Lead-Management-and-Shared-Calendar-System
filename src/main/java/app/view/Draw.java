@@ -1,5 +1,6 @@
 package app.view;
 
+import app.JDBC.SQLConnection;
 import app.model.ConstraintChecker;
 import app.shared.*;
 import app.viewmodel.LeadsViewModel;
@@ -1331,6 +1332,39 @@ public class Draw
     });
 
     return lead;
+  }
+
+  public static void drawLead(VBox vBox,LeadsViewModel leadsViewModel, ListView<Lead> leads)
+  {
+    if(leads.getItems() != null)
+    {
+      for(Node node : vBox.getChildren())
+      {
+        if(node instanceof Node)
+        {
+          //vBox.getChildren().removeAll();
+          Platform.runLater(()-> vBox.getChildren().remove(node));
+        }
+      }
+
+      for(Lead element : leads.getItems())
+      {
+        String firstName = element.firstName();
+        String lastName = element.lastName();
+        String email = element.email();
+        String position = element.title();
+        Platform.runLater(()->{
+          try
+          {
+            vBox.getChildren().add(drawLeadTile(vBox,leadsViewModel,firstName,lastName,email,position));
+          }
+          catch (Exception e)
+          {
+            throw new RuntimeException(e);
+          }
+        });
+      }
+    }
   }
 
 
