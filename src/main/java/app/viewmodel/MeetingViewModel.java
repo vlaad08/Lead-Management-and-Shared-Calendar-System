@@ -1,6 +1,7 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.User;
 import app.shared.UserTableRow;
@@ -63,6 +64,11 @@ public class MeetingViewModel implements PropertyChangeListener
   public ArrayList<Meeting> getMeetings()
   {
     return model.getMeetings();
+  }
+
+  public ArrayList<Lead> getLeads() throws SQLException, RemoteException
+  {
+    return model.getLeads();
   }
 
   public ArrayList<User> getUsers() throws SQLException, RemoteException

@@ -1,9 +1,6 @@
 package app.model;
 
-import app.shared.Meeting;
-import app.shared.Task;
-import app.shared.User;
-import app.shared.UserTableRow;
+import app.shared.*;
 
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
@@ -35,4 +32,6 @@ public interface Model
   ArrayList<User> getUsers() throws SQLException, RemoteException;
   ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException;
+
+  ArrayList<Lead> getLeads() throws SQLException, RemoteException;
 }

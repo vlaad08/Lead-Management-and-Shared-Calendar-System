@@ -18,6 +18,8 @@ public class ModelManager implements Model
   private ArrayList<Task> tasks;
   private ArrayList<User> users;
 
+  private ArrayList<Lead> leads;
+
   private final PropertyChangeSupport support;
 
   public ModelManager(Communicator communicator)
@@ -28,6 +30,7 @@ public class ModelManager implements Model
     meetings = communicator.getMeetings();
     tasks = communicator.getTasks();
     users = communicator.getUsers();
+    leads = communicator.getLeads();
 
 
     support = new PropertyChangeSupport(this);
@@ -89,9 +92,15 @@ public class ModelManager implements Model
     return communicator.getAttendance(meeting);
   }
 
+  @Override public ArrayList<Lead> getLeads()
+      throws SQLException, RemoteException
+  {
+    leads = communicator.getLeads();
+    return leads;
+  }
+
   @Override public void removeMeeting(Meeting meeting)
   {
-
   }
 
   @Override public ArrayList<Meeting> getMeetings() {

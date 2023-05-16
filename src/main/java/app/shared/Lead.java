@@ -4,55 +4,63 @@ import java.io.Serializable;
 
 public class Lead implements Serializable
 {
-  private String name;
-  private String address;
-  private String phoneNumber;
-  private String status;
-
-  private boolean assigned;
+  private String firstname;
+  private String middleName;
+  private String lastname;
   private String email;
-  private User assignedUser;
+  private String phone;
+  private String title;
+  private int business_id;
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
-  public void setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public boolean isAssigned()
+  public Lead(String firstname, String middleName, String lastname, String email, String phone,String title, int business_id)
   {
-    return assigned;
+    this.firstname = firstname;
+    this.middleName = middleName;
+    this.lastname = lastname;
+    this.email = email;
+    this.phone = phone;
+    this.title = title;
+    this.business_id = business_id;
   }
 
-  public void setAssigned(boolean assigned)
+  public String getPhone()
   {
-    this.assigned = assigned;
+    return phone;
+  }
+
+  public void setPhone(String phone)
+  {
+    this.phone = phone;
+  }
+
+  public String getFirstname()
+  {
+    return firstname;
+  }
+
+  public void setFirstname(String firstname)
+  {
+    this.firstname = firstname;
+  }
+
+  public String getMiddleName()
+  {
+    return middleName;
+  }
+
+  public void setMiddleName(String middleName)
+  {
+    this.middleName = middleName;
+  }
+
+  public String getLastname()
+  {
+    return lastname;
+  }
+
+  public void setLastname(String lastname)
+  {
+    this.lastname = lastname;
   }
 
   public String getEmail()
@@ -65,11 +73,29 @@ public class Lead implements Serializable
     this.email = email;
   }
 
-  public User getAssignedUser() {
-    return assignedUser;
+  public String getTitle()
+  {
+    return title;
   }
 
-  public void setAssignedUser(User assignedUser) {
-    this.assignedUser = assignedUser;
+  public void setTitle(String title)
+  {
+    this.title = title;
+  }
+
+  public int getBusiness_id()
+  {
+    return business_id;
+  }
+
+  public void setBusiness_id(int business_id)
+  {
+    this.business_id = business_id;
+  }
+
+  public String toString()
+  {
+    return firstname + " " + lastname + " | " + email;
+
   }
 }

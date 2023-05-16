@@ -22,7 +22,7 @@ public class UserTableRow
     this.firstName = new SimpleStringProperty(user.getFirstName());
     this.lastName = new SimpleStringProperty(user.getLastName());
     this.email = new SimpleStringProperty(user.getEmail());
-    this.attends = new SimpleStringProperty("Yes");
+    this.attends = new SimpleStringProperty("No");
   }
 
   public String getFirstName()

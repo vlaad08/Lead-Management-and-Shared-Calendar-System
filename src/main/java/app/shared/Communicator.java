@@ -31,4 +31,6 @@ public interface Communicator extends Remote
 
   ArrayList<String> getAttendance(Meeting meeting) throws SQLException, RemoteException;
   void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException;
+
+  ArrayList<Lead> getLeads() throws SQLException, RemoteException;
 }

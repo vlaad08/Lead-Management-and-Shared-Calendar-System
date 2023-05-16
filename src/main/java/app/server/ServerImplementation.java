@@ -136,6 +136,13 @@ public class ServerImplementation implements Communicator
     connection.editMeeting(oldMeeting,newMeeting);
   }
 
+  @Override public ArrayList<Lead> getLeads()
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getLeads();
+  }
+
   //Syncronization of Users
 
 

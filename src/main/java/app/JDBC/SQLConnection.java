@@ -1,5 +1,6 @@
 package app.JDBC;
 
+import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
 import app.shared.User;
@@ -70,7 +71,7 @@ public class SQLConnection
       statement.setDate(3, meeting.getDate());
       statement.setTime(4, meeting.getStartTime());
       statement.setTime(5, meeting.getEndTime());
-      statement.setString(6, meeting.getEmail());
+      statement.setString(6, meeting.getLeadEmail());
       statement.executeUpdate();
     }
   }
@@ -200,14 +201,14 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
   statement.setDate(3, newMeeting.getDate());
   statement.setTime(4, newMeeting.getStartTime());
   statement.setTime(5, newMeeting.getEndTime());
-  statement.setString(6, newMeeting.getEmail());
+  statement.setString(6, newMeeting.getLeadEmail());
 
   statement.setString(7, oldMeeting.getTitle());
   statement.setString(8, oldMeeting.getDescription());
   statement.setDate(9, oldMeeting.getDate());
   statement.setTime(10, oldMeeting.getStartTime());
   statement.setTime(11, oldMeeting.getEndTime());
-  statement.setString(12, oldMeeting.getEmail());
+  statement.setString(12, oldMeeting.getLeadEmail());
 
   statement.executeUpdate();
 
@@ -224,6 +225,29 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.setTime(4, meeting.getEndTime());
       statement.setString(5,email);
       statement.executeUpdate();
+    }
+  }
+
+  public ArrayList<Lead> getLeads() throws SQLException
+  {
+    try(Connection connection = getConnection();
+    PreparedStatement statement = connection.prepareStatement("select * from lead"))
+    {
+      ArrayList<Lead> leads = new ArrayList<>();
+      ResultSet set = statement.executeQuery();
+      while(set.next())
+      {
+        String firstname = set.getString("firstname");
+        String middleName = set.getString("middlename");
+        String lastname = set.getString("lastname");
+        String email = set.getString("email");
+        String phone = set.getString("phone");
+        String title = set.getString("title");
+        int business_id = set.getInt("business_id");
+
+        leads.add(new Lead(firstname,middleName, lastname, email, phone, title, business_id));
+      }
+      return leads;
     }
   }
 

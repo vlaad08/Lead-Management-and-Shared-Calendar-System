@@ -14,5 +14,7 @@ module cl.sep2 {
   exports app.view;
   exports app.viewmodel;
   exports app.shared;
+  exports app.model;
+
   opens app.shared to java.rmi, javafx.fxml;
 }

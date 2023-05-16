@@ -65,6 +65,7 @@ public class Draw
     HBox lead=new HBox();
     Label leadLabel=new Label("Lead: ");
     ComboBox<Lead> leads=new ComboBox<>();
+    leads.setItems(FXCollections.observableArrayList(meetingViewModel.getLeads()));
     leads.setPrefWidth(150);
     lead.setSpacing(65);
     lead.setPadding(new Insets(20,0,0,20));
@@ -173,7 +174,7 @@ public class Draw
       if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
 
-        createMeetingObject(meetingViewModel, titleTextField.getText(),null, datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), emails);
+        createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), emails);
         stage.close();
       }else
       {
@@ -191,7 +192,7 @@ public class Draw
 
   }
 
-  public static void createMeetingObject(MeetingViewModel meetingViewModel, String title, ComboBox<Lead> lead,
+  public static void createMeetingObject(MeetingViewModel meetingViewModel, String title, Lead lead,
       DatePicker datePicker, String startTime, String endTime,
       String description, ArrayList<String> emails){
 
@@ -200,7 +201,7 @@ public class Draw
 
         try
         {
-          meetingViewModel.addMeeting(title,description,date, Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),null,emails);
+          meetingViewModel.addMeeting(title,description,date, Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),lead.getEmail(),emails);
         }
         catch (SQLException | RemoteException e)
         {
@@ -211,7 +212,7 @@ public class Draw
 
   }
 
-  private static VBox drawMeetingTile(MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description) throws SQLException
+  private static VBox drawMeetingTile(MeetingViewModel meetingViewModel, String title, String leadEmail, DatePicker datePicker, String startTime, String endTime, String description) throws SQLException
   {
 
 
@@ -235,6 +236,16 @@ public class Draw
     titleTextField.setStyle("-fx-text-fill: white");
     titleTextField.setEditable(false);
     titleRow.setSpacing(20);
+
+
+    HBox lead = new HBox();
+    Label leadLabel = new Label("Lead email: ");
+    TextField leadTextField = new TextField(leadEmail);
+    leadTextField.setBackground(null);
+    leadTextField.setStyle("-fx-text-fill: white");
+    leadTextField.setEditable(false);
+    lead.setSpacing(20);
+    lead.getChildren().addAll(leadLabel, leadTextField);
 
     HBox date = new HBox();
     Label dateLabel = new Label("Date: ");
@@ -280,13 +291,13 @@ public class Draw
     time2.setPadding(new Insets(10, 0, 10, 0));
     descr.setPadding(new Insets(10, 0, 10, 0));
 
-    meeting.getChildren().addAll(titleRow, date, time1, time2, descr);
+    meeting.getChildren().addAll(titleRow, lead, date, time1, time2, descr);
 
     meeting.setOnMouseClicked(event -> {
 
       try
       {
-        drawManageMeetingPopUp(meetingViewModel, title, datePicker, startTime, endTime, description);
+        drawManageMeetingPopUp(meetingViewModel, title, leadEmail, datePicker, startTime, endTime, description);
       }
       catch (SQLException | RemoteException e)
       {
@@ -297,7 +308,7 @@ public class Draw
     return meeting;
   }
 
-  public static void drawManageMeetingPopUp(MeetingViewModel meetingViewModel, String title, DatePicker datePicker, String startTime, String endTime, String description)
+  public static void drawManageMeetingPopUp(MeetingViewModel meetingViewModel, String title, String leadEmail, DatePicker datePicker, String startTime, String endTime, String description)
       throws SQLException, RemoteException
   {
 
@@ -325,14 +336,33 @@ public class Draw
 
     HBox newTitle = new HBox();
     Label newTitleLabel = new Label("Title: ");
-    TextField newTitleTextField = new TextField();
+    TextField newTitleTextField = new TextField(title);
     newTitle.setSpacing(65);
     newTitle.setPadding(new Insets(20, 0, 0, 20));
     newTitle.getChildren().addAll(newTitleLabel, newTitleTextField);
 
     HBox lead=new HBox();
     Label leadLabel=new Label("Lead: ");
+
     ComboBox<Lead> leads=new ComboBox<>();
+
+    ObservableList<Lead> leadsList = FXCollections.observableArrayList(meetingViewModel.getLeads());
+
+    leads.setItems(leadsList);
+    if(leadEmail != null)
+    {
+      for(Lead l : leadsList)
+      {
+        if(leadEmail.equals(l.getEmail()))
+        {
+          leads.setValue(l);
+          break;
+        }
+      }
+    }
+
+
+
     leads.setPrefWidth(150);
     lead.setSpacing(65);
     lead.setPadding(new Insets(20,0,0,20));
@@ -343,14 +373,13 @@ public class Draw
     dateTime.setSpacing(20);
     Label startDate = new Label("Date:");
     startDate.setPrefWidth(75);
-    DatePicker newDatePicker = new DatePicker(LocalDate.now());
+    DatePicker newDatePicker = new DatePicker(datePicker.getValue());
     newDatePicker.setPrefWidth(170);
 
-    TextField newStartTime = new TextField(
-        LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+    TextField newStartTime = new TextField(startTime);
     newStartTime.setPrefWidth(60);
     Label to = new Label("to: ");
-    TextField newEndTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
+    TextField newEndTime = new TextField(endTime);
     newEndTime.setPrefWidth(60);
 
     Button update = new Button("Update");
@@ -369,7 +398,7 @@ public class Draw
     descr.setSpacing(20);
     Label newDescription = new Label("Description:");
     newDescription.setPrefWidth(75);
-    TextField descrTextField = new TextField();
+    TextField descrTextField = new TextField(description);
     descrTextField.setAlignment(Pos.TOP_LEFT);
     descrTextField.setPrefWidth(330);
     descrTextField.setPrefHeight(100);
@@ -844,7 +873,7 @@ public class Draw
           try
           {
             tilePane.getChildren().add(
-                drawMeetingTile(meetingViewModel, meeting.getTitle(),datePicker,startTime,endTime,
+                drawMeetingTile(meetingViewModel, meeting.getTitle(),meeting.getLeadEmail(),datePicker,startTime,endTime,
                     meeting.getDescription()));
 
           }

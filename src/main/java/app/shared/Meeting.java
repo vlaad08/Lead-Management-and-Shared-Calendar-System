@@ -47,12 +47,12 @@ public class Meeting implements Serializable
     this.description = description;
   }
 
-  public String getEmail()
+  public String getLeadEmail()
   {
     return leadEmail;
   }
 
-  public void setEmail(String leadEmail)
+  public void setLeadEmail(String leadEmail)
   {
     this.leadEmail = leadEmail;
   }
