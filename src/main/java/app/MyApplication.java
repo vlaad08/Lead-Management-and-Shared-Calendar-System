@@ -1,6 +1,8 @@
 package app;
 
-import app.model.*;
+import app.model.Model;
+import app.model.ModelManager;
+import app.model.UserListener;
 import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
@@ -22,21 +24,21 @@ public class MyApplication extends Application
 
   @Override public void start(Stage primaryStage) throws Exception
   {
-    Registry registry = LocateRegistry.getRegistry(5168);
+    Registry registry = LocateRegistry.getRegistry(7000);
     Communicator communicator = (Communicator) registry.lookup("communicator");
 
-    ModelManager modelManager = new ModelManager(communicator);
-    Model model = modelManager;
-    ReloadData data = modelManager ;
+    Model model = new ModelManager(communicator);
 
 
-    Listener listener = new Listener(data);
-    //All the liseners are in the Listener class
-    //TaskListener taskListener = new TaskListener(data);
+    MessageListener messageListener = new MessageListener(model);
+    TaskListener taskListener = new TaskListener(model);
+    UserListener userListener = new UserListener(model);
     //LeadListener
 
-    communicator.addListener(listener);
-    //communicator.addTaskListener(taskListener);
+
+    communicator.addMeetingListener(messageListener);
+    communicator.addTaskListener(taskListener);
+    communicator.addUserListener(userListener);
 
 
 
