@@ -11,9 +11,9 @@ import java.sql.SQLException;
 public class MessageListener extends UnicastRemoteObject implements
     RemotePropertyChangeListener<Meeting>
 {
-  private final Model model;
+  private final ReloadData model;
 
-  public MessageListener(Model model) throws RemoteException{
+  public MessageListener(ReloadData model) throws RemoteException{
     this.model = model;
 
   }

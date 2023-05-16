@@ -5,6 +5,7 @@ import app.model.User;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
+import app.viewmodel.LeadsViewModel;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
@@ -17,10 +18,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -803,4 +804,174 @@ public class Draw
       button.setOnMouseExited(event -> button.setStyle("-fx-background-color: none"));
     }
   }
+
+  //All the Code that is bellow is Experimental
+  //is used for Manage Leads
+
+  public static void drawLeadPopUp(VBox vBox, LeadsViewModel leadsViewModel)
+  {
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+
+    HBox name = new HBox();
+    Label firstNameLabel = new Label("First Name: ");
+    firstNameLabel.setPrefWidth(65);
+    TextField firstNameTextField = new TextField();
+    firstNameTextField.setText("");
+    Label lastNameLabel = new Label("Last Name: ");
+    TextField lastNameTextField = new TextField();
+    lastNameTextField.setText("");
+    name.setSpacing(20);
+    name.setPadding(new Insets(20, 0, 0, 20));
+    name.getChildren().addAll(firstNameLabel, firstNameTextField,lastNameLabel,lastNameTextField);
+
+    HBox email = new HBox();
+    Label emailLabel = new Label("Email: ");
+    emailLabel.setPrefWidth(65);
+    TextField emailField = new TextField();
+    emailField.setText("example@gmail.com");
+    email.setSpacing(20);
+    email.setPadding(new Insets(20,0,0,20));
+    email.getChildren().addAll(emailLabel,emailField);
+
+    HBox phone = new HBox();
+    Label phoneLabel = new Label("Phone: ");
+    phoneLabel.setPrefWidth(65);
+    TextField phoneField = new TextField();
+    phoneField.setText("");
+    phone.setSpacing(20);
+    phone.setPadding(new Insets(20,0,0,20));
+    phone.getChildren().addAll(phoneLabel,phoneField);
+
+    HBox title = new HBox();
+    Label titleLabel = new Label("Title: ");
+    titleLabel.setPrefWidth(65);
+    TextField titleTextField = new TextField();
+    titleTextField.setText("");
+    title.setSpacing(20);
+    title.setPadding(new Insets(20, 0, 0, 20));
+    title.getChildren().addAll(titleLabel, titleTextField);
+
+    HBox businessID = new HBox();
+    businessID.setPadding(new Insets(5));
+    businessID.setSpacing(20);
+    Label businessLabel = new Label("Business ID:");
+    businessLabel.setPrefWidth(65);
+    TextField businessField = new TextField();
+    businessField.setText("7456");
+
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+
+    businessID.getChildren().add(businessLabel);
+    businessID.getChildren().add(businessField);
+    businessID.getChildren().add(create);
+
+    businessID.setPadding(new Insets(20, 0, 0, 20));
+
+    insert.addAll(topBar, name,email, phone, title,businessID);
+
+
+    create.setOnAction(event -> {
+      if (ConstraintChecker.checkFillout(firstNameTextField) &&
+          ConstraintChecker.checkFillout(lastNameTextField)  &&
+          ConstraintChecker.checkFillout(emailField) &&
+          ConstraintChecker.checkFillout(phoneField) &&
+          ConstraintChecker.checkFillout(titleTextField) &&
+          ConstraintChecker.checkFillout(businessField) )
+      {
+        createLeadObject(vBox, leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessField.getText());
+        stage.close();
+      }else
+      {
+        Alert A = new Alert(Alert.AlertType.ERROR);
+        A.setContentText("Text field must not be empty");
+        A.show();
+      }
+
+    });
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
+  }
+
+  public static void createLeadObject(VBox vBox, LeadsViewModel leadsViewModel, String firstName,String lastName, String email, String phone, String title, String businessID ){
+
+    vBox.getChildren().add(
+        drawLeadTile(vBox, leadsViewModel, firstName,lastName,email, title));
+    Platform.runLater(()->{
+      try
+      {
+        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.valueOf(businessID)));
+      }
+      catch (Exception e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+
+  }
+
+  public static HBox drawLeadTile(VBox vBox, LeadsViewModel leadsViewModel, String firstName, String lastName, String email,  String title)
+  {
+    HBox lead = new HBox();
+
+    lead.setPadding(new Insets(10,10,10,50));
+    //lead.setPadding(new Insets(10));
+    lead.setPrefWidth(794);
+    lead.setPrefHeight(60);
+    //lead.setSpacing(20);
+
+    Label nameLabel = new Label(firstName+" "+lastName);
+    nameLabel.setTextFill(Paint.valueOf("White"));
+    nameLabel.setPrefWidth(270);
+    nameLabel.setPrefHeight(46);
+    nameLabel.setStyle(" -fx-background-color: #544997; -fx-font: bold 16pt 'System'; -fx-background-radius: 5px;");
+    nameLabel.setAlignment(Pos.CENTER);
+
+    Label emailLabel = new Label(email);
+    emailLabel.setPrefWidth(270);
+    emailLabel.setPrefHeight(48);
+    emailLabel.setFont(new Font(18));
+    emailLabel.setAlignment(Pos.CENTER);
+    emailLabel.setPadding(new Insets(0));
+
+    Label titleLabel = new Label(title);
+    titleLabel.setPrefWidth(240);
+    titleLabel.setPrefHeight(48);
+    titleLabel.setFont(new Font(18));
+    titleLabel.setAlignment(Pos.CENTER);
+    //titleLabel.setPadding(new Insets(0,));
+
+    lead.getChildren().addAll(nameLabel, emailLabel, titleLabel);
+
+    lead.setOnMouseClicked(event -> {
+      //drawManageTaskPopUp( vBox, leadsViewModel,  title, description, datePicker.getValue(), status);
+    });
+
+    return lead;
+  }
+
+
+
+
 }
+
+
+
+

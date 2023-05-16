@@ -1,5 +1,6 @@
 package app.model;
 
+import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.Task;
 
@@ -26,8 +27,8 @@ public interface Model
   ArrayList<Task> getTasks();
   boolean checkUser();
   void setUser();
-  void meetingAddedFromServer()
-      throws SQLException, RemoteException;
+  void addLead(Lead lead) throws SQLException, RemoteException;
+  ArrayList<Lead> getLeads() throws SQLException, RemoteException;
 
   void addPropertyChangeListener(PropertyChangeListener listener);
   void taskAddedFromServer() throws SQLException, RemoteException;

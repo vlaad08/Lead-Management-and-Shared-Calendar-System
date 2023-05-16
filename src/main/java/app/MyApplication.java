@@ -1,9 +1,6 @@
 package app;
 
-import app.model.MessageListener;
-import app.model.Model;
-import app.model.ModelManager;
-import app.model.TaskListener;
+import app.model.*;
 import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
@@ -28,10 +25,12 @@ public class MyApplication extends Application
     Registry registry = LocateRegistry.getRegistry(7000);
     Communicator communicator = (Communicator) registry.lookup("communicator");
 
-    Model model = new ModelManager(communicator);
+    ModelManager modelManager = new ModelManager(communicator);
+    Model model = modelManager;
+    ReloadData data = modelManager ;
 
 
-    MessageListener messageListener = new MessageListener(model);
+    MessageListener messageListener = new MessageListener(data);
     TaskListener taskListener = new TaskListener(model);
     //LeadListener
 

@@ -47,7 +47,8 @@ public class ServerImplementation implements Communicator
   @Override public void createLead(Lead lead)
       throws SQLException, RemoteException
   {
-
+    connection = SQLConnection.getInstance();
+    connection.addLead(lead);
   }
 
   @Override public void removeMeeting(Meeting meeting)
@@ -108,6 +109,13 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     return connection.getTasks();
+  }
+
+  @Override public ArrayList<Lead> getLeads()
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getLeads();
   }
 
   //Syncronization of Users
