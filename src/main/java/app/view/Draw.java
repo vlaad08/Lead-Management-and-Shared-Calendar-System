@@ -7,6 +7,8 @@ import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Draw
 {
@@ -574,14 +577,17 @@ public class Draw
 
     title.getChildren().addAll(titleLabel, titleTextField);
 
-    HBox employeeChoice = new HBox();
-    Label employee = new Label("Employee: ");
-    ComboBox<User> employees = new ComboBox<>();
-    employees.setItems(FXCollections.observableArrayList(tasksViewModel.getUsers()));
-    employeeChoice.setSpacing(35);
-    employeeChoice.setPadding(new Insets(20, 0, 0, 20));
 
-    employeeChoice.getChildren().addAll(employee, employees);
+    HBox businesses = new HBox();
+    Label business = new Label("Business: ");
+    ComboBox<Business> businessComboBox = new ComboBox<>();
+    businessComboBox.setItems(FXCollections.observableArrayList(tasksViewModel.getBusinesses()));
+    businesses.setPadding(new Insets(20, 0, 0, 20));
+    businesses.setSpacing(40);
+
+
+    businesses.getChildren().addAll(business, businessComboBox);
+
 
     HBox descr = new HBox();
     descr.setSpacing(20);
@@ -622,12 +628,55 @@ public class Draw
     status.setSpacing(60);
     status.getChildren().addAll(statusLabel, statuses);
 
+    HBox employeeChoice = new HBox();
+
+    ObservableList<UserTableRow> usersList = FXCollections.observableArrayList();
+
+    TableView<UserTableRow> assignTable = new TableView<>();
+    assignTable.setEditable(true);
+    TableColumn<UserTableRow, String> firstName = new TableColumn<>("First Name");
+    TableColumn<UserTableRow, String> lastName = new TableColumn<>("Last Name");
+    TableColumn<UserTableRow, String> email = new TableColumn<>("Email");
+    TableColumn<UserTableRow, String> attends = new TableColumn<>("Assign");
+
+    assignTable.getColumns().add(firstName);
+    assignTable.getColumns().add(lastName);
+    assignTable.getColumns().add(email);
+    assignTable.getColumns().add(attends);
+
+    firstName.setCellValueFactory(cell -> cell.getValue().firstNameProperty());
+    lastName.setCellValueFactory(cell -> cell.getValue().lastNameProperty());
+    email.setCellValueFactory(cell -> cell.getValue().emailProperty());
+    attends.setCellValueFactory(cell -> cell.getValue().attendsProperty());
+
+    attends.setCellFactory(ComboBoxTableCell.forTableColumn("Yes", "No"));
+
+
+    ArrayList<User> users = tasksViewModel.getUsers();
+
+
+    for (User user : users) {
+      usersList.add(new UserTableRow(user));
+    }
+
+    assignTable.setItems(usersList);
+
+
+
+
+    assignTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    assignTable.setPrefWidth(600);
+    assignTable.setPrefHeight(150);
+    assignTable.setPadding(Insets.EMPTY);
+    employeeChoice.getChildren().add(assignTable);
+
+
 
     dueDate.setPadding(new Insets(20, 0, 0, 20));
     descr.setPadding(new Insets(20, 0, 0, 20));
     status.setPadding(new Insets(20, 0, 10, 20));
 
-    insert.addAll(topBar, title, employeeChoice, descr, dueDate,  status);
+    insert.addAll(topBar, title,  businesses,descr, dueDate,  status,employeeChoice);
 
 
     create.setOnAction(event -> {
@@ -635,7 +684,15 @@ public class Draw
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
-          createTaskObject(tilePane, tasksViewModel, titleTextField.getText(), descrTextField.getText(), datePicker, statuses.getValue());
+          ArrayList<String> emails = new ArrayList<>();
+          for(UserTableRow row : assignTable.getItems())
+          {
+            if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+            {
+              emails.add(row.getEmail());
+            }
+          }
+          createTaskObject(tilePane, tasksViewModel, titleTextField.getText(), descrTextField.getText(), datePicker, statuses.getValue(), businessComboBox.getValue(), emails);
           stage.close();
         }
         else
@@ -663,7 +720,7 @@ public class Draw
 
 
 
-  public static VBox drawTaskTile(TasksViewModel tasksViewModel, String title, String description, DatePicker datePicker, String status)
+  public static VBox drawTaskTile(TasksViewModel tasksViewModel, String title, String description, DatePicker datePicker, String status, int business_id)
   {
     VBox task = new VBox();
 
@@ -724,14 +781,24 @@ public class Draw
 
 
 
-    task.setOnMouseClicked(event -> drawManageTaskPopUp(tasksViewModel,  title, description, datePicker.getValue(), status));
+    task.setOnMouseClicked(event -> {
+      try
+      {
+        drawManageTaskPopUp(tasksViewModel,  title, description, datePicker.getValue(), status, business_id);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
 
 
 
     return task;
   }
 
-  public static void drawManageTaskPopUp(TasksViewModel tasksViewModel, String title, String description, LocalDate date, String status)
+  public static void drawManageTaskPopUp(TasksViewModel tasksViewModel, String title, String description, LocalDate date, String status, int business_id)
+      throws SQLException, RemoteException
   {
 
     Stage stage = new Stage();
@@ -761,6 +828,26 @@ public class Draw
     titleBox.setPadding(new Insets(20, 0, 0, 20));
     titleBox.getChildren().addAll(titleLabel, titleTextField);
 
+    HBox businesses = new HBox();
+    Label business = new Label("Business: ");
+    ComboBox<Business> businessComboBox = new ComboBox<>();
+    businessComboBox.setItems(FXCollections.observableArrayList(tasksViewModel.getBusinesses()));
+
+    for(Business b : tasksViewModel.getBusinesses())
+    {
+      if(b.getBusiness_id() == business_id)
+      {
+        businessComboBox.setValue(b);
+        break;
+      }
+    }
+
+    businesses.setPadding(new Insets(20, 0, 0, 20));
+    businesses.setSpacing(40);
+
+
+    businesses.getChildren().addAll(business, businessComboBox);
+
     HBox descr = new HBox();
     descr.setSpacing(20);
     Label descriptionLabel = new Label("Description:");
@@ -785,10 +872,15 @@ public class Draw
     update.setPrefWidth(60);
     update.setTextFill(Paint.valueOf("White"));
     update.setStyle("-fx-background-color:  #348e2f");
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #d93f3f");
 
     dueDate.getChildren().add(dueDateLabel);
     dueDate.getChildren().add(datePicker);
     dueDate.getChildren().add(update);
+    dueDate.getChildren().add(delete);
 
 
     HBox statusBox = new HBox();
@@ -805,7 +897,69 @@ public class Draw
     descr.setPadding(new Insets(20, 0, 0, 20));
     statusBox.setPadding(new Insets(20, 0, 10, 20));
 
-    insert.addAll(topBar, titleBox, descr, dueDate,  statusBox);
+
+
+
+    HBox employeeChoice = new HBox();
+
+
+
+    TableView<UserTableRow> assignTable = new TableView<>();
+    assignTable.setEditable(true);
+    TableColumn<UserTableRow, String> firstName = new TableColumn<>("First Name");
+    TableColumn<UserTableRow, String> lastName = new TableColumn<>("Last Name");
+    TableColumn<UserTableRow, String> email = new TableColumn<>("Email");
+    TableColumn<UserTableRow, String> attends = new TableColumn<>("Assign");
+
+    assignTable.getColumns().add(firstName);
+    assignTable.getColumns().add(lastName);
+    assignTable.getColumns().add(email);
+    assignTable.getColumns().add(attends);
+
+    firstName.setCellValueFactory(cell -> cell.getValue().firstNameProperty());
+    lastName.setCellValueFactory(cell -> cell.getValue().lastNameProperty());
+    email.setCellValueFactory(cell -> cell.getValue().emailProperty());
+    attends.setCellValueFactory(cell -> cell.getValue().attendsProperty());
+
+    attends.setCellFactory(ComboBoxTableCell.forTableColumn("Yes", "No"));
+
+    ObservableList<UserTableRow> usersList = FXCollections.observableArrayList();
+    ArrayList<User> users = tasksViewModel.getUsers();
+
+    Task t = new Task(title, description, Date.valueOf(date),
+        status, business_id);
+    ArrayList<String> emails = tasksViewModel.getAssignedUsers(t);
+
+
+    for(User user : users)
+    {
+      UserTableRow userRow = new UserTableRow(user);
+      userRow.setAttends("No");
+      String userEmail = userRow.getEmail();
+      for(String e : emails)
+      {
+        if(e.equalsIgnoreCase(userEmail))
+        {
+          userRow.setAttends("Yes");
+        }
+      }
+
+
+      usersList.add(userRow);
+    }
+
+    assignTable.setItems(usersList);
+
+
+
+
+    assignTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    assignTable.setPrefWidth(600);
+    assignTable.setPrefHeight(150);
+    assignTable.setPadding(Insets.EMPTY);
+    employeeChoice.getChildren().add(assignTable);
+
+    insert.addAll(topBar, titleBox, businesses, descr, dueDate,  statusBox, assignTable);
 
 
     update.setOnAction(event -> {
@@ -813,10 +967,18 @@ public class Draw
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
+          ArrayList<String> emailsUpdated = new ArrayList<>();
+          for(UserTableRow row : assignTable.getItems())
+          {
+            if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+            {
+              emailsUpdated.add(row.getEmail());
+            }
+          }
           Task newTask = new Task(titleTextField.getText(), descrTextField.getText(), Date.valueOf(datePicker.getValue()), statuses.getValue(), 7456);
           Task oldTask = new Task(title, description, Date.valueOf(date),
-              status, 7456);
-          updateTaskObject(tasksViewModel, newTask, oldTask);
+              status, business_id);
+          updateTaskObject(tasksViewModel, newTask, oldTask, emailsUpdated);
           stage.close();
         }
         else
@@ -833,7 +995,17 @@ public class Draw
       }
 
     });
-
+    delete.setOnAction(event -> {
+      try
+      {
+        confirmationToDeleteObject(new Task(title, description, Date.valueOf(date),
+            status, business_id), tasksViewModel, stage);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
 
     Scene scene = new Scene(parent);
     stage.setResizable(false);
@@ -842,15 +1014,73 @@ public class Draw
 
   }
 
-  public static void createTaskObject(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker dueDate, String status){
+  public static void confirmationToDeleteObject(Object obj, Object viewModel, Stage primaryStage)
+      throws SQLException, RemoteException
+  {
+    Stage stage = new Stage();
+    VBox parent = new VBox();
+    parent.setPadding(new Insets(20));
+    Label label = new Label("Are you sure you want to delete this ");
+
+    HBox buttons = new HBox();
+    buttons.setSpacing(30);
+    Button yesButton = new Button("Yes");
+    Button noButton = new Button("No");
+    yesButton.setStyle("-fx-background-color:  #348e2f");
+    noButton.setStyle("-fx-background-color: #d93f3f");
+    yesButton.setTextFill(Paint.valueOf("White"));
+    noButton.setTextFill(Paint.valueOf("White"));
+    yesButton.setPadding(new Insets(5));
+    noButton.setPadding(new Insets(5));
+
+    String text = label.getText();
+
+    buttons.getChildren().addAll(yesButton, noButton);
+    parent.getChildren().addAll(label, buttons);
+
+    Scene scene = new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
+
+    if(obj instanceof Task && viewModel instanceof TasksViewModel)
+    {
+
+      label.setText(text + "task?");
+      yesButton.setOnAction(event -> {
+        try
+        {
+          primaryStage.close();
+          stage.close();
+          ((TasksViewModel) viewModel).removeTask((Task) obj);
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
+      noButton.setOnAction(event -> stage.close());
+    }
+    else if(obj instanceof Meeting && viewModel instanceof MeetingViewModel)
+    {
+      label.setText(text + "meeting?");
+      yesButton.setOnAction(event -> {
+        primaryStage.close();
+        stage.close();
+        ((MeetingViewModel) viewModel).removeMeeting((Meeting) obj);
+      });
+      noButton.setOnAction(event -> stage.close());
+    }
+  }
+
+   public static void createTaskObject(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker dueDate, String status, Business business, ArrayList<String> emails){
 
     tilePane.getChildren().add(
-        drawTaskTile(tasksViewModel, title,  description, dueDate, status));
+        drawTaskTile(tasksViewModel, title,  description, dueDate, status, business.getBusiness_id()));
     Date date=Date.valueOf(dueDate.getValue());
     Platform.runLater(()->{
       try
       {
-        tasksViewModel.addTask(title, description, date, status, 7456);
+        tasksViewModel.addTask(title, description, date, status, business.getBusiness_id(), emails);
       }
       catch (SQLException | RemoteException e)
       {
@@ -860,12 +1090,12 @@ public class Draw
 
   }
 
-  private static void updateTaskObject(TasksViewModel tasksViewModel, Task newTask, Task oldTask)
+  private static void updateTaskObject(TasksViewModel tasksViewModel, Task newTask, Task oldTask, ArrayList<String> emails)
   {
     Platform.runLater(()->{
       try
       {
-        tasksViewModel.editTask(newTask, oldTask);
+        tasksViewModel.editTask(newTask, oldTask, emails);
       }
       catch (SQLException | RemoteException e)
       {
@@ -876,7 +1106,7 @@ public class Draw
 
   public static void drawMeetings(TilePane tilePane, ObservableList<Meeting> meetings, MeetingViewModel meetingViewModel)
   {
-    if(!meetings.isEmpty())
+    if(meetings != null)
     {
       for(Node node : tilePane.getChildren())
       {
@@ -911,7 +1141,7 @@ public class Draw
 
   public static void drawTasks(TilePane tilePane, TasksViewModel viewModel, ObservableList<Task> tasks)
   {
-    if(!tasks.isEmpty())
+    if(tasks != null)
     {
       for(Node node : tilePane.getChildren())
       {
@@ -923,11 +1153,11 @@ public class Draw
 
       for(Task task : tasks)
       {
-        LocalDate date = task.date().toLocalDate();
+        LocalDate date = task.getDate().toLocalDate();
         DatePicker datePicker=new DatePicker(date);
         Platform.runLater(()-> tilePane.getChildren().add(
-            drawTaskTile(viewModel, task.title(), task.description(), datePicker,
-                task.status())));
+            drawTaskTile(viewModel, task.getTitle(), task.getDescription(), datePicker,
+                task.getStatus(), task.getBusiness_id())));
       }
     }
   }

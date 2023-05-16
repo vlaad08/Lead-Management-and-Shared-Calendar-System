@@ -1,6 +1,8 @@
 package app.model;
 
 import app.shared.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.collections.ObservableList;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -17,7 +19,7 @@ public class ModelManager implements Model
   private ArrayList<Meeting> meetings;
   private ArrayList<Task> tasks;
   private ArrayList<User> users;
-
+  private ArrayList<Business> businesses;
   private ArrayList<Lead> leads;
 
   private final PropertyChangeSupport support;
@@ -31,6 +33,7 @@ public class ModelManager implements Model
     tasks = communicator.getTasks();
     users = communicator.getUsers();
     leads = communicator.getLeads();
+    businesses = communicator.getBusinesses();
 
 
     support = new PropertyChangeSupport(this);
@@ -99,6 +102,25 @@ public class ModelManager implements Model
     return leads;
   }
 
+  @Override public ArrayList<Business> getBusinesses()
+      throws SQLException, RemoteException
+  {
+    businesses = communicator.getBusinesses();
+    return businesses;
+  }
+
+  @Override public ArrayList<String> getAssignedUsers(Task task)
+      throws SQLException, RemoteException
+  {
+    return communicator.getAssignedUsers(task);
+  }
+
+  @Override public void removeTask(Task tasks)
+      throws SQLException, RemoteException
+  {
+    communicator.removeTask(tasks);
+  }
+
   @Override public void removeMeeting(Meeting meeting)
   {
   }
@@ -125,16 +147,28 @@ public class ModelManager implements Model
   }
 
   @Override public void addTask(String title, String description,
-      java.sql.Date date, String status, int business_id)
+      java.sql.Date date, String status, int business_id, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    communicator.createTask(new Task(title, description, date, status, business_id));
+    Task task = new Task(title, description, date, status, business_id);
+
+
+    communicator.createTask(task);
+    for(String e : emails)
+    {
+      communicator.assignTask(e, task);
+    }
   }
 
-  @Override public void editTask(Task newTask, Task oldTask)
+  @Override public void editTask(Task newTask, Task oldTask, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
+    communicator.removeAssignedUsers(oldTask);
     communicator.editTask(newTask, oldTask);
+    for(String e : emails)
+    {
+      communicator.assignTask(e, newTask);
+    }
   }
 
   @Override public ArrayList<Task> getTasks()

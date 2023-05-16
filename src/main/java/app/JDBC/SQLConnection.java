@@ -1,10 +1,8 @@
 package app.JDBC;
 
-import app.shared.Lead;
-import app.shared.Meeting;
-import app.shared.Task;
-import app.shared.User;
+import app.shared.*;
 
+import javax.crypto.CipherInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -82,11 +80,11 @@ public class SQLConnection
         PreparedStatement statement = connection.prepareStatement(
             "INSERT INTO Task(title, description, dueDate, status, business_id) VALUES (?, ?, ?, ?, ?)"))
     {
-      statement.setString(1, task.title());
-      statement.setString(2, task.description());
-      statement.setDate(3, task.date());
-      statement.setString(4, task.status());
-      statement.setInt(5, task.business_id());
+      statement.setString(1, task.getTitle());
+      statement.setString(2, task.getDescription());
+      statement.setDate(3, task.getDate());
+      statement.setString(4, task.getStatus());
+      statement.setInt(5, task.getBusiness_id());
       statement.executeUpdate();
     }
   }
@@ -122,20 +120,20 @@ public class SQLConnection
     try(Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
             "update task set title = ?, description = ?, duedate = ?, status = ?, business_id = ? "
-                + "where title = ? and description = ? and duedate = ? and status = ? and business_id = ?");)
+                + "where title = ? and description = ? and duedate = ? and status = ? and business_id = ?"))
     {
 
-      statement.setString(1, newTask.title());
-      statement.setString(2, newTask.description());
-      statement.setDate(3, newTask.date());
-      statement.setString(4, newTask.status());
-      statement.setInt(5, newTask.business_id());
+      statement.setString(1, newTask.getTitle());
+      statement.setString(2, newTask.getDescription());
+      statement.setDate(3, newTask.getDate());
+      statement.setString(4, newTask.getStatus());
+      statement.setInt(5, newTask.getBusiness_id());
 
-      statement.setString(6, oldTask.title());
-      statement.setString(7, oldTask.description());
-      statement.setDate(8, oldTask.date());
-      statement.setString(9, oldTask.status());
-      statement.setInt(10, oldTask.business_id());
+      statement.setString(6, oldTask.getTitle());
+      statement.setString(7, oldTask.getDescription());
+      statement.setDate(8, oldTask.getDate());
+      statement.setString(9, oldTask.getStatus());
+      statement.setInt(10, oldTask.getBusiness_id());
 
       statement.executeUpdate();
     }
@@ -145,7 +143,7 @@ public class SQLConnection
   public ArrayList<User> getUsers() throws SQLException
   {
     try(Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("select * from \"user\"");)
+        PreparedStatement statement = connection.prepareStatement("select * from \"user\""))
     {
       ArrayList<User> users = new ArrayList<>();
       ResultSet set = statement.executeQuery();
@@ -187,7 +185,87 @@ public class SQLConnection
   }
 
 
+  public ArrayList<Business> getBusinesses() throws SQLException
+  {
+    try(Connection connection = getConnection();
+    PreparedStatement statement = connection.prepareStatement("select * from business"))
+    {
+      ArrayList<Business> businesses = new ArrayList<>();
+      ResultSet set = statement.executeQuery();
+      while(set.next())
+      {
+        String name = set.getString("businessname");
+        int business_id = set.getInt("business_id");
+        String street = set.getString("street");
+        int postalCode = set.getInt("postalcode");
+        businesses.add(new Business(name, business_id, street, postalCode));
+      }
+      return businesses;
+    }
+  }
 
+  public void assignTask(Task task, String email) throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("insert into assignment(title, duedate, business_id, email) values (?, ?, ?, ?)")
+        )
+    {
+      statement.setString(1, task.getTitle());
+      statement.setDate(2, task.getDate());
+      statement.setInt(3, task.getBusiness_id());
+      statement.setString(4, email);
+      statement.executeUpdate();
+    }
+  }
+
+  public ArrayList<String> getAssignedUsers(Task task) throws SQLException
+  {
+    try(Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from assignment"
+            + " where title = ? and duedate = ? and business_id = ?"))
+    {
+      ArrayList<String> emails = new ArrayList<>();
+      statement.setString(1, task.getTitle());
+      statement.setDate(2, task.getDate());
+      statement.setInt(3, task.getBusiness_id());
+      ResultSet set = statement.executeQuery();
+      while (set.next())
+      {
+        emails.add(set.getString("email"));
+      }
+      return emails;
+    }
+  }
+
+  public void removeAssignedUsers(Task task) throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from assignment where title = ? and duedate = ? and business_id = ?")
+        )
+    {
+      statement.setString(1, task.getTitle());
+      statement.setDate(2, task.getDate());
+      statement.setInt(3, task.getBusiness_id());
+      statement.executeUpdate();
+    }
+  }
+
+  public void removeTask(Task task) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from task where title =? and description = ? and duedate = ? and business_id = ?")
+        )
+    {
+      statement.setString(1, task.getTitle());
+      statement.setString(2, task.getDescription());
+      statement.setDate(3, task.getDate());
+      statement.setInt(4, task.getBusiness_id());
+      statement.executeUpdate();
+    }
+  }
 
 public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException{
 
@@ -273,17 +351,17 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public void removeAttendance(Meeting oldMeeting) throws SQLException
+  public void removeAttendance(Meeting meeting) throws SQLException
   {
     try
         (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("delete from attendance where"
             + " title = ? and date = ? and starttime = ? and endtime = ? "))
     {
-      statement.setString(1, oldMeeting.getTitle());
-      statement.setDate(2, oldMeeting.getDate());
-      statement.setTime(3, oldMeeting.getStartTime());
-      statement.setTime(4, oldMeeting.getEndTime());
+      statement.setString(1, meeting.getTitle());
+      statement.setDate(2, meeting.getDate());
+      statement.setTime(3, meeting.getStartTime());
+      statement.setTime(4, meeting.getEndTime());
       statement.executeUpdate();
     }
 

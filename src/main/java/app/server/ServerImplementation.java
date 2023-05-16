@@ -55,9 +55,13 @@ public class ServerImplementation implements Communicator
 
   }
 
-  @Override public void removeTask(Task task) throws SQLException
+  @Override public void removeTask(Task task)
+      throws SQLException, RemoteException
   {
-
+    connection = SQLConnection.getInstance();
+    removeAssignedUsers(task);
+    connection.removeTask(task);
+    taskSupport.firePropertyChange("reloadTask", null, task);
   }
 
   @Override public void removeLead(Lead lead) throws SQLException
@@ -148,6 +152,34 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.removeAttendance(oldMeeting);
+  }
+
+  @Override public ArrayList<Business> getBusinesses()
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getBusinesses();
+  }
+
+  @Override public void assignTask(String email, Task task)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.assignTask(task, email);
+  }
+
+  @Override public ArrayList<String> getAssignedUsers(Task task)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getAssignedUsers(task);
+  }
+
+  @Override public void removeAssignedUsers(Task task)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.removeAssignedUsers(task);
   }
 
   //Syncronization of Users
