@@ -42,4 +42,7 @@ public interface Model
   ArrayList<String> getAssignedUsers(Task task) throws SQLException, RemoteException;
   void removeTask(Task tasks) throws SQLException, RemoteException;
   void addLead(Lead lead) throws SQLException, RemoteException;
+  void createAddress(String street, String city, String country, String postalCode)
+      throws SQLException, RemoteException;
+  void createBusiness(String businessName, String street, String postalCode) throws SQLException, RemoteException;
 }

@@ -126,6 +126,25 @@ public class ModelManager implements Model
     communicator.addLead(lead);
   }
 
+  @Override public void createAddress(String street, String city,
+      String country, String postalCode) throws SQLException, RemoteException
+  {
+
+    Address address = new Address(street, city, country,
+        Integer.parseInt(postalCode));
+
+    if(!communicator.checkIfAddressExists(address))
+      communicator.createAddress(address);
+  }
+
+  @Override public void createBusiness(String businessName, String street,
+      String postalCode) throws SQLException, RemoteException
+  {
+    Business business = new Business(businessName, street, Integer.parseInt(postalCode));
+
+    communicator.createBusiness(business);
+  }
+
   @Override public void removeMeeting(Meeting meeting)
   {
   }

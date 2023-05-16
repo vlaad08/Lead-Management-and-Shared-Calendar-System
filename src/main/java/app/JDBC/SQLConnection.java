@@ -198,7 +198,9 @@ public class SQLConnection
         int business_id = set.getInt("business_id");
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
-        businesses.add(new Business(name, business_id, street, postalCode));
+        Business b = new Business(name, street, postalCode);
+        b.setBusiness_id(business_id);
+        businesses.add(b);
       }
       return businesses;
     }
@@ -380,6 +382,60 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.setString(6, lead.getTitle());
       statement.setInt(7, lead.getBusiness_id());
       statement.executeUpdate();
+    }
+  }
+
+  public void createAddress(Address address) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("insert into address(street,city,country,postalcode) values(?,?,?,?)")
+            )
+    {
+      statement.setString(1, address.getStreet());
+      statement.setString(2, address.getCity());
+      statement.setString(3, address.getCountry());
+      statement.setInt(4, address.getPostalCode());
+      statement.executeUpdate();
+    }
+  }
+
+  public Address getAddress(Address address) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("select * from address where street = ? and city = ? and country = ? and postalcode = ?")
+            )
+    {
+        statement.setString(1, address.getStreet());
+        statement.setString(2, address.getCity());
+        statement.setString(3, address.getCountry());
+        statement.setInt(4, address.getPostalCode());
+        ResultSet set = statement.executeQuery();
+        if(set.next())
+        {
+          String street = set.getString("street");
+          String city = set.getString("city");
+          String country = set.getString("country");
+          int postalCode = set.getInt("postalcode");
+          return  new Address(street, city, country, postalCode);
+        }
+        return null;
+    }
+  }
+
+  public void createBusiness(Business business) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("insert into business(businessname, street, postalcode) values (?,?,?)"))
+    {
+        statement.setString(1, business.getName());
+        statement.setString(2, business.getStreet());
+        statement.setInt(3, business.getPostalCode());
+        statement.executeUpdate();
     }
   }
 }

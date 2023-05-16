@@ -9,10 +9,9 @@ public class Business implements Serializable
   private String street;
   private int postalCode;
 
-  public Business(String name, int business_id, String street, int postalCode)
+  public Business(String name, String street, int postalCode)
   {
     this.name = name;
-    this.business_id = business_id;
     this.street = street;
     this.postalCode = postalCode;
   }

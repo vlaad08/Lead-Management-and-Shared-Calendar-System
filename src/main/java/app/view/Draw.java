@@ -1244,59 +1244,87 @@ public class Draw
     Label address = new Label("Street and No.: ");
     address.setWrapText(false);
     TextField addressTextField = new TextField("");
-    Label postalCode = new Label("Postal Code:");
-    postalCode.setPrefWidth(77);
-    TextField postalCodeTextField = new TextField("");
+    Label city = new Label("City: ");
+    city.setPrefWidth(77);
+    TextField cityTextField = new TextField();
 
-    data2.getChildren().addAll(address, addressTextField, postalCode, postalCodeTextField);
+    data2.getChildren().addAll(address, addressTextField, city, cityTextField);
     data2.setSpacing(20);
     data2.setPadding(new Insets(20,0,0,0));
 
+    HBox data3 = new HBox();
 
+    Label country = new Label("Country: ");
+    TextField countryTextField = new TextField();
+    country.setPrefWidth(65);
+    Label postalCode = new Label("Postal Code:");
+    postalCode.setPrefWidth(77);
+    TextField postalCodeTextField = new TextField("");
+    data3.setSpacing(20);
+    data3.setPadding(new Insets(20,0,0,20));
+    data3.getChildren().addAll( country, countryTextField, postalCode, postalCodeTextField);
 
     HBox businesses = new HBox();
-    Label business = new Label("Business: ");
+    Label businessLabel = new Label("Business: ");
+    businessLabel.setPrefWidth(65);
     ComboBox<Business> businessComboBox = new ComboBox<>();
-    businessComboBox.setPrefWidth(100);
     businessComboBox.setItems(FXCollections.observableArrayList(leadsViewModel.getBusinesses()));
-    businesses.setPadding(new Insets(20, 0, 0, 20));
-    businesses.setSpacing(40);
 
 
-    businesses.getChildren().addAll(business, businessComboBox);
+    businesses.setSpacing(20);
+    businesses.setPadding(new Insets(20,0,0,20));
+    businesses.getChildren().addAll(businessLabel, businessComboBox);
 
 
 
 
 
-    HBox workplace = new HBox();
-    Label businessName = new Label("Business name");
+    HBox workplace1 = new HBox();
+    Label businessName = new Label("Business: ");
+    businessName.setPrefWidth(65);
     TextField businessNameTextField = new TextField();
-
-    if(businessComboBox.getValue().getName() != null)
-    {
-      businessNameTextField.setText(businessComboBox.getValue().getName());
-    }
-    else
-    {
-      businessNameTextField.setText("");
-    }
-
     Label titleLabel = new Label("Title: ");
     titleLabel.setPrefWidth(65);
     TextField titleTextField = new TextField();
-    titleTextField.setText("");
-    workplace.setSpacing(20);
-    workplace.setPadding(new Insets(20, 0, 0, 20));
-    workplace.getChildren().addAll(businessName, businessNameTextField, titleLabel, titleTextField);
+    workplace1.setSpacing(20);
+    workplace1.setPadding(new Insets(20, 0, 0, 20));
+    workplace1.getChildren().addAll(businessName, businessNameTextField, titleLabel, titleTextField);
 
+
+    HBox workplace2 = new HBox();
+    Label businessAddress = new Label("Business address: ");
+    businessAddress.setPrefWidth(65);
+    TextField businessAddressTextField = new TextField();
+    Label businessCity = new Label("Business city: ");
+    TextField businessCityTextField = new TextField();
+    businessCity.setPrefWidth(65);
+    workplace2.setSpacing(20);
+    workplace2.setPadding(new Insets(20, 0, 0, 20));
+    workplace2.getChildren().addAll(businessAddress, businessAddressTextField, businessCity, businessCityTextField);
+
+
+    HBox workplace3 = new HBox();
+    Label businessCountry = new Label("Business country: ");
+    TextField businessCountryTextField = new TextField();
+    businessCountry.setPrefWidth(65);
+    Label businessPostalCode = new Label("Business Postal Code: ");
+    TextField businessPostalCodeTextField = new TextField();
+    businessPostalCode.setPrefWidth(65);
+
+    workplace3.setSpacing(20);
+    workplace3.setPadding(new Insets(20, 0, 0, 20));
+    workplace3.getChildren().addAll(businessCountry, businessCountryTextField, businessPostalCode, businessPostalCodeTextField);
 
     Button create = new Button("Create");
     create.setPrefWidth(60);
     create.setTextFill(Paint.valueOf("White"));
     create.setStyle("-fx-background-color:  #348e2f");
 
-    insert.addAll(topBar, name, data1, data2, business, workplace);
+    businessComboBox.setOnAction(event -> {
+
+    });
+
+    insert.addAll(topBar, name, data1, data2, data3, businesses, workplace1, workplace2, create);
 
 
     create.setOnAction(event -> {
@@ -1307,7 +1335,29 @@ public class Draw
           ConstraintChecker.checkFillOut(titleTextField) &&
           ConstraintChecker.checkFillOut(businessNameTextField))
       {
-        createLeadObject(vBox, leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessNameTextField.getText());
+        try
+        {
+          leadsViewModel.createAddress(addressTextField.getText(), cityTextField.getText(), countryTextField.getText(), postalCodeTextField.getText());
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+
+        if(businessComboBox.getValue() == null)
+        {
+          try
+          {
+            leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), businessPostalCodeTextField.getText());
+            leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), businessPostalCode.getText());
+          }
+          catch (SQLException | RemoteException e)
+          {
+            throw new RuntimeException(e);
+          }
+        }
+
+        createLeadObject(leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessNameTextField.getText());
         stage.close();
       }else
       {
@@ -1327,10 +1377,8 @@ public class Draw
 
   }
 
-  public static void createLeadObject(VBox vBox, LeadsViewModel leadsViewModel, String firstName,String lastName, String email, String phone, String title, String businessID ){
+  public static void createLeadObject(LeadsViewModel leadsViewModel, String firstName,String lastName, String email, String phone, String title, String businessID ){
 
-    vBox.getChildren().add(
-        drawLeadTile(vBox, leadsViewModel, firstName,lastName,email, title));
     Platform.runLater(()->{
       try
       {
@@ -1349,10 +1397,8 @@ public class Draw
     HBox lead = new HBox();
 
     lead.setPadding(new Insets(10,10,10,50));
-    //lead.setPadding(new Insets(10));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
-    //lead.setSpacing(20);
 
     Label nameLabel = new Label(firstName+" "+lastName);
     nameLabel.setTextFill(Paint.valueOf("White"));
@@ -1373,7 +1419,7 @@ public class Draw
     titleLabel.setPrefHeight(48);
     titleLabel.setFont(new Font(18));
     titleLabel.setAlignment(Pos.CENTER);
-    //titleLabel.setPadding(new Insets(0,));
+
 
     lead.getChildren().addAll(nameLabel, emailLabel, titleLabel);
 

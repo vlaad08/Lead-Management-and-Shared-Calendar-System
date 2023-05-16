@@ -36,4 +36,8 @@ public interface Communicator extends Remote
   ArrayList<String> getAssignedUsers(Task task) throws SQLException, RemoteException;
   void removeAssignedUsers(Task task) throws SQLException, RemoteException;
   void addLead(Lead lead) throws SQLException, RemoteException;
+  void createAddress(Address address)
+      throws SQLException, RemoteException;
+  boolean checkIfAddressExists(Address address) throws SQLException, RemoteException;
+  void createBusiness(Business business) throws SQLException, RemoteException;
 }

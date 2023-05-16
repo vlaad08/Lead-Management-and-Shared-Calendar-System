@@ -168,6 +168,30 @@ public class ServerImplementation implements Communicator
     connection.createLead(lead);
   }
 
+  @Override public void createAddress(Address address) throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    connection.createAddress(address);
+  }
+
+  @Override public boolean checkIfAddressExists(Address address)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+
+    Address a = connection.getAddress(address);
+
+    return a.equals(address);
+  }
+
+  @Override public void createBusiness(Business business)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+
+    connection.createBusiness(business);
+  }
+
   //Syncronization of Users
 
 

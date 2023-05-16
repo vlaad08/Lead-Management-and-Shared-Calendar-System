@@ -11,6 +11,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 
 public class ManageLeadsController
 {
@@ -89,7 +91,8 @@ public class ManageLeadsController
     }
   }
 
-  public void addLead(){
+  public void addLead() throws SQLException, RemoteException
+  {
     Draw.drawLeadPopUp(leadVBox, leadsViewModel);
   }
 

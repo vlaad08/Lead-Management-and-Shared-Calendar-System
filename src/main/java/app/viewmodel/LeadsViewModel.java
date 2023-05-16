@@ -29,4 +29,16 @@ public class LeadsViewModel
   {
     return model.getBusinesses();
   }
+
+  public void createAddress(String street, String city, String country, String postalCode)
+      throws SQLException, RemoteException
+  {
+    model.createAddress(street, city, country, postalCode);
+  }
+
+  public void createBusiness(String businessName, String street, String postalCode)
+      throws SQLException, RemoteException
+  {
+    model.createBusiness(businessName,street,postalCode);
+  }
 }
