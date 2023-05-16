@@ -71,6 +71,12 @@ public class ServerImplementation implements Communicator
     connection.editTask(newTask, oldTask);
     taskSupport.firePropertyChange("reloadTask", oldTask, newTask);
   }
+  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.editMeeting(oldMeeting,newMeeting);
+    meetingSupport.firePropertyChange("reloadMeeting",oldMeeting,newMeeting);
+  }
 
   @Override public void addMeetingListener(
       RemotePropertyChangeListener<Meeting> listener) throws RemoteException
