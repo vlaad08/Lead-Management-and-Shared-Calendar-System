@@ -182,6 +182,12 @@ public class ServerImplementation implements Communicator
     connection.removeAssignedUsers(task);
   }
 
+  @Override public void addLead(Lead lead) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.createLead(lead);
+  }
+
   //Syncronization of Users
 
 

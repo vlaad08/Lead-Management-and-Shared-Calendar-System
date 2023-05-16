@@ -121,6 +121,11 @@ public class ModelManager implements Model
     communicator.removeTask(tasks);
   }
 
+  @Override public void addLead(Lead lead) throws SQLException, RemoteException
+  {
+    communicator.addLead(lead);
+  }
+
   @Override public void removeMeeting(Meeting meeting)
   {
   }

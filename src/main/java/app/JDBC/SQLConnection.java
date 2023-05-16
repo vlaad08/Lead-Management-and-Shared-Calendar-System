@@ -366,4 +366,20 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
 
   }
+
+  public void createLead(Lead lead) throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")) {
+      statement.setString(1, lead.getFirstname());
+      statement.setString(2, lead.getMiddleName());
+      statement.setString(3, lead.getLastname());
+      statement.setString(4, lead.getEmail());
+      statement.setString(5, lead.getPhone());
+      statement.setString(6, lead.getTitle());
+      statement.setInt(7, lead.getBusiness_id());
+      statement.executeUpdate();
+    }
+  }
 }
