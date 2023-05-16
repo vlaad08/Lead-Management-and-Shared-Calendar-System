@@ -1,8 +1,11 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.shared.Business;
 import app.shared.Lead;
 
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class LeadsViewModel
@@ -21,4 +24,9 @@ public class LeadsViewModel
     return model.getLeads();
   }
 
+  public ArrayList<Business> getBusinesses()
+      throws SQLException, RemoteException
+  {
+    return model.getBusinesses();
+  }
 }

@@ -49,12 +49,8 @@ public class ConstraintChecker
     return false;
   }
 
-  public static boolean checkFillout(TextField textField)
+  public static boolean checkFillOut(TextField textField)
   {
-    if (textField.getText().equals(""))
-    {
-      return false;
-    }
-    return true;
+    return !textField.getText().equals("");
   }
 }

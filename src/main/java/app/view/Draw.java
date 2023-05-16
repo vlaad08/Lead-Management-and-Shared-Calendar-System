@@ -8,20 +8,25 @@ import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 
 import java.rmi.RemoteException;
 import java.sql.Date;
@@ -31,10 +36,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Objects;
+
+
 
 public class Draw
 {
+
+
 
   public static void drawMeetingPopUp(MeetingViewModel meetingViewModel)
       throws SQLException, RemoteException
@@ -682,7 +690,7 @@ public class Draw
 
 
     create.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(titleTextField))
+      if (ConstraintChecker.checkFillOut(titleTextField))
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
@@ -965,7 +973,7 @@ public class Draw
 
 
     update.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(titleTextField))
+      if (ConstraintChecker.checkFillOut(titleTextField))
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
@@ -1175,99 +1183,142 @@ public class Draw
   }
 
   public static void drawLeadPopUp(VBox vBox, LeadsViewModel leadsViewModel)
+      throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+
 
     VBox parent = new VBox();
-    parent.setPrefHeight(400);
-    parent.setPrefWidth(600);
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+
+    parent.setPrefHeight(600);
+    parent.setPrefWidth(800);
     parent.setAlignment(Pos.TOP_LEFT);
     ObservableList<Node> insert = parent.getChildren();
 
     HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
     topBar.setPrefHeight(40);
     topBar.setAlignment(Pos.CENTER_RIGHT);
     topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
 
     HBox name = new HBox();
     Label firstNameLabel = new Label("First Name: ");
     firstNameLabel.setPrefWidth(65);
+    Label middleNameLabel = new Label("Middle Name: ");
+    TextField middleNameTextField = new TextField();
+    middleNameTextField.setPromptText("Can be left empty");
     TextField firstNameTextField = new TextField();
-    firstNameTextField.setText("");
     Label lastNameLabel = new Label("Last Name: ");
     TextField lastNameTextField = new TextField();
-    lastNameTextField.setText("");
     name.setSpacing(20);
     name.setPadding(new Insets(20, 0, 0, 20));
-    name.getChildren().addAll(firstNameLabel, firstNameTextField,lastNameLabel,lastNameTextField);
+    name.getChildren().addAll(firstNameLabel, firstNameTextField,middleNameLabel, middleNameTextField,lastNameLabel,lastNameTextField);
 
-    HBox email = new HBox();
+    HBox data1 = new HBox();
+
     Label emailLabel = new Label("Email: ");
     emailLabel.setPrefWidth(65);
     TextField emailField = new TextField();
-    emailField.setText("example@gmail.com");
-    email.setSpacing(20);
-    email.setPadding(new Insets(20,0,0,20));
-    email.getChildren().addAll(emailLabel,emailField);
-
-    HBox phone = new HBox();
     Label phoneLabel = new Label("Phone: ");
-    phoneLabel.setPrefWidth(65);
+    phoneLabel.setPrefWidth(77);
     TextField phoneField = new TextField();
     phoneField.setText("");
-    phone.setSpacing(20);
-    phone.setPadding(new Insets(20,0,0,20));
-    phone.getChildren().addAll(phoneLabel,phoneField);
 
-    HBox title = new HBox();
+
+    data1.getChildren().addAll(emailLabel,emailField,phoneLabel,phoneField);
+    data1.setSpacing(20);
+    data1.setPadding(new Insets(20,0,0,20));
+
+
+
+    HBox data2 = new HBox();
+    Label address = new Label("Street and No.: ");
+    address.setWrapText(false);
+    TextField addressTextField = new TextField("");
+    Label postalCode = new Label("Postal Code:");
+    postalCode.setPrefWidth(77);
+    TextField postalCodeTextField = new TextField("");
+
+    data2.getChildren().addAll(address, addressTextField, postalCode, postalCodeTextField);
+    data2.setSpacing(20);
+    data2.setPadding(new Insets(20,0,0,0));
+
+
+
+    HBox businesses = new HBox();
+    Label business = new Label("Business: ");
+    ComboBox<Business> businessComboBox = new ComboBox<>();
+    businessComboBox.setPrefWidth(100);
+    businessComboBox.setItems(FXCollections.observableArrayList(leadsViewModel.getBusinesses()));
+    businesses.setPadding(new Insets(20, 0, 0, 20));
+    businesses.setSpacing(40);
+
+
+    businesses.getChildren().addAll(business, businessComboBox);
+
+
+
+
+
+    HBox workplace = new HBox();
+    Label businessName = new Label("Business name");
+    TextField businessNameTextField = new TextField();
+
+    if(businessComboBox.getValue().getName() != null)
+    {
+      businessNameTextField.setText(businessComboBox.getValue().getName());
+    }
+    else
+    {
+      businessNameTextField.setText("");
+    }
+
     Label titleLabel = new Label("Title: ");
     titleLabel.setPrefWidth(65);
     TextField titleTextField = new TextField();
     titleTextField.setText("");
-    title.setSpacing(20);
-    title.setPadding(new Insets(20, 0, 0, 20));
-    title.getChildren().addAll(titleLabel, titleTextField);
+    workplace.setSpacing(20);
+    workplace.setPadding(new Insets(20, 0, 0, 20));
+    workplace.getChildren().addAll(businessName, businessNameTextField, titleLabel, titleTextField);
 
-    HBox businessID = new HBox();
-    businessID.setPadding(new Insets(5));
-    businessID.setSpacing(20);
-    Label businessLabel = new Label("Business ID:");
-    businessLabel.setPrefWidth(65);
-    TextField businessField = new TextField();
-    businessField.setText("7456");
 
     Button create = new Button("Create");
     create.setPrefWidth(60);
     create.setTextFill(Paint.valueOf("White"));
     create.setStyle("-fx-background-color:  #348e2f");
 
-    businessID.getChildren().add(businessLabel);
-    businessID.getChildren().add(businessField);
-    businessID.getChildren().add(create);
-
-    businessID.setPadding(new Insets(20, 0, 0, 20));
-
-    insert.addAll(topBar, name,email, phone, title,businessID);
+    insert.addAll(topBar, name, data1, data2, business, workplace);
 
 
     create.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(firstNameTextField) &&
-          ConstraintChecker.checkFillout(lastNameTextField)  &&
-          ConstraintChecker.checkFillout(emailField) &&
-          ConstraintChecker.checkFillout(phoneField) &&
-          ConstraintChecker.checkFillout(titleTextField) &&
-          ConstraintChecker.checkFillout(businessField) )
+      if (ConstraintChecker.checkFillOut(firstNameTextField) &&
+          ConstraintChecker.checkFillOut(lastNameTextField)  &&
+          ConstraintChecker.checkFillOut(emailField) &&
+          ConstraintChecker.checkFillOut(phoneField) &&
+          ConstraintChecker.checkFillOut(titleTextField) &&
+          ConstraintChecker.checkFillOut(businessNameTextField))
       {
-        createLeadObject(vBox, leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessField.getText());
+        createLeadObject(vBox, leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessNameTextField.getText());
         stage.close();
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Text field must not be empty");
+        A.setContentText("Complete all fields");
         A.show();
       }
 
     });
+
+
 
     Scene scene = new Scene(parent);
     stage.setResizable(false);
