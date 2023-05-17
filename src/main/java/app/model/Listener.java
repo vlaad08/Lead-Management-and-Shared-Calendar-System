@@ -1,8 +1,8 @@
 package app.model;
 
-
 import dk.via.remote.observer.RemotePropertyChangeEvent;
 import dk.via.remote.observer.RemotePropertyChangeListener;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -10,28 +10,39 @@ import java.sql.SQLException;
 public class Listener extends UnicastRemoteObject implements
     RemotePropertyChangeListener<String>
 {
-  private final ReloadData model;
 
-  public Listener(ReloadData model) throws RemoteException{
+  private final Model model;
+
+  public Listener(Model model) throws RemoteException
+  {
     this.model = model;
-
   }
 
   @Override public void propertyChange(
       RemotePropertyChangeEvent<String> remotePropertyChangeEvent)
       throws RemoteException
   {
-    try{
-      if(remotePropertyChangeEvent.getPropertyName().equals("reloadMeeting")){
+    if(remotePropertyChangeEvent.getPropertyName().equals("reloadMeeting"))
+    {
+      try
+      {
         model.meetingAddedFromServer();
-      }else if(remotePropertyChangeEvent.getPropertyName().equals("reloadTask")){
-        model.taskAddedFromServer();
-      }else if(remotePropertyChangeEvent.getPropertyName().equals("reloadLead")){
-        model.leadAddedFromServer();
       }
-    }catch (Exception e){
-      e.printStackTrace();
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
+      }
     }
-
+    if(remotePropertyChangeEvent.getPropertyName().equals("reloadTask"))
+    {
+      try
+      {
+        model.taskAddedFromServer();
+      }
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
+      }
+    }
   }
 }

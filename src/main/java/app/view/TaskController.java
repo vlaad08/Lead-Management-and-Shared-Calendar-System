@@ -3,6 +3,10 @@ package app.view;
 import app.shared.Task;
 import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -14,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class TaskController implements PropertyChangeListener
@@ -30,7 +36,7 @@ public class TaskController implements PropertyChangeListener
   private ViewHandler viewHandler;
   private TasksViewModel tasksViewModel;
 
-  private final ListView<Task> taskListView = new ListView<>();
+  private final ObjectProperty<ObservableList<Task>> tasks = new SimpleObjectProperty<>();
 
   public void init(ViewHandler viewHandler, TasksViewModel tasksViewModel, Region root){
     this.viewHandler = viewHandler;
@@ -45,14 +51,14 @@ public class TaskController implements PropertyChangeListener
     tilePane.setTileAlignment(Pos.CENTER_LEFT);
 
 
-    tasksViewModel.bindTask(taskListView.itemsProperty());
+    tasksViewModel.bindTask(tasks);
 
     tasksViewModel.addPropertyChangeListener(this);
 
     //bs comes below
     Draw.hoverButtonNavbar(plansButton, meetingButton, leadButton, availableButton, clientsButton, manageLeadsButton, closeButton);
 
-    Draw.drawTasks(tilePane, tasksViewModel, taskListView);
+    Draw.drawTasks(tilePane, tasksViewModel, tasks.get());
   }
 
 
@@ -89,7 +95,7 @@ public class TaskController implements PropertyChangeListener
     }
   }
 
-  public void addTask()
+  public void addTask() throws SQLException, RemoteException
   {
     Draw.drawTaskPopUp(tilePane, tasksViewModel);
   }
@@ -101,7 +107,7 @@ public class TaskController implements PropertyChangeListener
       Platform.runLater(()->
       {
 
-        Draw.drawTasks(tilePane, tasksViewModel, taskListView);
+        Draw.drawTasks(tilePane, tasksViewModel, tasks.get());
       });
     }
   }

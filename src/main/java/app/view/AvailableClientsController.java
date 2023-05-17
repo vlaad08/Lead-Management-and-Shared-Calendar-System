@@ -1,19 +1,13 @@
 package app.view;
 
-import app.shared.Lead;
-import app.viewmodel.LeadsViewModel;
-import javafx.application.Platform;
+import app.viewmodel.AvailableClientsViewModel;
+import app.viewmodel.MeetingViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-public class AvailableClientsController implements PropertyChangeListener
+public class AvailableClientsController
 {
 
 
@@ -26,42 +20,20 @@ public class AvailableClientsController implements PropertyChangeListener
   @FXML private Button closeButton;
   @FXML private Button manageLeadsButton;
 
-  @FXML private VBox availableLeads;
-
   private Region root;
   private ViewHandler viewHandler;
-  private LeadsViewModel viewModel;
-  private final ListView<Lead> leads = new ListView<>();
+  private AvailableClientsViewModel availableClientsViewModel;
 
-  public void init(ViewHandler viewHandler, LeadsViewModel viewModel, Region root){
+  public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
     this.viewHandler = viewHandler;
-    this.viewModel = viewModel;
+    this.availableClientsViewModel = availableClientsViewModel;
     this.root = root;
 
-    viewModel.addPropertyChangeListener(this);
 
-    //bs comes below
-    hoverButtonNavbar(calendarButton);
-    hoverButtonNavbar(plansButton);
-    hoverButtonNavbar(meetingButton);
-    hoverButtonNavbar(tasksButton);
-    hoverButtonNavbar(clientsButton);
-    hoverButtonNavbar(manageLeadsButton);
-    hoverButtonNavbar(closeButton);
+    Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
 
-    viewModel.bind(leads.itemsProperty());
-    Draw.drawLead(availableLeads,viewModel , leads,1);
   }
 
-  public void hoverButtonNavbar(Button b)
-  {
-    b.setOnMouseEntered(event -> {
-      b.setStyle("-fx-background-color: #786FAC;");
-    });
-    b.setOnMouseExited(event -> {
-      b.setStyle("-fx-background-color: none");
-    });
-  }
 
   public void onCloseButton()
   {
@@ -93,16 +65,5 @@ public class AvailableClientsController implements PropertyChangeListener
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-  if(evt.getPropertyName().equals("reloadLead"))
-  {
-    Platform.runLater(()->{
-      Draw.drawLead(availableLeads, viewModel, leads,1);
-    });
-
-  }
   }
 }

@@ -1,11 +1,8 @@
 package app.server;
 
 import app.JDBC.SQLConnection;
-import app.shared.Communicator;
-import app.shared.Lead;
-import app.shared.Meeting;
+import app.shared.*;
 
-import app.shared.Task;
 import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
 
@@ -16,7 +13,6 @@ import java.util.ArrayList;
 public class ServerImplementation implements Communicator
 {
   private final RemotePropertyChangeSupport<String> support;
-  //private final RemotePropertyChangeSupport<Task> taskSupport;
 
   private SQLConnection connection;
 
@@ -25,7 +21,6 @@ public class ServerImplementation implements Communicator
   public ServerImplementation()
   {
     support = new RemotePropertyChangeSupport<>();
-    //taskSupport = new RemotePropertyChangeSupport<>();
   }
 
 
@@ -47,9 +42,6 @@ public class ServerImplementation implements Communicator
   @Override public void createLead(Lead lead)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
-    connection.addLead(lead);
-    support.firePropertyChange("reloadLead",null,"" );
 
   }
 
@@ -59,9 +51,13 @@ public class ServerImplementation implements Communicator
 
   }
 
-  @Override public void removeTask(Task task) throws SQLException
+  @Override public void removeTask(Task task)
+      throws SQLException, RemoteException
   {
-
+    connection = SQLConnection.getInstance();
+    removeAssignedUsers(task);
+    connection.removeTask(task);
+    support.firePropertyChange("reloadTask", null, "");
   }
 
   @Override public void removeLead(Lead lead) throws SQLException
@@ -73,7 +69,13 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.editTask(newTask, oldTask);
-    support.firePropertyChange("reloadData",null,"" );
+    support.firePropertyChange("reloadTask", null, "");
+  }
+  @Override public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.editMeeting(oldMeeting,newMeeting);
+    support.firePropertyChange("reloadMeeting",null,"");
   }
 
   @Override public void addListener(
@@ -82,17 +84,7 @@ public class ServerImplementation implements Communicator
     support.addPropertyChangeListener(listener);
   }
 
-  @Override public void addTaskListener(
-      RemotePropertyChangeListener<Task> listener) throws RemoteException
-  {
-    //taskSupport.addPropertyChangeListener(listener);
-  }
 
-  @Override public void addLeadListener(
-      RemotePropertyChangeListener<Lead> listener) throws RemoteException
-  {
-
-  }
 
   @Override public ArrayList<Meeting> getMeetings() throws SQLException
   {
@@ -107,11 +99,73 @@ public class ServerImplementation implements Communicator
     return connection.getTasks();
   }
 
+  @Override public ArrayList<User> getUsers()
+      throws RemoteException, SQLException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getUsers();
+  }
+
+  @Override public void attendsMeeting(String email, Meeting meeting) throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    connection.setAttendance(email,meeting);
+  }
+
+  @Override public ArrayList<String> getAttendance(Meeting meeting)
+      throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getAttendance(meeting);
+  }
+
+
   @Override public ArrayList<Lead> getLeads()
       throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
     return connection.getLeads();
+  }
+
+  @Override public void removeAttendance(Meeting oldMeeting)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.removeAttendance(oldMeeting);
+  }
+
+  @Override public ArrayList<Business> getBusinesses()
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getBusinesses();
+  }
+
+  @Override public void assignTask(String email, Task task)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.assignTask(task, email);
+  }
+
+  @Override public ArrayList<String> getAssignedUsers(Task task)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getAssignedUsers(task);
+  }
+
+  @Override public void removeAssignedUsers(Task task)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.removeAssignedUsers(task);
+  }
+
+  @Override public void addLead(Lead lead) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.createLead(lead);
   }
 
   //Syncronization of Users
