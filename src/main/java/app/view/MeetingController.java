@@ -120,9 +120,7 @@ public class MeetingController implements PropertyChangeListener
     if(evt.getPropertyName().equals("reloadMeetings"))
     {
         Platform.runLater(()->{
-
             Draw.drawMeetings(tilePane, meetings.get(), meetingViewModel);
-
         });
 
     }

@@ -208,7 +208,8 @@ public class Draw
 
   public static void createMeetingObject(MeetingViewModel meetingViewModel, String title, Lead lead,
       DatePicker datePicker, String startTime, String endTime,
-      String description, ArrayList<String> emails){
+      String description, ArrayList<String> emails)
+  {
 
       Date date=Date.valueOf(datePicker.getValue());
       Platform.runLater(()->{
@@ -1167,23 +1168,19 @@ public class Draw
       {
         if(node instanceof VBox)
         {
-          tilePane.getChildren().remove(node);
+          Platform.runLater(()-> tilePane.getChildren().remove(node));
         }
       }
 
       for(Meeting meeting : meetings)
       {
-        LocalDate date = meeting.getDate().toLocalDate();
-        DatePicker datePicker=new DatePicker(date);
-        String startTime=meeting.getStartTime().toString();
-        String endTime=meeting.getEndTime().toString();
-        Platform.runLater(()->{
+        LocalDate localDate = meeting.getDate().toLocalDate();
+        DatePicker datePicker = new DatePicker(localDate);
+        Platform.runLater(()-> {
           try
           {
-            tilePane.getChildren().add(
-                drawMeetingTile(meetingViewModel, meeting.getTitle(),meeting.getLeadEmail(),datePicker,startTime,endTime,
-                    meeting.getDescription()));
-
+            tilePane.getChildren().add(drawMeetingTile(meetingViewModel, meeting.getTitle(), meeting.getLeadEmail(),datePicker , meeting.getStartTime().toString()
+            , meeting.getEndTime().toString(), meeting.getDescription()));
           }
           catch (SQLException e)
           {
@@ -1554,11 +1551,7 @@ public class Draw
         leadsViewModel.editLead(oldLead, newLead);
         stage.close();
       }
-      catch (SQLException e)
-      {
-        throw new RuntimeException(e);
-      }
-      catch (RemoteException e)
+      catch (SQLException | RemoteException e)
       {
         throw new RuntimeException(e);
       }
@@ -1569,11 +1562,7 @@ public class Draw
       {
         confirmationToDeleteObject(lead, leadsViewModel, stage);
       }
-      catch (SQLException e)
-      {
-        throw new RuntimeException(e);
-      }
-      catch (RemoteException e)
+      catch (SQLException | RemoteException e)
       {
         throw new RuntimeException(e);
       }
@@ -1653,9 +1642,6 @@ public class Draw
       activity.getChildren().add(text);
       parent.getChildren().add(activity);
     }
-
-
-
 
 
 
