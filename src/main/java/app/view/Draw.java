@@ -37,8 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-
+import java.util.List;
 
 public class Draw
 {
@@ -558,7 +557,8 @@ public class Draw
     stage.show();
   }
 
-  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting,  ArrayList<String> emails){
+  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting,  ArrayList<String> emails)
+  {
 
       Platform.runLater(()->{
         try
@@ -572,8 +572,6 @@ public class Draw
       });
 
   }
-
-
 
   public static void drawTaskPopUp(TilePane tilePane, TasksViewModel tasksViewModel)
       throws SQLException, RemoteException
@@ -750,8 +748,6 @@ public class Draw
     stage.show();
 
   }
-
-
 
   public static VBox drawTaskTile(TasksViewModel tasksViewModel, String title, String description, DatePicker datePicker, String status, int business_id)
   {
@@ -1220,8 +1216,6 @@ public class Draw
       }
     }
   }
-
-
   public static void hoverButtonNavbar(Button... b)
   {
     for(Button button : b)
@@ -1610,5 +1604,63 @@ public class Draw
         });
       }
     }
+  }
+
+  public static void drawCalendarActivityPopUp(List<CalendarActivity> calendarActivities)
+  {
+    Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+    VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+
+
+    parent.getChildren().add(topBar);
+
+    for (CalendarActivity calendarActivity : calendarActivities)
+    {
+      HBox activity = new HBox();
+      activity.setSpacing(20);
+      activity.setPadding(new Insets(20));
+      Text text = new Text();
+      text.setFont(Font.font(15));
+      if(calendarActivity.getMeeting() != null)
+      {
+        text.setText(calendarActivity.getMeeting().toString());
+      }
+      if(calendarActivity.getTask() != null)
+      {
+        text.setText(calendarActivity.getTask().toString());
+      }
+
+      activity.getChildren().add(text);
+      parent.getChildren().add(activity);
+    }
+
+
+
+
+
+
+    Scene scene =new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
   }
 }

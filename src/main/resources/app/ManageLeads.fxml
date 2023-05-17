@@ -141,7 +141,7 @@
                                 </Button>
                             </children>
                      <cursor>
-                        <Cursor fx:constant="CLOSED_HAND" />
+                        <Cursor fx:constant="DEFAULT" />
                      </cursor>
                         </HBox>
                     </bottom>
