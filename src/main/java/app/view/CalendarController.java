@@ -1,19 +1,16 @@
 package app.view;
 
 import app.shared.Meeting;
+import app.shared.Task;
 import app.viewmodel.CalendarViewModel;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -21,18 +18,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
-public class CalendarController {
+public class CalendarController implements PropertyChangeListener
+{
 
     ZonedDateTime dateFocus;
     ZonedDateTime today;
@@ -62,7 +56,6 @@ public class CalendarController {
 
 
 
-    //THIS MAY BE ILLEGAL BUT ILL MAKE AN INIT HERE
     public void init(ViewHandler viewHandler, CalendarViewModel calendarViewModel, Region root){
 
         this.calendarViewModel = calendarViewModel;
@@ -72,21 +65,12 @@ public class CalendarController {
         today = ZonedDateTime.now();
         drawCalendar();
 
-
+        calendarViewModel.addPropertyChangeListener(this);
 
         Draw.hoverButtonNavbar(availableClientsButton, leadButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
 
     }
 
-    public void hoverButtonNavbar(Button b)
-    {
-        b.setOnMouseEntered(event -> {
-            b.setStyle("-fx-background-color: #786FAC;");
-        });
-        b.setOnMouseExited(event -> {
-            b.setStyle("-fx-background-color: none");
-        });
-    }
 
     public void onCloseButton()
     {
@@ -98,8 +82,6 @@ public class CalendarController {
     }
 
 
-
-    //public void reset(){} //Ill just leave this here we may need this later for smt
 
 
 
@@ -124,14 +106,14 @@ public class CalendarController {
         }
 
     @FXML
-    void backOneMonth(ActionEvent event) {
+    void backOneMonth() {
         dateFocus = dateFocus.minusMonths(1);
         calendar.getChildren().clear();
         drawCalendar();
     }
 
     @FXML
-    void forwardOneMonth(ActionEvent event) {
+    void forwardOneMonth() {
         dateFocus = dateFocus.plusMonths(1);
         calendar.getChildren().clear();
         drawCalendar();
@@ -201,27 +183,34 @@ public class CalendarController {
         VBox calendarActivityBox = new VBox();
         calendarActivityBox.setPadding(new Insets(2));
         calendarActivityBox.setStyle("-fx-background-radius: 10px;");
-        for (int k = 0; k < calendarActivities.size(); k++) {
-            if(k >= 2) {
-                Text moreActivities = new Text("...");
-                calendarActivityBox.getChildren().add(moreActivities);
-                moreActivities.setOnMouseClicked(mouseEvent -> {
-                    //On ... click print all activities for given date
-                    System.out.println(calendarActivities);
-                });
-                break;
+        for (CalendarActivity activity : calendarActivities) {
+
+            TextField text = new TextField();
+            text.setEditable(false);
+            text.setCursor(Cursor.DEFAULT);
+            text.setMaxWidth(rectangleWidth);
+            text.setMaxHeight(rectangleHeight);
+
+            if(activity.getMeeting() != null)
+            {
+                text.setText(activity.getMeeting().toString());
             }
-            Text text = new Text(calendarActivities.get(k).getClientName() + ", " + calendarActivities.get(k).getDate().toLocalTime());
+            if(activity.getTask() != null)
+            {
+                text.setText(activity.getTask().toString());
+            }
+
+
             calendarActivityBox.getChildren().add(text);
-            text.setOnMouseClicked(mouseEvent -> {
-                //On Text clicked
-                System.out.println(text.getText());
-            });
+            text.setOnMouseClicked(event -> Draw.drawCalendarActivityPopUp(calendarActivities));
         }
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
         calendarActivityBox.setMaxWidth(rectangleWidth * 0.8);
         calendarActivityBox.setMaxHeight(rectangleHeight * 0.65);
         calendarActivityBox.setStyle("-fx-background-color: white");
+        calendarActivityBox.setOnMouseClicked(event ->
+            Draw.drawCalendarActivityPopUp(calendarActivities)
+        );
         stackPane.getChildren().add(calendarActivityBox);
     }
 
@@ -258,11 +247,40 @@ public class CalendarController {
                 if(localDateTime.getYear() == time.getYear() && localDateTime.getMonth().getValue() == time.getMonthValue() &&
                     localDateTime.getDayOfMonth() == time.getDayOfMonth() && localDateTime.getHour() == time.getHour() && localDateTime.getMinute() == time.getMinute())
                 {
-                    calendarActivities.add(new CalendarActivity(time, "Hans", 111111));
+                    calendarActivities.add(new CalendarActivity(time, meeting));
+                }
+            }
+        }
+        if(calendarViewModel.getTasks() != null)
+        {
+            ArrayList<Task> tasks = calendarViewModel.getTasks();
+            for(Task task : tasks)
+            {
+                LocalDateTime localDateTime = LocalDateTime.of(task.getDate().toLocalDate(), LocalTime.of(0, 0));
+                ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(), localDateTime.getDayOfMonth(),
+                    localDateTime.getHour(), localDateTime.getMinute(), 0, 0, dateFocus.getZone());
+                if(localDateTime.getYear() == time.getYear() && localDateTime.getMonth().getValue() == time.getMonthValue() &&
+                    localDateTime.getDayOfMonth() == time.getDayOfMonth() && localDateTime.getHour() == time.getHour() && localDateTime.getMinute() == time.getMinute())
+                {
+                    calendarActivities.add(new CalendarActivity(time, task));
                 }
             }
         }
 
         return createCalendarMap(calendarActivities);
+    }
+
+    @Override public void propertyChange(PropertyChangeEvent evt)
+    {
+        if(evt.getPropertyName().equals("reloadCalendar"))
+        {
+            for(Node node : calendar.getChildren())
+            {
+                Platform.runLater(() -> {
+                    calendar.getChildren().remove(node);
+                });
+            }
+            drawCalendar();
+        }
     }
 }

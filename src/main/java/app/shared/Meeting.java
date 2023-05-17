@@ -89,6 +89,6 @@ public class Meeting implements Serializable
 
   @Override public String toString()
   {
-    return "Meeting: \n Title: " + title + "\n Description: " + description + "\n Date: " + date + "\n Start time: " + startTime + "\n End time: " + endTime + "\n"+leadEmail;
+    return "Meeting: " + title + " | Starts at " + startTime + " Ends at: " + endTime;
   }
 }

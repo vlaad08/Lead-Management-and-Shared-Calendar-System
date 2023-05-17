@@ -8,20 +8,26 @@ import app.viewmodel.TasksViewModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 
 import java.rmi.RemoteException;
 import java.sql.Date;
@@ -31,17 +37,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
 public class Draw
 {
+
+
 
   public static void drawMeetingPopUp(MeetingViewModel meetingViewModel)
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
 
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
     parent.setPrefWidth(600);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -198,7 +208,8 @@ public class Draw
 
   public static void createMeetingObject(MeetingViewModel meetingViewModel, String title, Lead lead,
       DatePicker datePicker, String startTime, String endTime,
-      String description, ArrayList<String> emails){
+      String description, ArrayList<String> emails)
+  {
 
       Date date=Date.valueOf(datePicker.getValue());
       Platform.runLater(()->{
@@ -318,10 +329,11 @@ public class Draw
   {
 
     Stage stage = new Stage();
-
+    stage.initStyle(StageStyle.UNDECORATED);
 
     //container
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefWidth(600);
     parent.setPrefHeight(400);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -403,12 +415,16 @@ public class Draw
     descr.setSpacing(20);
     Label newDescription = new Label("Description:");
     newDescription.setPrefWidth(75);
-    TextField descrTextField = new TextField(description);
-    descrTextField.setAlignment(Pos.TOP_LEFT);
-    descrTextField.setPrefWidth(330);
-    descrTextField.setPrefHeight(100);
-    descr.getChildren().add(newDescription);
-    descr.getChildren().add(descrTextField);
+    TextArea descrText = new TextArea(description);
+    descrText.setPrefWidth(330);
+    descrText.setPrefHeight(100);
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #d93f3f");
+
+
+    descr.getChildren().addAll(newDescription, descrText, delete);
     descr.setLayoutY(10);
 
 
@@ -484,8 +500,7 @@ public class Draw
 
     insert.addAll(topBar, newTitle,lead, dateTime, descr, employeeAttendance);
 
-
-    Platform.runLater(()-> update.setOnAction(event -> {
+    update.setOnAction(event -> {
 
       if (ConstraintChecker.checkTime(newStartTime.getText(),newEndTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
@@ -502,7 +517,7 @@ public class Draw
           Meeting oldMeeting = new Meeting(title, description, Date.valueOf(
               datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
               endTime), leadEmail);
-          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrTextField.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), leads.getValue().getEmail());
+          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrText.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), leads.getValue().getEmail());
 
           updateMeetingObject(meetingViewModel,oldMeeting,newMeeting, emailsUpdated);
           stage.close();
@@ -519,8 +534,22 @@ public class Draw
         A.show();
       }
 
-    }));
+    });
 
+
+    delete.setOnAction(event -> {
+      Meeting meeting = new Meeting(title, description, Date.valueOf(
+          datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
+          endTime), leadEmail);
+      try
+      {
+        confirmationToDeleteObject(meeting, meetingViewModel, stage);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
 
 
     Scene scene = new Scene(parent);
@@ -529,7 +558,8 @@ public class Draw
     stage.show();
   }
 
-  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting,  ArrayList<String> emails){
+  public static void updateMeetingObject(MeetingViewModel meetingViewModel,Meeting oldMeeting, Meeting newMeeting,  ArrayList<String> emails)
+  {
 
       Platform.runLater(()->{
         try
@@ -544,14 +574,14 @@ public class Draw
 
   }
 
-
-
   public static void drawTaskPopUp(TilePane tilePane, TasksViewModel tasksViewModel)
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
 
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
     parent.setPrefWidth(600);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -682,7 +712,7 @@ public class Draw
 
 
     create.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(titleTextField))
+      if (ConstraintChecker.checkFillOut(titleTextField))
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
@@ -719,8 +749,6 @@ public class Draw
     stage.show();
 
   }
-
-
 
   public static VBox drawTaskTile(TasksViewModel tasksViewModel, String title, String description, DatePicker datePicker, String status, int business_id)
   {
@@ -804,8 +832,10 @@ public class Draw
   {
 
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
 
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
     parent.setPrefWidth(600);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -965,7 +995,7 @@ public class Draw
 
 
     update.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(titleTextField))
+      if (ConstraintChecker.checkFillOut(titleTextField))
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
@@ -1072,11 +1102,24 @@ public class Draw
         {
           ((MeetingViewModel) viewModel).removeMeeting((Meeting) obj);
         }
-        catch (SQLException e)
+        catch (SQLException | RemoteException e)
         {
           throw new RuntimeException(e);
         }
-        catch (RemoteException e)
+      });
+      noButton.setOnAction(event -> stage.close());
+    }
+    else if(obj instanceof Lead && viewModel instanceof LeadsViewModel)
+    {
+      label.setText(text + "lead?");
+      yesButton.setOnAction(event -> {
+        primaryStage.close();
+        stage.close();
+        try
+        {
+          ((LeadsViewModel) viewModel).removeLead((Lead) obj);
+        }
+        catch (SQLException | RemoteException e)
         {
           throw new RuntimeException(e);
         }
@@ -1131,17 +1174,13 @@ public class Draw
 
       for(Meeting meeting : meetings)
       {
-        LocalDate date = meeting.getDate().toLocalDate();
-        DatePicker datePicker=new DatePicker(date);
-        String startTime=meeting.getStartTime().toString();
-        String endTime=meeting.getEndTime().toString();
-        Platform.runLater(()->{
+        LocalDate localDate = meeting.getDate().toLocalDate();
+        DatePicker datePicker = new DatePicker(localDate);
+        Platform.runLater(()-> {
           try
           {
-            tilePane.getChildren().add(
-                drawMeetingTile(meetingViewModel, meeting.getTitle(),meeting.getLeadEmail(),datePicker,startTime,endTime,
-                    meeting.getDescription()));
-
+            tilePane.getChildren().add(drawMeetingTile(meetingViewModel, meeting.getTitle(), meeting.getLeadEmail(),datePicker , meeting.getStartTime().toString()
+            , meeting.getEndTime().toString(), meeting.getDescription()));
           }
           catch (SQLException e)
           {
@@ -1174,8 +1213,6 @@ public class Draw
       }
     }
   }
-
-
   public static void hoverButtonNavbar(Button... b)
   {
     for(Button button : b)
@@ -1185,100 +1222,193 @@ public class Draw
     }
   }
 
-  public static void drawLeadPopUp(VBox vBox, LeadsViewModel leadsViewModel)
+  public static void drawLeadPopUp(LeadsViewModel leadsViewModel)
+      throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+
 
     VBox parent = new VBox();
-    parent.setPrefHeight(400);
-    parent.setPrefWidth(600);
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+
+    parent.setPrefHeight(600);
+    parent.setPrefWidth(800);
     parent.setAlignment(Pos.TOP_LEFT);
     ObservableList<Node> insert = parent.getChildren();
 
     HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
     topBar.setPrefHeight(40);
     topBar.setAlignment(Pos.CENTER_RIGHT);
     topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
 
     HBox name = new HBox();
     Label firstNameLabel = new Label("First Name: ");
     firstNameLabel.setPrefWidth(65);
+    Label middleNameLabel = new Label("Middle Name: ");
+    TextField middleNameTextField = new TextField();
+    middleNameTextField.setPromptText("Can be left empty");
     TextField firstNameTextField = new TextField();
-    firstNameTextField.setText("");
     Label lastNameLabel = new Label("Last Name: ");
     TextField lastNameTextField = new TextField();
-    lastNameTextField.setText("");
     name.setSpacing(20);
     name.setPadding(new Insets(20, 0, 0, 20));
-    name.getChildren().addAll(firstNameLabel, firstNameTextField,lastNameLabel,lastNameTextField);
+    name.getChildren().addAll(firstNameLabel, firstNameTextField,middleNameLabel, middleNameTextField,lastNameLabel,lastNameTextField);
 
-    HBox email = new HBox();
+    HBox data1 = new HBox();
+
     Label emailLabel = new Label("Email: ");
     emailLabel.setPrefWidth(65);
     TextField emailField = new TextField();
-    emailField.setText("example@gmail.com");
-    email.setSpacing(20);
-    email.setPadding(new Insets(20,0,0,20));
-    email.getChildren().addAll(emailLabel,emailField);
-
-    HBox phone = new HBox();
     Label phoneLabel = new Label("Phone: ");
-    phoneLabel.setPrefWidth(65);
+    phoneLabel.setPrefWidth(77);
     TextField phoneField = new TextField();
     phoneField.setText("");
-    phone.setSpacing(20);
-    phone.setPadding(new Insets(20,0,0,20));
-    phone.getChildren().addAll(phoneLabel,phoneField);
 
-    HBox title = new HBox();
+
+    data1.getChildren().addAll(emailLabel,emailField,phoneLabel,phoneField);
+    data1.setSpacing(20);
+    data1.setPadding(new Insets(20,0,0,20));
+
+
+
+
+    HBox businesses = new HBox();
+    Label businessLabel = new Label("Business: ");
+    businessLabel.setPrefWidth(65);
+    ComboBox<Business> businessComboBox = new ComboBox<>();
+    businessComboBox.setItems(FXCollections.observableArrayList(leadsViewModel.getBusinesses()));
+
+
+    businesses.setSpacing(20);
+    businesses.setPadding(new Insets(20,0,0,20));
+    businesses.getChildren().addAll(businessLabel, businessComboBox);
+
+
+
+
+
+    HBox workplace1 = new HBox();
+    Label businessName = new Label("Business: ");
+    businessName.setPrefWidth(65);
+    TextField businessNameTextField = new TextField();
     Label titleLabel = new Label("Title: ");
     titleLabel.setPrefWidth(65);
     TextField titleTextField = new TextField();
-    titleTextField.setText("");
-    title.setSpacing(20);
-    title.setPadding(new Insets(20, 0, 0, 20));
-    title.getChildren().addAll(titleLabel, titleTextField);
+    workplace1.setSpacing(20);
+    workplace1.setPadding(new Insets(20, 0, 0, 20));
+    workplace1.getChildren().addAll(businessName, businessNameTextField, titleLabel, titleTextField);
 
-    HBox businessID = new HBox();
-    businessID.setPadding(new Insets(5));
-    businessID.setSpacing(20);
-    Label businessLabel = new Label("Business ID:");
-    businessLabel.setPrefWidth(65);
-    TextField businessField = new TextField();
-    businessField.setText("7456");
+
+    HBox workplace2 = new HBox();
+    Label businessAddress = new Label("Address: ");
+    businessAddress.setPrefWidth(65);
+    TextField businessAddressTextField = new TextField();
+    Label businessCity = new Label("City: ");
+    TextField businessCityTextField = new TextField();
+    businessCity.setPrefWidth(65);
+    workplace2.setSpacing(20);
+    workplace2.setPadding(new Insets(20, 0, 0, 20));
+    workplace2.getChildren().addAll(businessAddress, businessAddressTextField, businessCity, businessCityTextField);
+
+
+    HBox workplace3 = new HBox();
+    Label businessCountry = new Label("Country: ");
+    TextField businessCountryTextField = new TextField();
+    businessCountry.setPrefWidth(65);
+    Label businessPostalCode = new Label("Postal Code: ");
+    TextField businessPostalCodeTextField = new TextField();
+    businessPostalCode.setPrefWidth(65);
+
+    workplace3.setSpacing(20);
+    workplace3.setPadding(new Insets(20, 0, 0, 20));
+    workplace3.getChildren().addAll(businessCountry, businessCountryTextField, businessPostalCode, businessPostalCodeTextField);
 
     Button create = new Button("Create");
     create.setPrefWidth(60);
     create.setTextFill(Paint.valueOf("White"));
     create.setStyle("-fx-background-color:  #348e2f");
 
-    businessID.getChildren().add(businessLabel);
-    businessID.getChildren().add(businessField);
-    businessID.getChildren().add(create);
+    businessComboBox.setOnAction(event -> {
 
-    businessID.setPadding(new Insets(20, 0, 0, 20));
+    });
 
-    insert.addAll(topBar, name,email, phone, title,businessID);
+    insert.addAll(topBar, name, data1, businesses, workplace1, workplace2, workplace3, create);
 
-
+    firstNameTextField.setPromptText("Required");
+    lastNameTextField.setPromptText("Required");
+    emailField.setPromptText("Required");
+    phoneField.setPromptText("Required");
+    titleTextField.setPromptText("Required");
     create.setOnAction(event -> {
-      if (ConstraintChecker.checkFillout(firstNameTextField) &&
-          ConstraintChecker.checkFillout(lastNameTextField)  &&
-          ConstraintChecker.checkFillout(emailField) &&
-          ConstraintChecker.checkFillout(phoneField) &&
-          ConstraintChecker.checkFillout(titleTextField) &&
-          ConstraintChecker.checkFillout(businessField) )
+      if (ConstraintChecker.checkFillOut(firstNameTextField) &&
+          ConstraintChecker.checkFillOut(lastNameTextField)  &&
+          ConstraintChecker.checkFillOut(emailField) &&
+          ConstraintChecker.checkFillOut(phoneField) &&
+          ConstraintChecker.checkFillOut(titleTextField))
       {
-        createLeadObject(vBox, leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessField.getText());
+
+        if(businessComboBox.getValue() == null)
+        {
+
+            Platform.runLater(()->{
+              try
+              {
+                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), businessPostalCodeTextField.getText());
+              }
+              catch (SQLException | RemoteException e)
+              {
+                throw new RuntimeException(e);
+              }
+              try
+              {
+                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), businessPostalCodeTextField.getText());
+              }
+              catch (SQLException | RemoteException e)
+              {
+                throw new RuntimeException(e);
+              }
+
+              Business b = new Business(businessNameTextField.getText(), businessAddressTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
+
+              int id;
+              try
+              {
+                id = leadsViewModel.getBusinessId(b);
+              }
+              catch (SQLException | RemoteException e)
+              {
+                throw new RuntimeException(e);
+              }
+              createLeadObject(leadsViewModel, firstNameTextField.getText(), middleNameTextField.getText() ,lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), id, businessNameTextField.getText());
+
+            });
+          }
+        else
+        {
+          createLeadObject(leadsViewModel, firstNameTextField.getText(),
+              middleNameTextField.getText(), lastNameTextField.getText(), emailField.getText(), phoneField.getText(), titleTextField.getText(), businessComboBox.getValue().getBusiness_id(), businessComboBox.getValue().getName());
+        }
+
         stage.close();
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Text field must not be empty");
+        A.setContentText("Complete all required fields");
         A.show();
       }
 
     });
+
+
 
     Scene scene = new Scene(parent);
     stage.setResizable(false);
@@ -1287,14 +1417,12 @@ public class Draw
 
   }
 
-  public static void createLeadObject(VBox vBox, LeadsViewModel leadsViewModel, String firstName,String lastName, String email, String phone, String title, String businessID ){
+  public static void createLeadObject(LeadsViewModel leadsViewModel, String firstName, String middleName, String lastName, String email, String phone, String title, int businessID, String businessName ){
 
-    vBox.getChildren().add(
-        drawLeadTile(vBox, leadsViewModel, firstName,lastName,email, title));
     Platform.runLater(()->{
       try
       {
-        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.parseInt(businessID)));
+        leadsViewModel.addLead(new Lead(firstName, middleName, lastName, email, phone, title, businessID, businessName));
       }
       catch (Exception e)
       {
@@ -1304,15 +1432,14 @@ public class Draw
 
   }
 
-  public static HBox drawLeadTile(VBox vBox, LeadsViewModel leadsViewModel, String firstName, String lastName, String email,  String title)
+  public static HBox drawLeadTile(LeadsViewModel leadsViewModel, String firstName, String middleName, String lastName, String email, String businessName,  String title, String phone, int business_id)
   {
     HBox lead = new HBox();
 
     lead.setPadding(new Insets(10,10,10,50));
-    //lead.setPadding(new Insets(10));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
-    //lead.setSpacing(20);
+    lead.setStyle("-fx-background-color: #e2e0eb; -fx-background-radius: 15; -fx-border-radius: 15");
 
     Label nameLabel = new Label(firstName+" "+lastName);
     nameLabel.setTextFill(Paint.valueOf("White"));
@@ -1328,22 +1455,198 @@ public class Draw
     emailLabel.setAlignment(Pos.CENTER);
     emailLabel.setPadding(new Insets(0));
 
+    Label businessLabel = new Label(businessName);
+    businessLabel.setPrefWidth(270);
+    businessLabel.setPrefHeight(48);
+    businessLabel.setFont(new Font(18));
+    businessLabel.setAlignment(Pos.CENTER);
+    businessLabel.setPadding(new Insets(0));
+
+
     Label titleLabel = new Label(title);
     titleLabel.setPrefWidth(240);
     titleLabel.setPrefHeight(48);
     titleLabel.setFont(new Font(18));
     titleLabel.setAlignment(Pos.CENTER);
-    //titleLabel.setPadding(new Insets(0,));
 
-    lead.getChildren().addAll(nameLabel, emailLabel, titleLabel);
+
+    lead.getChildren().addAll(nameLabel, emailLabel, businessLabel, titleLabel);
 
     lead.setOnMouseClicked(event -> {
-      //drawManageTaskPopUp( vBox, leadsViewModel,  title, description, datePicker.getValue(), status);
+      drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id);
     });
 
     return lead;
   }
 
+  private static void drawManageLeadPopUp(LeadsViewModel leadsViewModel, String firstName, String middleName, String lastName, String email,
+      String businessName, String title, String phone, int business_id)
+  {
+    Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+    VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+    parent.setPrefHeight(500);
+    parent.setPrefWidth(700);
+    parent.setAlignment(Pos.TOP_LEFT);
 
 
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+
+    HBox names = new HBox();
+    names.setAlignment(Pos.CENTER);
+    Label firstNameLabel = new Label("First Name: ");
+    TextField firstnameTextField = new TextField(firstName);
+    Label middleNameLabel = new Label("Middle Name: ");
+    TextField middleNameTextField = new TextField(middleName);
+    Label lastNameLabel = new Label("Last Name: ");
+    TextField lastNameTextField = new TextField(lastName);
+
+    names.getChildren().addAll(firstNameLabel,firstnameTextField, middleNameLabel, middleNameTextField, lastNameLabel, lastNameTextField);
+
+    HBox data = new HBox();
+    data.setAlignment(Pos.CENTER);
+    Label emailLabel = new Label("Email: ");
+    TextField emailTextField = new TextField(email);
+    Label phoneLabel = new Label("Phone: ");
+    TextField phoneTextField = new TextField(phone);
+    Label role= new Label("Role: ");
+    TextField roleTextField = new TextField(title);
+
+    data.getChildren().addAll(emailLabel, emailTextField, phoneLabel, phoneTextField, role, roleTextField);
+
+    HBox buttons = new HBox();
+    buttons.setAlignment(Pos.CENTER);
+    Button update = new Button("Update");
+    update.setPrefWidth(60);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color:  #348e2f");
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #d93f3f");
+
+    buttons.getChildren().addAll(update, delete);
+
+    parent.getChildren().addAll(topBar, names, data, buttons);
+
+    update.setOnAction(event -> {
+      Lead oldLead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName);
+      Lead newLead = new Lead(firstnameTextField.getText(), middleNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), phoneTextField.getText(), roleTextField.getText(),
+          business_id, businessName);
+      try
+      {
+        leadsViewModel.editLead(oldLead, newLead);
+        stage.close();
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+    delete.setOnAction(event -> {
+      Lead lead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName);
+      try
+      {
+        confirmationToDeleteObject(lead, leadsViewModel, stage);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+
+    Scene scene = new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  public static void drawLeads(VBox leadVBox, ObservableList<Lead> leads, LeadsViewModel leadsViewModel)
+  {
+    if(leads != null)
+    {
+      for(Node node : leadVBox.getChildren())
+      {
+        if(node instanceof HBox)
+        {
+          Platform.runLater(()-> leadVBox.getChildren().remove(node));
+        }
+      }
+
+      for(Lead lead : leads)
+      {
+        Platform.runLater(()->
+        {
+          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
+        });
+      }
+    }
+  }
+
+  public static void drawCalendarActivityPopUp(List<CalendarActivity> calendarActivities)
+  {
+    Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+    VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+
+
+    parent.getChildren().add(topBar);
+
+    for (CalendarActivity calendarActivity : calendarActivities)
+    {
+      HBox activity = new HBox();
+      activity.setSpacing(20);
+      activity.setPadding(new Insets(20));
+      Text text = new Text();
+      text.setFont(Font.font(15));
+      if(calendarActivity.getMeeting() != null)
+      {
+        text.setText(calendarActivity.getMeeting().toString());
+      }
+      if(calendarActivity.getTask() != null)
+      {
+        text.setText(calendarActivity.getTask().toString());
+      }
+
+      activity.getChildren().add(text);
+      parent.getChildren().add(activity);
+    }
+
+
+
+    Scene scene =new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
+  }
 }

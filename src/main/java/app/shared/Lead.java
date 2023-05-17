@@ -12,7 +12,9 @@ public class Lead implements Serializable
   private String title;
   private int business_id;
 
-  public Lead(String firstname, String middleName, String lastname, String email, String phone,String title, int business_id)
+  private String businessName;
+
+  public Lead(String firstname, String middleName, String lastname, String email, String phone,String title, int business_id, String businessName)
   {
     this.firstname = firstname;
     this.middleName = middleName;
@@ -21,6 +23,7 @@ public class Lead implements Serializable
     this.phone = phone;
     this.title = title;
     this.business_id = business_id;
+    this.businessName = businessName;
   }
 
   public String getPhone()
@@ -97,5 +100,15 @@ public class Lead implements Serializable
   {
     return firstname + " " + lastname + " | " + email;
 
+  }
+
+  public void setBusinessName(String businessName)
+  {
+    this.businessName = businessName;
+  }
+
+  public String getBusinessName()
+  {
+    return businessName;
   }
 }

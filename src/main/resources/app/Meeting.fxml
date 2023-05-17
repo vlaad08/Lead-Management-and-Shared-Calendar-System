@@ -79,7 +79,7 @@
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leeds" textFill="WHITE" GridPane.rowIndex="8">
+                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
                             <font>
                                 <Font size="18.0" />
                             </font>
