@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "password");
+        "postgres", "1945");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException
@@ -257,23 +257,6 @@ public class SQLConnection
       statement.setString(2, task.getDescription());
       statement.setDate(3, task.getDate());
       statement.setInt(4, task.getBusiness_id());
-      statement.executeUpdate();
-    }
-  }
-
-  public void removeMeeting(Meeting meeting) throws SQLException
-  {
-    try
-        (Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement("delete from meeting where title =? and description = ? and date = ? and starttime = ? and endtime= ? and email = ?")
-        )
-    {
-      statement.setString(1, meeting.getTitle());
-      statement.setString(2, meeting.getDescription());
-      statement.setDate(3, meeting.getDate());
-      statement.setTime(4, meeting.getStartTime());
-      statement.setTime(5, meeting.getEndTime());
-      statement.setString(6, meeting.getLeadEmail());
       statement.executeUpdate();
     }
   }
