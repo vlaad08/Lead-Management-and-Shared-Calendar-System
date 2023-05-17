@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -48,8 +49,10 @@ public class Draw
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
 
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
     parent.setPrefWidth(600);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -326,10 +329,11 @@ public class Draw
   {
 
     Stage stage = new Stage();
-
+    stage.initStyle(StageStyle.UNDECORATED);
 
     //container
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefWidth(600);
     parent.setPrefHeight(400);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -558,8 +562,10 @@ public class Draw
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
 
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
     parent.setPrefWidth(600);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -812,8 +818,10 @@ public class Draw
   {
 
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
 
     VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
     parent.setPrefWidth(600);
     parent.setAlignment(Pos.TOP_LEFT);
@@ -1392,13 +1400,14 @@ public class Draw
 
   }
 
-  public static HBox drawLeadTile(LeadsViewModel leadsViewModel, String firstName, String lastName, String email, String businessName,  String title)
+  public static HBox drawLeadTile(LeadsViewModel leadsViewModel, String firstName, String middleName, String lastName, String email, String businessName,  String title, String phone, int business_id)
   {
     HBox lead = new HBox();
 
     lead.setPadding(new Insets(10,10,10,50));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
+    lead.setStyle("-fx-background-color: #e2e0eb; -fx-background-radius: 15; -fx-border-radius: 15");
 
     Label nameLabel = new Label(firstName+" "+lastName);
     nameLabel.setTextFill(Paint.valueOf("White"));
@@ -1429,13 +1438,81 @@ public class Draw
     titleLabel.setAlignment(Pos.CENTER);
 
 
-    lead.getChildren().addAll(nameLabel, emailLabel, titleLabel);
+    lead.getChildren().addAll(nameLabel, emailLabel, businessLabel, titleLabel);
 
     lead.setOnMouseClicked(event -> {
-      //drawManageTaskPopUp( vBox, leadsViewModel,  title, description, datePicker.getValue(), status);
+      drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id);
     });
 
     return lead;
+  }
+
+  private static void drawManageLeadPopUp(LeadsViewModel leadsViewModel, String firstName, String middleName, String lastName, String email,
+      String businessName, String title, String phone, int business_id)
+  {
+    Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+    VBox parent = new VBox();
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+    parent.setPrefHeight(500);
+    parent.setPrefWidth(700);
+    parent.setAlignment(Pos.TOP_LEFT);
+
+
+    HBox topBar = new HBox();
+    Button closeButton = new Button("X");
+    closeButton.setOnAction(event -> stage.close());
+    closeButton.setStyle("-fx-background-color: none");
+    closeButton.setTextFill(Paint.valueOf("White"));
+    hoverButtonNavbar(closeButton);
+    closeButton.setPrefHeight(40);
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+    topBar.getChildren().add(closeButton);
+
+
+    HBox names = new HBox();
+    names.setAlignment(Pos.CENTER);
+    Label firstNameLabel = new Label("First Name: ");
+    TextField firstnameTextField = new TextField(firstName);
+    Label middleNameLabel = new Label("Middle Name: ");
+    TextField middleNameTextField = new TextField(middleName);
+    Label lastNameLabel = new Label("Last Name: ");
+    TextField lastNameTextField = new TextField(lastName);
+
+    names.getChildren().addAll(firstNameLabel,firstnameTextField, middleNameLabel, middleNameTextField, lastNameLabel, lastNameTextField);
+
+    HBox data = new HBox();
+    data.setAlignment(Pos.CENTER);
+    Label emailLabel = new Label("Email: ");
+    TextField emailTextField = new TextField(email);
+    Label phoneLabel = new Label("Phone: ");
+    TextField phoneTextField = new TextField(phone);
+    Label role= new Label("Role: ");
+    TextField roleTextField = new TextField(title);
+
+    data.getChildren().addAll(emailLabel, emailTextField, phoneLabel, phoneTextField, role, roleTextField);
+
+    HBox buttons = new HBox();
+    buttons.setAlignment(Pos.CENTER);
+    Button update = new Button("Update");
+    update.setPrefWidth(60);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color:  #348e2f");
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #d93f3f");
+
+    buttons.getChildren().addAll(update, delete);
+
+    parent.getChildren().addAll(topBar, names, data, buttons);
+
+    Scene scene = new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
   }
 
   public static void drawLeads(VBox leadVBox, ObservableList<Lead> leads, LeadsViewModel leadsViewModel)
@@ -1454,8 +1531,7 @@ public class Draw
       {
         Platform.runLater(()->
         {
-
-          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle()));
+          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
         });
       }
     }
