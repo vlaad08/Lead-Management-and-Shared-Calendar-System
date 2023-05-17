@@ -4,9 +4,6 @@ package app.view;
 import app.shared.Meeting;
 import app.viewmodel.MeetingViewModel;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -15,7 +12,6 @@ import javafx.scene.layout.*;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 public class MeetingController implements PropertyChangeListener
@@ -37,7 +33,7 @@ public class MeetingController implements PropertyChangeListener
   @FXML private StackPane addRectangle;
 
 
-  private final ObjectProperty<ObservableList<Meeting>> meetings = new SimpleObjectProperty<>();
+  private final ListView<Meeting> meetings = new ListView<>();
 
   public void init(ViewHandler viewHandler, MeetingViewModel meetingViewModel, Region root)
       throws SQLException
@@ -48,6 +44,7 @@ public class MeetingController implements PropertyChangeListener
     this.root = root;
 
     meetingViewModel.addPropertyChangeListener(this);
+
 
 
     //bs comes below
@@ -67,10 +64,10 @@ public class MeetingController implements PropertyChangeListener
     tilePane.setTileAlignment(Pos.CENTER_LEFT);
 
 
-    meetingViewModel.bindMeetings(meetings);
+    meetingViewModel.bindMeetings(meetings.itemsProperty());
 
 
-    Draw.drawMeetings(tilePane, meetings.get(), meetingViewModel);
+    Draw.drawMeetings(tilePane, meetings);
   }
 
 
@@ -119,9 +116,8 @@ public class MeetingController implements PropertyChangeListener
   }
 
 
-  public void addMeeting() throws SQLException, RemoteException
-  {
-    Draw.drawMeetingPopUp(meetingViewModel);
+  public void addMeeting(){
+    Draw.drawMeetingPopUp(tilePane, meetingViewModel);
   }
 
 
@@ -143,8 +139,7 @@ public class MeetingController implements PropertyChangeListener
     {
         Platform.runLater(()->{
 
-            Draw.drawMeetings(tilePane, meetings.get(), meetingViewModel);
-
+            Draw.drawMeetings(tilePane,  meetings);
         });
 
     }

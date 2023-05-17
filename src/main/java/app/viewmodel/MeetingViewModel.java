@@ -1,11 +1,11 @@
 package app.viewmodel;
 
 import app.model.Model;
-import app.shared.Lead;
+import app.model.User;
 import app.shared.Meeting;
-import app.shared.User;
-import app.shared.UserTableRow;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.List;
 
 public class MeetingViewModel implements PropertyChangeListener
 {
@@ -44,17 +45,12 @@ public class MeetingViewModel implements PropertyChangeListener
     property.bindBidirectional(meetings);
   }
 
-  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime, String leadEmail,ArrayList<String> emails)
+  public void addMeeting(String title,String description,Date date, Time startTime,Time endTime,String email)
       throws SQLException, RemoteException
   {
-    model.addMeeting(title,description,date,startTime,endTime, leadEmail, emails);
+    model.addMeeting(title,description,date,startTime,endTime,email);
   }
 
-  public void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails)
-      throws SQLException, RemoteException
-  {
-    model.editMeeting(oldMeeting, newMeeting, emails);
-  }
 
   public void removeMeeting(Meeting meeting)
   {
@@ -66,19 +62,7 @@ public class MeetingViewModel implements PropertyChangeListener
     return model.getMeetings();
   }
 
-  public ArrayList<Lead> getLeads() throws SQLException, RemoteException
-  {
-    return model.getLeads();
-  }
 
-  public ArrayList<User> getUsers() throws SQLException, RemoteException
-  {return model.getUsers();}
-
-  public ArrayList<String> getAttendance(Meeting meeting)
-      throws SQLException, RemoteException
-  {
-    return model.getAttendance(meeting);
-  }
 
 
   public boolean checkUser()

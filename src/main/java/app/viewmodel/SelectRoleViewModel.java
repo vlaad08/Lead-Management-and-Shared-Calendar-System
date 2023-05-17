@@ -13,7 +13,7 @@ public class SelectRoleViewModel
 
   public void setUser()
   {
-
+    model.setUser();
   }
 
 }
