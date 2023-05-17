@@ -162,6 +162,18 @@ public class ModelManager implements Model
     support.firePropertyChange("reloadLeads", false, true);
   }
 
+  @Override public void editLead(Lead oldLead, Lead newLead)
+      throws SQLException, RemoteException
+  {
+    communicator.editLead(oldLead, newLead);
+  }
+
+  @Override public void removeLead(Lead lead)
+      throws SQLException, RemoteException
+  {
+    communicator.removeLead(lead);
+  }
+
   @Override public void removeMeeting(Meeting meeting)
   {
   }

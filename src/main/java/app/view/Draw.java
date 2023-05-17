@@ -1088,6 +1088,23 @@ public class Draw
       });
       noButton.setOnAction(event -> stage.close());
     }
+    else if(obj instanceof Lead && viewModel instanceof LeadsViewModel)
+    {
+      label.setText(text + "lead?");
+      yesButton.setOnAction(event -> {
+        primaryStage.close();
+        stage.close();
+        try
+        {
+          ((LeadsViewModel) viewModel).removeLead((Lead) obj);
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
+      noButton.setOnAction(event -> stage.close());
+    }
   }
 
    public static void createTaskObject(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker dueDate, String status, Business business, ArrayList<String> emails){
@@ -1509,6 +1526,40 @@ public class Draw
     buttons.getChildren().addAll(update, delete);
 
     parent.getChildren().addAll(topBar, names, data, buttons);
+
+    update.setOnAction(event -> {
+      Lead oldLead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName);
+      Lead newLead = new Lead(firstnameTextField.getText(), middleNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), phoneTextField.getText(), roleTextField.getText(),
+          business_id, businessName);
+      try
+      {
+        leadsViewModel.editLead(oldLead, newLead);
+        stage.close();
+      }
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
+      }
+      catch (RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+    delete.setOnAction(event -> {
+      Lead lead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName);
+      try
+      {
+        confirmationToDeleteObject(lead, leadsViewModel, stage);
+      }
+      catch (SQLException e)
+      {
+        throw new RuntimeException(e);
+      }
+      catch (RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
 
     Scene scene = new Scene(parent);
     stage.setScene(scene);

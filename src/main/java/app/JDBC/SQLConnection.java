@@ -50,11 +50,7 @@ public class SQLConnection
         meetings.add(
             new Meeting(title, description, date, startTime, endTime, email));
       }
-      if(!meetings.isEmpty())
-      {
-        return meetings;
-      }
-      return new ArrayList<>();
+      return meetings;
     }
   }
 
@@ -106,11 +102,7 @@ public class SQLConnection
         int businessId = resultSet.getInt("business_id");
         tasks.add(new Task(title, description, date, status, businessId));
       }
-      if (!tasks.isEmpty())
-      {
-        return tasks;
-      }
-      return new ArrayList<>();
+      return tasks;
     }
   }
 
@@ -462,7 +454,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
   {
     try (
         Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("select business_id from business where businessname = ? and street = ? and postalcode = ?");
+        PreparedStatement statement = connection.prepareStatement("select business_id from business where businessname = ? and street = ? and postalcode = ?")
         )
     {
       statement.setString(1, business.getName());
@@ -475,6 +467,94 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         id =  set.getInt("business_id");
       }
       return id;
+    }
+  }
+
+  public void editLead(Lead oldLead, Lead newLead) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("update lead set firstname = ?, middlename = ?, lastname = ?,"
+                + "email = ?, phone = ?, title = ?, business_id = ? where firstname = ? and middlename = ? and lastname = ? and "
+                + "email = ? and phone = ? and title = ? and business_id = ?")
+            )
+    {
+      statement.setString(1, newLead.getFirstname());
+      statement.setString(2, newLead.getMiddleName());
+      statement.setString(3, newLead.getLastname());
+      statement.setString(4, newLead.getEmail());
+      statement.setString(5, newLead.getPhone());
+      statement.setString(6, newLead.getTitle());
+      statement.setInt(7, newLead.getBusiness_id());
+
+      statement.setString(8, oldLead.getFirstname());
+      statement.setString(9, oldLead.getMiddleName());
+      statement.setString(10, oldLead.getLastname());
+      statement.setString(11, oldLead.getEmail());
+      statement.setString(12, oldLead.getPhone());
+      statement.setString(13, oldLead.getTitle());
+      statement.setInt(14, oldLead.getBusiness_id());
+
+      statement.executeUpdate();
+    }
+  }
+
+  public ArrayList<Meeting> getMeetingsByLead(Lead lead) throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from meeting where email = ?")
+        )
+    {
+      ArrayList<Meeting> meetings = new ArrayList<>();
+      statement.setString(1, lead.getEmail());
+      ResultSet set = statement.executeQuery();
+      while (set.next())
+      {
+        String title = set.getString("title");
+        String description = set.getString("description");
+        Date date = set.getDate("date");
+        Time startTime = set.getTime("starttime");
+        Time endTime = set.getTime("endtime");
+        String email = set.getString("email");
+        meetings.add(
+            new Meeting(title, description, date, startTime, endTime, email));
+      }
+      return meetings;
+    }
+  }
+
+  public void removeMeeting(Meeting meeting) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from meeting where title = ? and date = ? and starttime = ? and endtime = ? and email = ?"))
+    {
+      statement.setString(1, meeting.getTitle());
+      statement.setDate(2, meeting.getDate());
+      statement.setTime(3,meeting.getStartTime());
+      statement.setTime(4,meeting.getEndTime());
+      statement.setString(5, meeting.getLeadEmail());
+      statement.executeUpdate();
+    }
+  }
+
+  public void removeLead(Lead lead) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("delete from lead where firstname = ? and lastname = ? and email = ? and phone = ? and title = ? and business_id = ?")
+            )
+    {
+      statement.setString(1, lead.getFirstname());
+      statement.setString(2, lead.getLastname());
+      statement.setString(3, lead.getEmail());
+      statement.setString(4, lead.getPhone());
+      statement.setString(5, lead.getTitle());
+      statement.setInt(6, lead.getBusiness_id());
+      statement.executeUpdate();
     }
   }
 }

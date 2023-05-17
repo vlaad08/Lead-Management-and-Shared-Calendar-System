@@ -47,4 +47,7 @@ public interface Model
   void createBusiness(String businessName, String street, String postalCode) throws SQLException, RemoteException;
   int getBusinessId(Business business) throws SQLException, RemoteException;
   void leadAddedFromServer() throws SQLException, RemoteException;
+  void editLead(Lead oldLead, Lead newLead) throws SQLException,
+      RemoteException;
+  void removeLead(Lead lead) throws SQLException, RemoteException;
 }

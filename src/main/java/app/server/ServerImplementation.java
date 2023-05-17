@@ -9,6 +9,8 @@ import dk.via.remote.observer.RemotePropertyChangeSupport;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerImplementation implements Communicator
 {
@@ -60,9 +62,22 @@ public class ServerImplementation implements Communicator
     support.firePropertyChange("reloadTask", null, "");
   }
 
-  @Override public void removeLead(Lead lead) throws SQLException
+  @Override public void removeLead(Lead lead)
+      throws SQLException, RemoteException
   {
+    connection = SQLConnection.getInstance();
 
+    ArrayList<Meeting> meetings = connection.getMeetingsByLead(lead);
+
+    for(Meeting meeting : meetings)
+    {
+      connection.removeAttendance(meeting);
+      connection.removeMeeting(meeting);
+    }
+
+    connection.removeLead(lead);
+    support.firePropertyChange("reloadLead", null, "");
+    support.firePropertyChange("reloadMeeting", null, "");
   }
 
   @Override public void editTask(Task newTask, Task oldTask) throws SQLException, RemoteException
@@ -200,57 +215,39 @@ public class ServerImplementation implements Communicator
     return connection.getBusinessID(business);
   }
 
-  //Syncronization of Users
-
-
-  /*
-  @Override public void addTask(Task task) throws RemoteException
+  @Override public void editLead(Lead oldLead, Lead newLead)
+      throws SQLException, RemoteException
   {
-    taskList.add(task);
-    supportTask.firePropertyChange("task",null,task);
+    connection = SQLConnection.getInstance();
+
+    ArrayList<Meeting> meetings = connection.getMeetingsByLead(oldLead);
+    Map<Meeting,ArrayList<String>> meetingMap = new HashMap<>();
+    for(Meeting meeting : meetings)
+    {
+      ArrayList<String> emails = getAttendance(meeting);
+
+      connection.removeAttendance(meeting);
+      connection.removeMeeting(meeting);
+
+      meeting.setLeadEmail(newLead.getEmail());
+
+      meetingMap.put(meeting, emails);
+    }
+
+    connection.editLead(oldLead, newLead);
+
+    for (Meeting meeting : meetingMap.keySet())
+    {
+      connection.createMeeting(meeting);
+      ArrayList<String> emails = meetingMap.get(meeting);
+      for(String e : emails)
+      {
+        connection.setAttendance(e, meeting);
+      }
+    }
+
+    support.firePropertyChange("reloadLead", null, "");
+    support.firePropertyChange("reloadMeeting", null, "");
   }
 
-  @Override public void manageTask(Task deletedTask, Task createdTask) throws RemoteException
-  {
-    taskList.remove(deletedTask);
-    taskList.add(createdTask);
-    supportTask.firePropertyChange("task",null,createdTask);
-  }
-
-  @Override public void removeTask(Task task) throws RemoteException
-  {
-    taskList.remove(task);
-    supportTask.firePropertyChange("task",null,task);
-  }
-
-  @Override public ArrayList<Task> getTasks() throws RemoteException
-  {
-    return taskList;
-  }
-
-  @Override public void addLead(Lead lead) throws RemoteException
-  {
-    leadList.add(lead);
-    supportLead.firePropertyChange("lead",null,lead);
-  }
-
-  @Override public void manageLead(Lead deletedLead, Lead createdLead) throws RemoteException
-  {
-    leadList.remove(deletedLead);
-    leadList.add(createdLead);
-    supportLead.firePropertyChange("lead",null,createdLead);
-  }
-
-  @Override public void removeLead(Lead lead) throws RemoteException
-  {
-    leadList.remove(lead);
-    supportLead.firePropertyChange("lead",null,lead);
-  }
-
-  @Override public ArrayList<Lead> getLeads() throws RemoteException
-  {
-    return leadList;
-  }
-
-   */
 }

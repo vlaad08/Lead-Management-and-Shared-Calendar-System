@@ -37,6 +37,11 @@ public class LeadsViewModel implements PropertyChangeListener
     model.addLead(lead);
   }
 
+  public void removeLead(Lead lead) throws SQLException, RemoteException
+  {
+    model.removeLead(lead);
+  }
+
   public ArrayList<Lead> getLeads()
   {
     return model.getLeads();
@@ -85,5 +90,11 @@ public class LeadsViewModel implements PropertyChangeListener
   public void addPropertyChangeListener(PropertyChangeListener listener)
   {
     support.addPropertyChangeListener(listener);
+  }
+
+  public void editLead(Lead oldLead, Lead newLead)
+      throws SQLException, RemoteException
+  {
+    model.editLead(oldLead, newLead);
   }
 }
