@@ -25,7 +25,6 @@ public class ServerImplementation implements Communicator
     support = new RemotePropertyChangeSupport<>();
   }
 
-
   @Override public void createMeeting(Meeting meeting) throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
@@ -104,8 +103,6 @@ public class ServerImplementation implements Communicator
   {
     support.addPropertyChangeListener(listener);
   }
-
-
 
   @Override public ArrayList<Meeting> getMeetings() throws SQLException
   {
