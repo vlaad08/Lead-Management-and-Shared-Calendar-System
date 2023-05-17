@@ -39,11 +39,7 @@ public class CalendarViewModel implements PropertyChangeListener
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
-    if(evt.getPropertyName().equals("reloadMeetings"))
-    {
-      support.firePropertyChange("reloadCalendar", false, true);
-    }
-    if(evt.getPropertyName().equals("reloadTasks"))
+    if(evt.getPropertyName().equals("reloadMeetings") || evt.getPropertyName().equals("reloadTasks"))
     {
       support.firePropertyChange("reloadCalendar", false, true);
     }
