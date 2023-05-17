@@ -32,6 +32,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Draw
 {
@@ -757,7 +758,7 @@ public class Draw
     Platform.runLater(()->{
       try
       {
-        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.valueOf(businessID)));
+        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.valueOf(businessID),"Available"));
       }
       catch (Exception e)
       {
@@ -807,7 +808,7 @@ public class Draw
     return lead;
   }
 
-  public static void drawLead(VBox vBox,LeadsViewModel leadsViewModel, ListView<Lead> leads)
+  public static void drawLead(VBox vBox,LeadsViewModel leadsViewModel, ListView<Lead> leads, int sort)
   {
     if(leads.getItems() != null)
     {
@@ -820,23 +821,48 @@ public class Draw
         }
       }
 
-      for(Lead element : leads.getItems())
-      {
-        String firstName = element.firstName();
-        String lastName = element.lastName();
-        String email = element.email();
-        String position = element.title();
-        Platform.runLater(()->{
-          try
-          {
-            vBox.getChildren().add(drawLeadTile(vBox,leadsViewModel,firstName,lastName,email,position));
+      ArrayList<Lead> available = new ArrayList<>();
+
+
+      if(sort == 0){ //For all leads
+
+        for(Lead element : leads.getItems()) {
+          String firstName = element.firstName();
+          String lastName = element.lastName();
+          String email = element.email();
+          String position = element.title();
+          Platform.runLater(()->{
+            try {
+              vBox.getChildren().add(drawLeadTile(vBox,leadsViewModel,firstName,lastName,email,position));
+            }
+            catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          });
+        }
+      }else if(sort == 1){ //For available leads
+        for(Lead element: leads.getItems()){
+          if(element.status().equals("Available")){
+            available.add(element);
           }
-          catch (Exception e)
-          {
-            throw new RuntimeException(e);
-          }
-        });
+        }
+
+        for(Lead element: available){
+          String firstName = element.firstName();
+          String lastName = element.lastName();
+          String email = element.email();
+          String position = element.title();
+          Platform.runLater(()->{
+            try {
+              vBox.getChildren().add(drawLeadTile(vBox,leadsViewModel,firstName,lastName,email,position));
+            }
+            catch (Exception e) {
+              throw new RuntimeException(e);
+            }
+          });
+        }
       }
+
     }
   }
 

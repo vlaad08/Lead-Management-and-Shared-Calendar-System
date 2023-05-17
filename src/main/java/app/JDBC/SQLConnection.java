@@ -45,11 +45,7 @@ public class SQLConnection
         String email = resultSet.getString("email");
         meetings.add(new Meeting(title, description, date, startTime, endTime, email));
       }
-      if(!meetings.isEmpty())
-      {
-        return meetings;
-      }
-      return null;
+      return meetings;
     }
   }
 
@@ -95,11 +91,7 @@ public class SQLConnection
         int businessId = resultSet.getInt("business_id");
         tasks.add(new Task(title, description, date, status,businessId));
       }
-      if(!tasks.isEmpty())
-      {
-        return tasks;
-      }
-      return null;
+      return tasks;
     }
   }
 
@@ -157,7 +149,8 @@ public class SQLConnection
         String phone = resultSet.getString("phone");
         String title = resultSet.getString("title");
         int businessId = resultSet.getInt("business_id");
-        leads.add(new Lead(firstName,middleName,lastName,email,phone,title,businessId));
+        String status = resultSet.getString("status");
+        leads.add(new Lead(firstName,middleName,lastName,email,phone,title,businessId,status));
       }
         return leads;
     }

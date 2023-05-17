@@ -1,13 +1,19 @@
 package app.view;
 
-import app.viewmodel.AvailableClientsViewModel;
-import app.viewmodel.MeetingViewModel;
+import app.shared.Lead;
+import app.viewmodel.LeadsViewModel;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
-public class AvailableClientsController
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class AvailableClientsController implements PropertyChangeListener
 {
 
 
@@ -20,14 +26,19 @@ public class AvailableClientsController
   @FXML private Button closeButton;
   @FXML private Button manageLeadsButton;
 
+  @FXML private VBox availableLeads;
+
   private Region root;
   private ViewHandler viewHandler;
-  private AvailableClientsViewModel availableClientsViewModel;
+  private LeadsViewModel viewModel;
+  private final ListView<Lead> leads = new ListView<>();
 
-  public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
+  public void init(ViewHandler viewHandler, LeadsViewModel viewModel, Region root){
     this.viewHandler = viewHandler;
-    this.availableClientsViewModel = availableClientsViewModel;
+    this.viewModel = viewModel;
     this.root = root;
+
+    viewModel.addPropertyChangeListener(this);
 
     //bs comes below
     hoverButtonNavbar(calendarButton);
@@ -37,6 +48,9 @@ public class AvailableClientsController
     hoverButtonNavbar(clientsButton);
     hoverButtonNavbar(manageLeadsButton);
     hoverButtonNavbar(closeButton);
+
+    viewModel.bind(leads.itemsProperty());
+    Draw.drawLead(availableLeads,viewModel , leads,1);
   }
 
   public void hoverButtonNavbar(Button b)
@@ -79,5 +93,16 @@ public class AvailableClientsController
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+  if(evt.getPropertyName().equals("reloadLead"))
+  {
+    Platform.runLater(()->{
+      Draw.drawLead(availableLeads, viewModel, leads,1);
+    });
+
+  }
   }
 }

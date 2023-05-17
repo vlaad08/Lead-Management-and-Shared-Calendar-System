@@ -57,7 +57,7 @@ public class ManageLeadsController implements PropertyChangeListener
     hoverButtonNavbar(closeButton);
 
     leadsViewModel.bind(leads.itemsProperty());
-    Draw.drawLead(leadVBox, leadsViewModel,leads);
+    Draw.drawLead(leadVBox, leadsViewModel,leads,0);
   }
 
   public void hoverButtonNavbar(Button b)
@@ -114,7 +114,7 @@ public class ManageLeadsController implements PropertyChangeListener
     if(evt.getPropertyName().equals("reloadLead"))
     {
       Platform.runLater(()->{
-        Draw.drawLead(leadVBox, leadsViewModel, leads);
+        Draw.drawLead(leadVBox, leadsViewModel, leads,0);
       });
 
     }

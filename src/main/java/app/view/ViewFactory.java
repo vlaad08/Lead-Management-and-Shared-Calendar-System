@@ -123,7 +123,7 @@ public class ViewFactory
       {
         Region root = loader.load();
         availableClientsController = loader.getController();
-        availableClientsController.init(viewHandler, viewModelFactory.getAvailableClientsViewModel(), root);
+        availableClientsController.init(viewHandler, viewModelFactory.getLeadsViewModel(), root);
       }
       catch (IOException e)
       {
