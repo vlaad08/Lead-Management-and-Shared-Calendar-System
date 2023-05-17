@@ -3,8 +3,6 @@ package app.viewmodel;
 import app.model.Model;
 import app.shared.Business;
 import app.shared.Lead;
-import app.shared.Meeting;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -21,14 +19,16 @@ public class LeadsViewModel implements PropertyChangeListener
 {
   private final Model model;
 
-  private ObjectProperty<ObservableList<Lead>> leads;
+  private final ObjectProperty<ObservableList<Lead>> leads;
 
-  private PropertyChangeSupport support;
+  private final PropertyChangeSupport support;
 
   public LeadsViewModel(Model model){
     this.model = model;
     support = new PropertyChangeSupport(this);
     model.addPropertyChangeListener(this);
+
+
     leads = new SimpleObjectProperty<>();
     leads.set(FXCollections.observableArrayList(getLeads()));
   }
@@ -80,5 +80,10 @@ public class LeadsViewModel implements PropertyChangeListener
       leads.set(observableList);
       support.firePropertyChange("reloadLeads", false, true);
     }
+  }
+
+  public void addPropertyChangeListener(PropertyChangeListener listener)
+  {
+    support.addPropertyChangeListener(listener);
   }
 }

@@ -166,7 +166,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createLead(lead);
-    support.firePropertyChange("reloadLead",null,"");
+    support.firePropertyChange("reloadLeads",null,"");
   }
 
   @Override public void createAddress(Address address) throws SQLException

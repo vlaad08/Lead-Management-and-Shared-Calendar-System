@@ -8,8 +8,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
@@ -17,7 +15,6 @@ import javafx.scene.layout.VBox;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
@@ -49,6 +46,8 @@ public class ManageLeadsController implements PropertyChangeListener
     this.leadsViewModel = leadsViewModel;
     this.root = root;
 
+
+    leadsViewModel.addPropertyChangeListener(this);
 
     Draw.hoverButtonNavbar(calendarButton, availableClientsButton, plansButton, meetingButton, tasksButton, clientsButton, closeButton);
 
