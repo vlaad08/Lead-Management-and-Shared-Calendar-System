@@ -52,6 +52,7 @@ public class ModelManager implements Model
     {
       communicator.attendsMeeting(email, meeting);
     }
+    support.firePropertyChange("reloadMeetings", false, true);
   }
 
 

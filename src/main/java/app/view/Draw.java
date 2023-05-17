@@ -1167,7 +1167,7 @@ public class Draw
       {
         if(node instanceof VBox)
         {
-          Platform.runLater(()-> tilePane.getChildren().remove(node));
+          tilePane.getChildren().remove(node);
         }
       }
 

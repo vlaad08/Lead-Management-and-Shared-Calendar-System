@@ -3,10 +3,12 @@ package app.view;
 import app.shared.Meeting;
 import app.shared.Task;
 import app.viewmodel.CalendarViewModel;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
@@ -272,6 +274,12 @@ public class CalendarController implements PropertyChangeListener
     {
         if(evt.getPropertyName().equals("reloadCalendar"))
         {
+            for(Node node : calendar.getChildren())
+            {
+                Platform.runLater(() -> {
+                    calendar.getChildren().remove(node);
+                });
+            }
             drawCalendar();
         }
     }
