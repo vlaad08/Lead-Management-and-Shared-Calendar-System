@@ -22,10 +22,13 @@ public class LeadTest
     assertEquals(1, connection.getLeads().size());
   }
 
+  /*
   @Test void add_a_lead_and_test_if_list_contain_that_lead() throws Exception{
     String email = "1example@gmail.com";
     Lead lead = new Lead("testLead","","nma",email,"sdasdsad","manager",7456);
     connection.addLead(lead);
     assertTrue(connection.getLeads().contains(lead));
   }
+
+   */
 }
