@@ -127,7 +127,9 @@ public class ModelManager implements Model
   }
 
   @Override public void removeMeeting(Meeting meeting)
+      throws SQLException, RemoteException
   {
+    communicator.removeMeeting(meeting);
   }
 
   @Override public ArrayList<Meeting> getMeetings() {

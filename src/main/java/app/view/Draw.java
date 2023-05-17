@@ -1068,7 +1068,18 @@ public class Draw
       yesButton.setOnAction(event -> {
         primaryStage.close();
         stage.close();
-        ((MeetingViewModel) viewModel).removeMeeting((Meeting) obj);
+        try
+        {
+          ((MeetingViewModel) viewModel).removeMeeting((Meeting) obj);
+        }
+        catch (SQLException e)
+        {
+          throw new RuntimeException(e);
+        }
+        catch (RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
       });
       noButton.setOnAction(event -> stage.close());
     }

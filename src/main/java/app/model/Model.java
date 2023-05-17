@@ -14,7 +14,7 @@ public interface Model
 {
   void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String leadEmail,ArrayList<String> emails)
       throws SQLException, RemoteException;
-  void removeMeeting(Meeting meeting);
+  void removeMeeting(Meeting meeting) throws SQLException, RemoteException, NullPointerException;
   ArrayList<Meeting> getMeetings();
 
   void addTask(String title, String description, java.sql.Date date, String status, int business_id, ArrayList<String> emails)

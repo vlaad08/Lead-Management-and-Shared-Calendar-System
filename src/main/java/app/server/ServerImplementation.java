@@ -48,7 +48,8 @@ public class ServerImplementation implements Communicator
   @Override public void removeMeeting(Meeting meeting)
       throws SQLException, RemoteException
   {
-
+    connection = SQLConnection.getInstance();
+    connection.removeMeeting(meeting);
   }
 
   @Override public void removeTask(Task task)

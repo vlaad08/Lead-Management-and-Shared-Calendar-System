@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public interface Communicator extends Remote
 {
-  void createMeeting(Meeting meeting) throws SQLException, RemoteException;
+  void createMeeting(Meeting meeting) throws SQLException, RemoteException, NullPointerException;
   void createTask(Task task) throws SQLException, RemoteException;
   void createLead(Lead lead) throws SQLException, RemoteException;
   void removeMeeting(Meeting meeting) throws SQLException, RemoteException;
