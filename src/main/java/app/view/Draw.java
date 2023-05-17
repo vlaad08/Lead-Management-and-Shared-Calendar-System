@@ -1444,7 +1444,7 @@ public class Draw
     {
       for(Node node : leadVBox.getChildren())
       {
-        if(node instanceof VBox)
+        if(node instanceof HBox)
         {
           Platform.runLater(()-> leadVBox.getChildren().remove(node));
         }
