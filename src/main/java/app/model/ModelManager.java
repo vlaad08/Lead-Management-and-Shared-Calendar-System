@@ -125,9 +125,9 @@ public class ModelManager implements Model
     communicator.removeTask(tasks);
   }
 
-  @Override public void addLead(Lead lead) throws SQLException, RemoteException
+  @Override public void createLead(Lead lead) throws SQLException, RemoteException
   {
-    communicator.addLead(lead);
+    communicator.createLead(lead);
   }
 
   @Override public void createAddress(String street, String city,
@@ -175,7 +175,9 @@ public class ModelManager implements Model
   }
 
   @Override public void removeMeeting(Meeting meeting)
+      throws SQLException, RemoteException
   {
+    communicator.removeMeeting(meeting);
   }
 
   @Override public ArrayList<Meeting> getMeetings() {

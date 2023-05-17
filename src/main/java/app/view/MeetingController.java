@@ -115,16 +115,6 @@ public class MeetingController implements PropertyChangeListener
 
 
 
-  public void removeMeeting(){
-    //meetingViewModel.removeMeeting(meeting);
-  }
-
-  public void editMeeting(){
-
-  }
-
-
-
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
     if(evt.getPropertyName().equals("reloadMeetings"))

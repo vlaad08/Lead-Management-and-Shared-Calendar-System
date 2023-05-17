@@ -57,6 +57,7 @@ public class MeetingViewModel implements PropertyChangeListener
   }
 
   public void removeMeeting(Meeting meeting)
+      throws SQLException, RemoteException
   {
     model.removeMeeting(meeting);
   }

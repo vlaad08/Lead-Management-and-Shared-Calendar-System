@@ -44,20 +44,26 @@ public class ServerImplementation implements Communicator
   @Override public void createLead(Lead lead)
       throws SQLException, RemoteException
   {
-
+    connection = SQLConnection.getInstance();
+    connection.createLead(lead);
+    support.firePropertyChange("reloadLeads",null,"");
   }
 
   @Override public void removeMeeting(Meeting meeting)
       throws SQLException, RemoteException
   {
+    connection = SQLConnection.getInstance();
+    connection.removeAttendance(meeting);
+    connection.removeMeeting(meeting);
 
+    support.firePropertyChange("reloadMeeting", null, "");
   }
 
   @Override public void removeTask(Task task)
       throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
-    removeAssignedUsers(task);
+    connection.removeAssignedUsers(task);
     connection.removeTask(task);
     support.firePropertyChange("reloadTask", null, "");
   }
@@ -177,12 +183,6 @@ public class ServerImplementation implements Communicator
     connection.removeAssignedUsers(task);
   }
 
-  @Override public void addLead(Lead lead) throws SQLException, RemoteException
-  {
-    connection = SQLConnection.getInstance();
-    connection.createLead(lead);
-    support.firePropertyChange("reloadLeads",null,"");
-  }
 
   @Override public void createAddress(Address address) throws SQLException
   {

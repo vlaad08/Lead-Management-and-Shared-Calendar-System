@@ -415,12 +415,16 @@ public class Draw
     descr.setSpacing(20);
     Label newDescription = new Label("Description:");
     newDescription.setPrefWidth(75);
-    TextField descrTextField = new TextField(description);
-    descrTextField.setAlignment(Pos.TOP_LEFT);
-    descrTextField.setPrefWidth(330);
-    descrTextField.setPrefHeight(100);
-    descr.getChildren().add(newDescription);
-    descr.getChildren().add(descrTextField);
+    TextArea descrText = new TextArea(description);
+    descrText.setPrefWidth(330);
+    descrText.setPrefHeight(100);
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #d93f3f");
+
+
+    descr.getChildren().addAll(newDescription, descrText, delete);
     descr.setLayoutY(10);
 
 
@@ -496,8 +500,7 @@ public class Draw
 
     insert.addAll(topBar, newTitle,lead, dateTime, descr, employeeAttendance);
 
-
-    Platform.runLater(()-> update.setOnAction(event -> {
+    update.setOnAction(event -> {
 
       if (ConstraintChecker.checkTime(newStartTime.getText(),newEndTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
@@ -514,7 +517,7 @@ public class Draw
           Meeting oldMeeting = new Meeting(title, description, Date.valueOf(
               datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
               endTime), leadEmail);
-          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrTextField.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), leads.getValue().getEmail());
+          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrText.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), leads.getValue().getEmail());
 
           updateMeetingObject(meetingViewModel,oldMeeting,newMeeting, emailsUpdated);
           stage.close();
@@ -531,8 +534,22 @@ public class Draw
         A.show();
       }
 
-    }));
+    });
 
+
+    delete.setOnAction(event -> {
+      Meeting meeting = new Meeting(title, description, Date.valueOf(
+          datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
+          endTime), leadEmail);
+      try
+      {
+        confirmationToDeleteObject(meeting, meetingViewModel, stage);
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
 
 
     Scene scene = new Scene(parent);
@@ -1084,7 +1101,14 @@ public class Draw
       yesButton.setOnAction(event -> {
         primaryStage.close();
         stage.close();
-        ((MeetingViewModel) viewModel).removeMeeting((Meeting) obj);
+        try
+        {
+          ((MeetingViewModel) viewModel).removeMeeting((Meeting) obj);
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
       });
       noButton.setOnAction(event -> stage.close());
     }

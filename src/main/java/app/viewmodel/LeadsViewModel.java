@@ -34,7 +34,7 @@ public class LeadsViewModel implements PropertyChangeListener
   }
 
   public void addLead(Lead lead) throws Exception{
-    model.addLead(lead);
+    model.createLead(lead);
   }
 
   public void removeLead(Lead lead) throws SQLException, RemoteException
