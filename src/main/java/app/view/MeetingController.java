@@ -50,14 +50,11 @@ public class MeetingController implements PropertyChangeListener
     meetingViewModel.addPropertyChangeListener(this);
 
 
+
     //bs comes below
-    hoverButtonNavbar(plansButton);
-    hoverButtonNavbar(taskButton);
-    hoverButtonNavbar(leadButton);
-    hoverButtonNavbar(availableButton);
-    hoverButtonNavbar(clientsButton);
-    hoverButtonNavbar(manageLeadsButton);
-    hoverButtonNavbar(closeButton);
+
+    Draw.hoverButtonNavbar(plansButton,taskButton,leadButton,availableButton,clientsButton,manageLeadsButton,closeButton);
+
 
     tilePane.setHgap(40);
     tilePane.setVgap(50);
@@ -74,15 +71,6 @@ public class MeetingController implements PropertyChangeListener
   }
 
 
-  public void hoverButtonNavbar(Button b)
-  {
-    b.setOnMouseEntered(event -> {
-      b.setStyle("-fx-background-color: #786FAC;");
-    });
-    b.setOnMouseExited(event -> {
-      b.setStyle("-fx-background-color: none");
-    });
-  }
 
   public void onCloseButton()
   {

@@ -166,6 +166,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createLead(lead);
+    support.firePropertyChange("reloadLead",null,"");
   }
 
   @Override public void createAddress(Address address) throws SQLException
@@ -188,8 +189,15 @@ public class ServerImplementation implements Communicator
       throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
-
     connection.createBusiness(business);
+    support.firePropertyChange("reloadBusiness",null,"");
+  }
+
+  @Override public int getBusinessId(Business business)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getBusinessID(business);
   }
 
   //Syncronization of Users

@@ -2,9 +2,9 @@ package app.JDBC;
 
 import app.shared.*;
 
-import javax.crypto.CipherInputStream;
 import java.sql.*;
 import java.util.ArrayList;
+
 
 public class SQLConnection
 {
@@ -324,10 +324,26 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         String phone = set.getString("phone");
         String title = set.getString("title");
         int business_id = set.getInt("business_id");
-
-        leads.add(new Lead(firstname,middleName, lastname, email, phone, title, business_id));
+        leads.add(new Lead(firstname,middleName, lastname, email, phone, title, business_id, getBusinessNameByID(business_id)));
       }
       return leads;
+    }
+  }
+
+  public String getBusinessNameByID(int id) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select businessname from business where business_id = ?"))
+    {
+      statement.setInt(1, id);
+      ResultSet set = statement.executeQuery();
+      String name = "";
+      if(set.next())
+      {
+        name = set.getString("businessname");
+      }
+      return name;
     }
   }
 
@@ -409,20 +425,23 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
             PreparedStatement statement = connection.prepareStatement("select * from address where street = ? and city = ? and country = ? and postalcode = ?")
             )
     {
-        statement.setString(1, address.getStreet());
-        statement.setString(2, address.getCity());
-        statement.setString(3, address.getCountry());
-        statement.setInt(4, address.getPostalCode());
-        ResultSet set = statement.executeQuery();
-        if(set.next())
-        {
-          String street = set.getString("street");
-          String city = set.getString("city");
-          String country = set.getString("country");
-          int postalCode = set.getInt("postalcode");
-          return  new Address(street, city, country, postalCode);
-        }
-        return null;
+      statement.setString(1, address.getStreet());
+      statement.setString(2, address.getCity());
+      statement.setString(3, address.getCountry());
+      statement.setInt(4, address.getPostalCode());
+      ResultSet set = statement.executeQuery();
+      String street = null;
+      String city = null;
+      String country = null;
+      int postalCode = 0;
+      if (set.next())
+      {
+        street = set.getString("street");
+        city = set.getString("city");
+        country = set.getString("country");
+        postalCode = set.getInt("postalcode");
+      }
+      return new Address(street, city, country, postalCode);
     }
   }
 
@@ -436,6 +455,26 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         statement.setString(2, business.getStreet());
         statement.setInt(3, business.getPostalCode());
         statement.executeUpdate();
+    }
+  }
+
+  public int getBusinessID(Business business) throws SQLException
+  {
+    try (
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select business_id from business where businessname = ? and street = ? and postalcode = ?");
+        )
+    {
+      statement.setString(1, business.getName());
+      statement.setString(2, business.getStreet());
+      statement.setInt(3, business.getPostalCode());
+      ResultSet set = statement.executeQuery();
+      int id = 0;
+      if(set.next())
+      {
+        id =  set.getInt("business_id");
+      }
+      return id;
     }
   }
 }

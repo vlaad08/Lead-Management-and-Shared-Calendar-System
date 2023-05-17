@@ -35,7 +35,7 @@ public interface Model
   ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException;
 
-  ArrayList<Lead> getLeads() throws SQLException, RemoteException;
+  ArrayList<Lead> getLeads() ;
 
   ArrayList<Business> getBusinesses() throws SQLException, RemoteException;
 
@@ -45,4 +45,6 @@ public interface Model
   void createAddress(String street, String city, String country, String postalCode)
       throws SQLException, RemoteException;
   void createBusiness(String businessName, String street, String postalCode) throws SQLException, RemoteException;
+  int getBusinessId(Business business) throws SQLException, RemoteException;
+  void leadAddedFromServer() throws SQLException, RemoteException;
 }

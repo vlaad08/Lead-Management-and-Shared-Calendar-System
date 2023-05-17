@@ -96,10 +96,14 @@ public class ModelManager implements Model
   }
 
   @Override public ArrayList<Lead> getLeads()
-      throws SQLException, RemoteException
   {
-    leads = communicator.getLeads();
-    return leads;
+    try{
+      leads = communicator.getLeads();
+      return leads;
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override public ArrayList<Business> getBusinesses()
@@ -143,6 +147,19 @@ public class ModelManager implements Model
     Business business = new Business(businessName, street, Integer.parseInt(postalCode));
 
     communicator.createBusiness(business);
+  }
+
+  @Override public int getBusinessId(Business business)
+      throws SQLException, RemoteException
+  {
+    return communicator.getBusinessId(business);
+  }
+
+  @Override public void leadAddedFromServer()
+      throws SQLException, RemoteException
+  {
+    leads = communicator.getLeads();
+    support.firePropertyChange("reloadLeads", false, true);
   }
 
   @Override public void removeMeeting(Meeting meeting)

@@ -1182,7 +1182,7 @@ public class Draw
     }
   }
 
-  public static void drawLeadPopUp(VBox vBox, LeadsViewModel leadsViewModel)
+  public static void drawLeadPopUp(LeadsViewModel leadsViewModel)
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
@@ -1240,29 +1240,6 @@ public class Draw
 
 
 
-    HBox data2 = new HBox();
-    Label address = new Label("Street and No.: ");
-    address.setWrapText(false);
-    TextField addressTextField = new TextField("");
-    Label city = new Label("City: ");
-    city.setPrefWidth(77);
-    TextField cityTextField = new TextField();
-
-    data2.getChildren().addAll(address, addressTextField, city, cityTextField);
-    data2.setSpacing(20);
-    data2.setPadding(new Insets(20,0,0,0));
-
-    HBox data3 = new HBox();
-
-    Label country = new Label("Country: ");
-    TextField countryTextField = new TextField();
-    country.setPrefWidth(65);
-    Label postalCode = new Label("Postal Code:");
-    postalCode.setPrefWidth(77);
-    TextField postalCodeTextField = new TextField("");
-    data3.setSpacing(20);
-    data3.setPadding(new Insets(20,0,0,20));
-    data3.getChildren().addAll( country, countryTextField, postalCode, postalCodeTextField);
 
     HBox businesses = new HBox();
     Label businessLabel = new Label("Business: ");
@@ -1292,10 +1269,10 @@ public class Draw
 
 
     HBox workplace2 = new HBox();
-    Label businessAddress = new Label("Business address: ");
+    Label businessAddress = new Label("Address: ");
     businessAddress.setPrefWidth(65);
     TextField businessAddressTextField = new TextField();
-    Label businessCity = new Label("Business city: ");
+    Label businessCity = new Label("City: ");
     TextField businessCityTextField = new TextField();
     businessCity.setPrefWidth(65);
     workplace2.setSpacing(20);
@@ -1304,10 +1281,10 @@ public class Draw
 
 
     HBox workplace3 = new HBox();
-    Label businessCountry = new Label("Business country: ");
+    Label businessCountry = new Label("Country: ");
     TextField businessCountryTextField = new TextField();
     businessCountry.setPrefWidth(65);
-    Label businessPostalCode = new Label("Business Postal Code: ");
+    Label businessPostalCode = new Label("Postal Code: ");
     TextField businessPostalCodeTextField = new TextField();
     businessPostalCode.setPrefWidth(65);
 
@@ -1324,45 +1301,68 @@ public class Draw
 
     });
 
-    insert.addAll(topBar, name, data1, data2, data3, businesses, workplace1, workplace2, create);
+    insert.addAll(topBar, name, data1, businesses, workplace1, workplace2, workplace3, create);
 
-
+    firstNameTextField.setPromptText("Required");
+    lastNameTextField.setPromptText("Required");
+    emailField.setPromptText("Required");
+    phoneField.setPromptText("Required");
+    titleTextField.setPromptText("Required");
     create.setOnAction(event -> {
       if (ConstraintChecker.checkFillOut(firstNameTextField) &&
           ConstraintChecker.checkFillOut(lastNameTextField)  &&
           ConstraintChecker.checkFillOut(emailField) &&
           ConstraintChecker.checkFillOut(phoneField) &&
-          ConstraintChecker.checkFillOut(titleTextField) &&
-          ConstraintChecker.checkFillOut(businessNameTextField))
+          ConstraintChecker.checkFillOut(titleTextField))
       {
-        try
-        {
-          leadsViewModel.createAddress(addressTextField.getText(), cityTextField.getText(), countryTextField.getText(), postalCodeTextField.getText());
-        }
-        catch (SQLException | RemoteException e)
-        {
-          throw new RuntimeException(e);
-        }
 
         if(businessComboBox.getValue() == null)
         {
-          try
-          {
-            leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), businessPostalCodeTextField.getText());
-            leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), businessPostalCode.getText());
+
+            Platform.runLater(()->{
+              try
+              {
+                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), businessPostalCodeTextField.getText());
+              }
+              catch (SQLException | RemoteException e)
+              {
+                throw new RuntimeException(e);
+              }
+              try
+              {
+                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), businessPostalCodeTextField.getText());
+              }
+              catch (SQLException | RemoteException e)
+              {
+                throw new RuntimeException(e);
+              }
+
+              Business b = new Business(businessNameTextField.getText(), businessAddressTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
+
+              int id;
+              try
+              {
+                id = leadsViewModel.getBusinessId(b);
+              }
+              catch (SQLException | RemoteException e)
+              {
+                throw new RuntimeException(e);
+              }
+              createLeadObject(leadsViewModel, firstNameTextField.getText(), middleNameTextField.getText() ,lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), id, businessNameTextField.getText());
+
+            });
           }
-          catch (SQLException | RemoteException e)
-          {
-            throw new RuntimeException(e);
-          }
+        else
+        {
+          createLeadObject(leadsViewModel, firstNameTextField.getText(),
+              middleNameTextField.getText(), lastNameTextField.getText(), emailField.getText(), phoneField.getText(), titleTextField.getText(), businessComboBox.getValue().getBusiness_id(), businessComboBox.getValue().getName());
         }
 
-        createLeadObject(leadsViewModel, firstNameTextField.getText(), lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), businessNameTextField.getText());
         stage.close();
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Complete all fields");
+        A.setContentText("Complete all required fields");
         A.show();
       }
 
@@ -1377,12 +1377,12 @@ public class Draw
 
   }
 
-  public static void createLeadObject(LeadsViewModel leadsViewModel, String firstName,String lastName, String email, String phone, String title, String businessID ){
+  public static void createLeadObject(LeadsViewModel leadsViewModel, String firstName, String middleName, String lastName, String email, String phone, String title, int businessID, String businessName ){
 
     Platform.runLater(()->{
       try
       {
-        leadsViewModel.addLead(new Lead(firstName, "", lastName, email, phone, title, Integer.parseInt(businessID)));
+        leadsViewModel.addLead(new Lead(firstName, middleName, lastName, email, phone, title, businessID, businessName));
       }
       catch (Exception e)
       {
@@ -1392,7 +1392,7 @@ public class Draw
 
   }
 
-  public static HBox drawLeadTile(VBox vBox, LeadsViewModel leadsViewModel, String firstName, String lastName, String email,  String title)
+  public static HBox drawLeadTile(LeadsViewModel leadsViewModel, String firstName, String lastName, String email, String businessName,  String title)
   {
     HBox lead = new HBox();
 
@@ -1414,6 +1414,14 @@ public class Draw
     emailLabel.setAlignment(Pos.CENTER);
     emailLabel.setPadding(new Insets(0));
 
+    Label businessLabel = new Label(businessName);
+    businessLabel.setPrefWidth(270);
+    businessLabel.setPrefHeight(48);
+    businessLabel.setFont(new Font(18));
+    businessLabel.setAlignment(Pos.CENTER);
+    businessLabel.setPadding(new Insets(0));
+
+
     Label titleLabel = new Label(title);
     titleLabel.setPrefWidth(240);
     titleLabel.setPrefHeight(48);
@@ -1430,6 +1438,26 @@ public class Draw
     return lead;
   }
 
+  public static void drawLeads(VBox leadVBox, ObservableList<Lead> leads, LeadsViewModel leadsViewModel)
+  {
+    if(leads != null)
+    {
+      for(Node node : leadVBox.getChildren())
+      {
+        if(node instanceof VBox)
+        {
+          Platform.runLater(()-> leadVBox.getChildren().remove(node));
+        }
+      }
 
+      for(Lead lead : leads)
+      {
+        Platform.runLater(()->
+        {
 
+          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle()));
+        });
+      }
+    }
+  }
 }

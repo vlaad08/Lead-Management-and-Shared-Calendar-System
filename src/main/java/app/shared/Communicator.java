@@ -40,4 +40,5 @@ public interface Communicator extends Remote
       throws SQLException, RemoteException;
   boolean checkIfAddressExists(Address address) throws SQLException, RemoteException;
   void createBusiness(Business business) throws SQLException, RemoteException;
+  int getBusinessId(Business business) throws SQLException, RemoteException;
 }
