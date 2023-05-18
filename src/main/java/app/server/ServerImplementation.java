@@ -134,7 +134,7 @@ public class ServerImplementation implements Communicator
 
     ArrayList<Meeting> meetings = connection.getMeetings();
     ArrayList<User> users = getUsers();
-    System.out.println(users);
+
 
 
     if(meetings != null)
@@ -154,22 +154,11 @@ public class ServerImplementation implements Communicator
         for(String email : userEmails)
         {
           User user = connection.getUserByEmail(email);
-          System.out.println(user);
 
-          if(meeting.getDate().equals(date))
+
+          if(meeting.getDate().equals(date) && meeting.getStartTime().before(startTime) && meeting.getEndTime().after(endTime))
           {
-            if(meeting.getStartTime().before(startTime))
-            {
-              System.out.println(users);
               users.remove(user);
-              System.out.println(users);
-            }
-          }
-          else if(meeting.getDate().before(date))
-          {
-            System.out.println(users);
-            users.remove(user);
-            System.out.println(users);
           }
         }
       }

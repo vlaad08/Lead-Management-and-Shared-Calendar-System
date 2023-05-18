@@ -194,7 +194,7 @@ public class Draw
           usersList.add(new UserTableRow(user));
         }
 
-        attendance.setItems(usersList);
+
 
       }
       catch (SQLException | RemoteException e)
