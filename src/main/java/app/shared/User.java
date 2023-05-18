@@ -21,7 +21,7 @@ public class User implements Serializable
       this.email = email;
       this.phone = phone;
       this.manager = manager;
-      this.street =street;
+      this.street = street;
       this.postalCode = postalCode;
   }
 

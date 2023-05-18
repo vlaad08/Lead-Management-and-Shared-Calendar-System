@@ -7,7 +7,9 @@ import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
 
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -122,6 +124,55 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     return connection.getUsers();
+  }
+
+  @Override public ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime)
+      throws RemoteException, SQLException
+  {
+    connection = SQLConnection.getInstance();
+
+    ArrayList<Meeting> meetings = connection.getMeetings();
+    ArrayList<User> users = getUsers();
+
+
+    if(meetings != null)
+    {
+      Map<Meeting, ArrayList<String>> meetingMap = new HashMap<>();
+
+      for(Meeting meeting : meetings)
+      {
+        meetingMap.put(meeting, connection.getAttendance(meeting));
+      }
+
+      for(Meeting meeting : meetingMap.keySet())
+      {
+        ArrayList<String> userEmails = meetingMap.get(meeting);
+
+
+
+
+        for(String email : userEmails)
+        {
+          User user = connection.getUserByEmail(email);
+
+          if(meeting.getDate().equals(date))
+          {
+            if(meeting.getStartTime().before(startTime))
+            {
+              users.remove(user);
+            }
+          }
+          else if(meeting.getDate().before(date))
+          {
+            users.remove(user);
+          }
+        }
+      }
+    }
+
+    System.out.println(users);
+
+    return users;
   }
 
   @Override public void attendsMeeting(String email, Meeting meeting) throws SQLException

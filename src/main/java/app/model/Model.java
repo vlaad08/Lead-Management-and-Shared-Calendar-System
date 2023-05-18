@@ -4,6 +4,7 @@ import app.shared.*;
 
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public interface Model
 
   void addPropertyChangeListener(PropertyChangeListener listener);
   void taskAddedFromServer() throws SQLException, RemoteException;
-  void reloadUsers() throws SQLException, RemoteException;
   ArrayList<User> getUsers() throws SQLException, RemoteException;
   ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException;
@@ -48,4 +48,6 @@ public interface Model
   void editLead(Lead oldLead, Lead newLead) throws SQLException,
       RemoteException;
   void removeLead(Lead lead) throws SQLException, RemoteException;
+  ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime)
+      throws SQLException, RemoteException;
 }

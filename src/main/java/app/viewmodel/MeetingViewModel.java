@@ -75,6 +75,12 @@ public class MeetingViewModel implements PropertyChangeListener
   public ArrayList<User> getUsers() throws SQLException, RemoteException
   {return model.getUsers();}
 
+  public ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime)
+      throws SQLException, RemoteException
+  {
+    return model.getAvailableUsers(date, startTime, endTime);
+  }
+
   public ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException
   {
