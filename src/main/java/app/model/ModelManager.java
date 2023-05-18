@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -236,6 +237,14 @@ public class ModelManager implements Model
       e.printStackTrace();
     }
     return null;
+  }
+
+  @Override public ArrayList<User> getAvailableUserForMeeting(Date date,
+      Time startTime, Time endTime)
+  {
+    ArrayList<User> available = new ArrayList<>();
+
+    return  available;
   }
 
   @Override public boolean checkUser()

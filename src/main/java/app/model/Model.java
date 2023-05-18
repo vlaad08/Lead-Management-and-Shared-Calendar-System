@@ -4,6 +4,7 @@ import app.shared.*;
 
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public interface Model
   ArrayList<User> getUsers() throws SQLException, RemoteException;
   ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException;
+  ArrayList<User> getAvailableUserForMeeting(Date date,Time startTime, Time endTime);
 
   ArrayList<Lead> getLeads() ;
 

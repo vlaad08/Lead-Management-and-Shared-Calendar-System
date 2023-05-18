@@ -362,6 +362,32 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
+  public ArrayList<String> getAvailableUser(Date selectedDate, Time startTime, Time endTime) throws SQLException{
+    try(Connection connection = getConnection();
+    PreparedStatement statement = connection.prepareStatement("SELECT distinct email from \"user\""
+        + "WHERE email NOT IN (" + "Select email from attendance"
+        + "    Where date = ? "
+        + "    AND startTime = ? AND endTime = ? "
+        + "    OR  startTime > '13:00' AND  startTime < '14:00'"
+        + "    OR  endTime > '13:00' AND  endTime < '14:00'"
+        + "    OR startTime < '13:00' AND endTime > '14:00')")){
+      ArrayList<String> user = new ArrayList<>();
+      ResultSet set = statement.executeQuery();
+      while(set.next())
+      {
+        String title = set.getString("title");
+        Date date = set.getDate("date");
+        Time startTimeDatabase = set.getTime("startTime");
+        Time endTimeDatabase = set.getTime("endTime");
+        String email = set.getString("email");
+        user.add(email);
+      }
+
+
+      return user;
+    }
+  }
+
   public void removeAttendance(Meeting meeting) throws SQLException
   {
     try
