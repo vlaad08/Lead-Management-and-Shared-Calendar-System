@@ -40,7 +40,7 @@ public class ManageLeadsController implements PropertyChangeListener
   private ViewHandler viewHandler;
   private LeadsViewModel leadsViewModel;
 
-  private ObjectProperty<ObservableList<Lead>> leads = new SimpleObjectProperty<>();
+  private final ObjectProperty<ObservableList<Lead>> leads = new SimpleObjectProperty<>();
 
   public void init(ViewHandler viewHandler, LeadsViewModel leadsViewModel, Region root){
     this.viewHandler = viewHandler;

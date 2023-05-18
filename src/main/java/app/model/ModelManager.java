@@ -138,7 +138,6 @@ public class ModelManager implements Model
     Address address = new Address(street, city, country,
         Integer.parseInt(postalCode));
 
-    if(!communicator.checkIfAddressExists(address))
       communicator.createAddress(address);
   }
 

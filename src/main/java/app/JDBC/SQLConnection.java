@@ -423,18 +423,17 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.setString(3, address.getCountry());
       statement.setInt(4, address.getPostalCode());
       ResultSet set = statement.executeQuery();
-      String street = null;
-      String city = null;
-      String country = null;
-      int postalCode = 0;
+      Address a = null;
       if (set.next())
       {
-        street = set.getString("street");
-        city = set.getString("city");
-        country = set.getString("country");
-        postalCode = set.getInt("postalcode");
+        String street = set.getString("street");
+        String city = set.getString("city");
+        String country = set.getString("country");
+        int postalCode = set.getInt("postalcode");
+        a = new Address(street, city, country, postalCode);
       }
-      return new Address(street, city, country, postalCode);
+
+      return a;
     }
   }
 

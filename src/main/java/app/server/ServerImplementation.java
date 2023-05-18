@@ -45,7 +45,7 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
     connection.createLead(lead);
-    support.firePropertyChange("reloadLeads",null,"");
+    support.firePropertyChange("reloadLead",null,"");
   }
 
   @Override public void removeMeeting(Meeting meeting)
@@ -181,10 +181,14 @@ public class ServerImplementation implements Communicator
   }
 
 
-  @Override public void createAddress(Address address) throws SQLException
+  @Override public void createAddress(Address address)
+      throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
-    connection.createAddress(address);
+    if(checkIfAddressExists(address))
+    {
+      connection.createAddress(address);
+    }
   }
 
   @Override public boolean checkIfAddressExists(Address address)
@@ -194,7 +198,12 @@ public class ServerImplementation implements Communicator
 
     Address a = connection.getAddress(address);
 
-    return a.equals(address);
+
+    if(a != null)
+    {
+      return a.equals(address);
+    }
+    return false;
   }
 
   @Override public void createBusiness(Business business)
