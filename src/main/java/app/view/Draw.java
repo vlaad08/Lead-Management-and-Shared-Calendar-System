@@ -181,16 +181,8 @@ public class Draw
     Platform.runLater(() -> refresh.setOnAction(event -> {
       try
       {
-        for(UserTableRow userTableRow : attendance.getItems())
-        {
-
-          attendance.getItems().remove(userTableRow);
-          usersList.remove(userTableRow);
-
-        }
-
-        attendance.setItems(usersList);
-        employeeAttendance.getChildren().remove(attendance);
+        attendance.getItems().clear();
+        usersList.clear();
 
         Time start = Time.valueOf(LocalTime.parse(startTime.getText()));
         Time end = Time.valueOf(LocalTime.parse(endTime.getText()));
@@ -204,7 +196,6 @@ public class Draw
 
         attendance.setItems(usersList);
 
-        employeeAttendance.getChildren().add(attendance);
       }
       catch (SQLException | RemoteException e)
       {

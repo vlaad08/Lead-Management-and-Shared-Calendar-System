@@ -5,6 +5,7 @@ import app.shared.*;
 
 import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
+import org.postgresql.util.OSUtil;
 
 import java.rmi.RemoteException;
 import java.sql.Date;
@@ -133,6 +134,7 @@ public class ServerImplementation implements Communicator
 
     ArrayList<Meeting> meetings = connection.getMeetings();
     ArrayList<User> users = getUsers();
+    System.out.println(users);
 
 
     if(meetings != null)
@@ -149,29 +151,29 @@ public class ServerImplementation implements Communicator
         ArrayList<String> userEmails = meetingMap.get(meeting);
 
 
-
-
         for(String email : userEmails)
         {
           User user = connection.getUserByEmail(email);
+          System.out.println(user);
 
           if(meeting.getDate().equals(date))
           {
             if(meeting.getStartTime().before(startTime))
             {
+              System.out.println(users);
               users.remove(user);
+              System.out.println(users);
             }
           }
           else if(meeting.getDate().before(date))
           {
+            System.out.println(users);
             users.remove(user);
+            System.out.println(users);
           }
         }
       }
     }
-
-    System.out.println(users);
-
     return users;
   }
 

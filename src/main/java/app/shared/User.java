@@ -1,6 +1,7 @@
 package app.shared;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class User implements Serializable
 {
@@ -108,5 +109,18 @@ public class User implements Serializable
   public String toString()
   {
       return firstName + " " + lastName + " | " + email;
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    User other = (User) obj;
+    return Objects.equals(email, other.email);
   }
 }
