@@ -182,18 +182,21 @@ public class Draw
       try
       {
         attendance.getItems().clear();
-        usersList.clear();
+        ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
+
 
         Time start = Time.valueOf(LocalTime.parse(startTime.getText()));
         Time end = Time.valueOf(LocalTime.parse(endTime.getText()));
         ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), start, end);
 
+        System.out.println(availableUsers);
 
         for(User user : availableUsers)
         {
-          usersList.add(new UserTableRow(user));
+          availableUserList.add(new UserTableRow(user));
         }
 
+        attendance.setItems(availableUserList);
 
 
       }
@@ -201,6 +204,8 @@ public class Draw
       {
         throw new RuntimeException(e);
       }
+
+
     }));
 
 
