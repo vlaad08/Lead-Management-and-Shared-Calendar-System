@@ -18,5 +18,4 @@ public class CalendarViewModel
     return model.getMeetings();
   }
 
-  //Im not doin all this
 }

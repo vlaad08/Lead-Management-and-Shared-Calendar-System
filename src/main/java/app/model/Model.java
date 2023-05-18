@@ -16,12 +16,12 @@ public interface Model
       throws SQLException, RemoteException;
   void removeMeeting(Meeting meeting);
   ArrayList<Meeting> getMeetings();
+  void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails) throws SQLException, RemoteException;
 
   void addTask(String title, String description, java.sql.Date date, String status, int business_id, ArrayList<String> emails)
       throws SQLException, RemoteException;
 
   void editTask(Task newTask, Task oldTask, ArrayList<String> emails) throws SQLException, RemoteException;
-  void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails) throws SQLException, RemoteException;
 
   ArrayList<Task> getTasks();
   boolean checkUser();
@@ -40,6 +40,6 @@ public interface Model
   ArrayList<Business> getBusinesses() throws SQLException, RemoteException;
 
   ArrayList<String> getAssignedUsers(Task task) throws SQLException, RemoteException;
-  void removeTask(Task tasks) throws SQLException, RemoteException;
+  void removeTask(Task task) throws SQLException, RemoteException;
   void addLead(Lead lead) throws SQLException, RemoteException;
 }
