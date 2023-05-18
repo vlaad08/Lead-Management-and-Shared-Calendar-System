@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public interface Communicator extends Remote
 {
-  void createMeeting(Meeting meeting) throws SQLException, RemoteException;
+  void createMeeting(Meeting meeting) throws SQLException, RemoteException, NullPointerException;
   void createTask(Task task) throws SQLException, RemoteException;
   void createLead(Lead lead) throws SQLException, RemoteException;
   void removeMeeting(Meeting meeting) throws SQLException, RemoteException;
@@ -35,5 +35,11 @@ public interface Communicator extends Remote
   void assignTask(String email, Task task) throws SQLException, RemoteException;
   ArrayList<String> getAssignedUsers(Task task) throws SQLException, RemoteException;
   void removeAssignedUsers(Task task) throws SQLException, RemoteException;
-  void addLead(Lead lead) throws SQLException, RemoteException;
+  void createAddress(Address address)
+      throws SQLException, RemoteException;
+  boolean checkIfAddressExists(Address address) throws SQLException, RemoteException;
+  void createBusiness(Business business) throws SQLException, RemoteException;
+  int getBusinessId(Business business) throws SQLException, RemoteException;
+  void editLead(Lead oldLead, Lead newLead) throws SQLException,
+      RemoteException;
 }

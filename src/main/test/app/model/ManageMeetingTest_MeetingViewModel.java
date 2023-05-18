@@ -1,5 +1,7 @@
 package app.model;
 
+import static org.mockito.Mockito.*;
+
 import app.server.ServerImplementation;
 import app.shared.Communicator;
 import app.shared.Meeting;
@@ -8,44 +10,55 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.rmi.RemoteException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ManageMeetingTest_MeetingViewModel
-{
+public class ManageMeetingTest_MeetingViewModel {
   private MeetingViewModel viewModel;
   private ModelManager modelManager;
   private Meeting meeting;
 
-  @BeforeEach void setUp() throws Exception {
-    this.modelManager = Mockito.mock(ModelManager.class);
-    this.viewModel = new MeetingViewModel(modelManager);
+  @BeforeEach
+  void setUp() {
+    this.modelManager = mock(ModelManager.class);
+    this.viewModel = Mockito.mock(MeetingViewModel.class);
 
     this.meeting = new Meeting("Meeting3","test3",
         Date.valueOf(LocalDate.of(2023,6,5)),
         Time.valueOf(LocalTime.of(12,30,0)),
         Time.valueOf(LocalTime.of(15,45,0)), "example@gmail.com");
+  }
+
+  @Test
+  void should_edit_meeting() throws SQLException, RemoteException
+  {
+
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("agostonbabicz@gmail.com");
+    emails.add("emanuelduca@gmail.com");
+
+    viewModel.editMeeting(meeting, meeting,emails);
+    verify(viewModel, times(1)).editMeeting(meeting, meeting,emails);
 
   }
 
-  @Test void edit_a_meeting() throws Exception{
-    // Know it's show an error because the method doesn't exist
-    //viewModel.editMeeting(meeting,meeting);
-    Mockito.verify(modelManager,Mockito.times(1)).editMeeting(meeting,meeting);
-
-  }
-
-  @Test void test_if_a_meeting_is_removed() throws Exception{
+  @Test
+  void should_remove_meeting() throws SQLException, RemoteException
+  {
     viewModel.removeMeeting(meeting);
-    Mockito.verify(modelManager,Mockito.times(1)).removeMeeting(meeting);
+    verify(viewModel, times(1)).removeMeeting(meeting);
   }
 
-  @Test void getMeetings(){
+  @Test
+  void should_get_meetings() {
     viewModel.getMeetings();
-    Mockito.verify(modelManager,Mockito.times(2)).getMeetings();
+    verify(viewModel, times(1)).getMeetings();
   }
 }

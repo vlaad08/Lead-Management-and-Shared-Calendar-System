@@ -1,48 +1,43 @@
 package app.view;
 
+import app.shared.Meeting;
+import app.shared.Task;
+
 import java.time.ZonedDateTime;
 
 public class CalendarActivity {
-    private ZonedDateTime date;
-    private String clientName;
-    private Integer serviceNo;
+    private final ZonedDateTime date;
+    private Meeting meeting;
 
-    public CalendarActivity(ZonedDateTime date, String clientName, Integer serviceNo) {
+    private Task task;
+
+    public CalendarActivity(ZonedDateTime date, Meeting meeting) {
         this.date = date;
-        this.clientName = clientName;
-        this.serviceNo = serviceNo;
+        this.meeting = meeting;
     }
+
+    public CalendarActivity(ZonedDateTime date, Task task){
+        this.date = date;
+        this.task = task;
+    }
+
+    public Meeting getMeeting()
+    {
+        return meeting;
+    }
+
+
+    public Task getTask()
+    {
+        return task;
+    }
+
 
     public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(ZonedDateTime date) {
-        this.date = date;
-    }
 
-    public String getClientName() {
-        return clientName;
-    }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
 
-    public Integer getServiceNo() {
-        return serviceNo;
-    }
-
-    public void setServiceNo(Integer serviceNo) {
-        this.serviceNo = serviceNo;
-    }
-
-    @Override
-    public String toString() {
-        return "CalenderActivity{" +
-                "date=" + date +
-                ", clientName='" + clientName + '\'' +
-                ", serviceNo=" + serviceNo +
-                '}';
-    }
 }

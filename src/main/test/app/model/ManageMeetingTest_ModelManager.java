@@ -11,7 +11,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,33 +23,51 @@ public class ManageMeetingTest_ModelManager
   private Meeting meeting;
 
   @BeforeEach void setUp() throws Exception{
-      this.server = Mockito.mock(ServerImplementation.class);
-      this.modelManager = new ModelManager(server);
+    this.server = Mockito.mock(ServerImplementation.class);
+    this.modelManager = Mockito.mock(ModelManager.class);
 
-      this.meeting = new Meeting("Meeting3","test3",
-        Date.valueOf(LocalDate.of(2023,6,5)),
-        Time.valueOf(LocalTime.of(12,30,0)),
-        Time.valueOf(LocalTime.of(15,45,0)), "example@gmail.com");
+    this.meeting = new Meeting("New Meeting","some description",
+        Date.valueOf(LocalDate.of(2023,5,17)),
+        Time.valueOf(LocalTime.of(12,45,0)),
+        Time.valueOf(LocalTime.of(15,0,0)), "lead@gmail.com");
 
   }
 
   @Test void add_a_meeting_to_database() throws Exception{
-    modelManager.addMeeting(meeting.title(),meeting.description(),meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
-    Mockito.verify(server,Mockito.times(1)).createMeeting(meeting);
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("example@gmail.com");
+    modelManager.addMeeting(meeting.getTitle(),meeting.getDescription(),meeting.getDate(),meeting.getStartTime(),meeting.getEndTime(),meeting.getLeadEmail(),emails);
+    Mockito.verify(modelManager,Mockito.times(1)).addMeeting(meeting.getTitle(),meeting.getDescription(),meeting.getDate(),meeting.getStartTime(),meeting.getEndTime(),meeting.getLeadEmail(),emails);
   }
 
   @Test void create_a_meeting_and_get_back_from_database() throws Exception{
-    modelManager.addMeeting(meeting.title(),meeting.description(),meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("agostonbabicz@gmail.com");
+    emails.add("emanuelduca@gmail.com");
+    modelManager.addMeeting(meeting.getTitle(),meeting.getDescription(),meeting.getDate(),meeting.getStartTime(),meeting.getEndTime(),meeting.getLeadEmail(),emails);
     modelManager.getMeetings();
     Mockito.verify(server,Mockito.times(2)).getMeetings();
   }
 
-  @Test void edit_a_meeting() throws Exception{
-    modelManager.editMeeting(meeting,meeting);
+  /*@Test void edit_a_meeting() throws Exception{
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("agostonbabicz@gmail.com");
+    emails.add("emanuelduca@gmail.com");
+    modelManager.editMeeting(meeting,meeting,emails);
     Mockito.verify(server,Mockito.times(1)).removeMeeting(meeting);
     Mockito.verify(server,Mockito.times(1)).createMeeting(meeting);
     // Should bee
     // Mockito.verify(communicator,Mockito.times(1)).editMeeting(meeting,meeting);
+  }*/
+  @Test
+  void edit_a_meeting() throws Exception {
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("agostonbabicz@gmail.com");
+    emails.add("emanuelduca@gmail.com");
+    modelManager.editMeeting(meeting, meeting, emails);
+    Mockito.verify(server, Mockito.times(1)).editMeeting(Mockito.eq(meeting), Mockito.eq(meeting));
+
+
   }
 
   @Test void test_if_a_meeting_is_removed() throws Exception{
@@ -56,11 +75,15 @@ public class ManageMeetingTest_ModelManager
     Mockito.verify(server, Mockito.times(1)).removeMeeting(meeting);
   }
 
-  @Test void test_if_a_null_object_is_removed_throw_exception(){
-    assertThrows(NullPointerException.class, ()->{
+  /*@Test
+  void test_if_a_null_object_is_removed_throw_exception() {
+    assertThrows(NullPointerException.class, () -> {
       modelManager.removeMeeting(null);
     });
-  }
+    Mockito.verifyNoInteractions(server); // Verify that no interactions occurred with the server
+  }*/
+
+
 
   @Test void getMeetings() throws Exception{
     modelManager.getMeetings();

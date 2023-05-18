@@ -65,4 +65,9 @@ public class Task implements Serializable
   {
     return business_id;
   }
+
+  public String toString()
+  {
+    return "Task: " + title + " | Due Date: " + date;
+  }
 }

@@ -3,7 +3,7 @@ package app.model;
 import app.JDBC.SQLConnection;
 import app.model.Model;
 import app.model.ModelManager;
-import app.model.User;
+import app.shared.User;
 import app.server.ServerImplementation;
 import app.shared.Communicator;
 import app.shared.Meeting;
@@ -37,8 +37,8 @@ public class MeetingTest {
 
   private MeetingViewModel meetingViewModel;
 
-  //@InjectMocks
-  //private MeetingController meetingController;
+  @InjectMocks
+  private MeetingController meetingController;
 
 
   @BeforeEach
@@ -83,7 +83,12 @@ public class MeetingTest {
         Time.valueOf(LocalTime.of(10,30,0)),
         Time.valueOf(LocalTime.of(10,45,0)), "example@gmail.com");
 
-    meetingViewModel.addMeeting(meeting.title(),meeting.description(),meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("agostonbabicz@gmail.com");
+    emails.add("emanuelduca@gmail.com");
+
+
+    meetingViewModel.addMeeting(meeting.getTitle(),meeting.getDescription(),meeting.getDate(),meeting.getStartTime(),meeting.getEndTime(),meeting.getLeadEmail(),emails);
     assertEquals(true,meetingViewModel.getMeetings().contains(meeting));
   }
 
@@ -133,7 +138,11 @@ public class MeetingTest {
         Time.valueOf(LocalTime.of(12,30,0)),
         Time.valueOf(LocalTime.of(15,45,0)), "example@gmail.com");
 
-    meetingViewModel.addMeeting(meeting.title(),meeting.description(),meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("agostonbabicz@gmail.com");
+    emails.add("emanuelduca@gmail.com");
+
+    meetingViewModel.addMeeting(meeting.getTitle(),meeting.getDescription(),meeting.getDate(),meeting.getStartTime(),meeting.getEndTime(),meeting.getLeadEmail(),emails);
 
     assertTrue(meetingViewModel.getMeetings().contains(meeting));
     assertEquals((i+1),meetingViewModel.getMeetings().size());
@@ -146,8 +155,12 @@ public class MeetingTest {
         Date.valueOf(LocalDate.of(2069,6,5)),
         Time.valueOf(LocalTime.of(16,30,0)),
         Time.valueOf(LocalTime.of(12,45,0)), "example@gmail.com");
+
+    ArrayList<String> emails = new ArrayList<String>();
+
+
     assertThrows(IllegalArgumentException.class, ()->{
-      meetingViewModel.addMeeting(meeting.title(),meeting.description(),meeting.date(),meeting.startTime(),meeting.endTime(),meeting.email());
+      meetingViewModel.addMeeting(meeting.getTitle(),meeting.getDescription(),meeting.getDate(),meeting.getStartTime(),meeting.getEndTime(),meeting.getLeadEmail(),emails);
     });
     assertFalse(meetingViewModel.getMeetings().contains(meeting));
   }

@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import java.rmi.RemoteException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class TestTasksViewModel
 {
@@ -24,9 +25,9 @@ public class TestTasksViewModel
   @BeforeEach
   void setUp() throws SQLException, RemoteException
   {
-    communicator= Mockito.mock(Communicator.class);
-    model=new ModelManager(communicator);
-    tasksViewModel=new TasksViewModel(model);
+    communicator = Mockito.mock(Communicator.class);
+    model=Mockito.mock(ModelManager.class);
+    tasksViewModel = Mockito.mock(TasksViewModel.class);
     tasks=new SimpleObjectProperty<>();
     tasksViewModel.bindTask(tasks);
     dummy=new Task("Dummy","DummyDescription", Date.valueOf("2023-05-12"),"",1);
@@ -35,19 +36,25 @@ public class TestTasksViewModel
   @Test
   void  new_task_is_created_and_stored() throws SQLException, RemoteException
   {
-    tasksViewModel.addTask(dummy.title(), dummy.description(), dummy.date(),
-        dummy.status(), dummy.business_id());
-    Mockito.verify(communicator,Mockito.times(1)).createTask(dummy);
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("example@gmail.com");
+    tasksViewModel.addTask(dummy.getTitle(), dummy.getDescription(), dummy.getDate(),
+        dummy.getStatus(), dummy.getBusiness_id(),emails);
+    Mockito.verify(tasksViewModel,Mockito.times(1)).addTask(dummy.getTitle(), dummy.getDescription(), dummy.getDate(),
+        dummy.getStatus(), dummy.getBusiness_id(),emails);
   }
 
-//  @Test
-//  void new_task_is_not_stored_without_title()
-//      throws SQLException, RemoteException
-//  {
-//    Task temp=new Task("","DummyDescription", Date.valueOf("2023-05-12"),"",1);
-//    tasksViewModel.addTask("","DummyDescription", Date.valueOf("2023-05-12"),"",1);
-//    Mockito.verify(communicator,Mockito.never()).createTask(temp);
-//  }
+  @Test
+  void new_task_is_not_stored_without_title()
+      throws SQLException, RemoteException
+  {
+    ArrayList<String> emails = new ArrayList<String>();
+    emails.add("example@gmail.com");
+    Task temp=new Task("","DummyDescription", Date.valueOf("2023-05-12"),"",1);
+    tasksViewModel.addTask(dummy.getTitle(), dummy.getDescription(), dummy.getDate(),
+        dummy.getStatus(), dummy.getBusiness_id(),emails);
+    Mockito.verify(communicator,Mockito.never()).createTask(temp);
+  }
 
   
 

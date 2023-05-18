@@ -52,6 +52,7 @@ public class ModelManager implements Model
     {
       communicator.attendsMeeting(email, meeting);
     }
+
   }
 
 
@@ -96,10 +97,14 @@ public class ModelManager implements Model
   }
 
   @Override public ArrayList<Lead> getLeads()
-      throws SQLException, RemoteException
   {
-    leads = communicator.getLeads();
-    return leads;
+    try{
+      leads = communicator.getLeads();
+      return leads;
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override public ArrayList<Business> getBusinesses()
@@ -121,13 +126,59 @@ public class ModelManager implements Model
     communicator.removeTask(tasks);
   }
 
-  @Override public void addLead(Lead lead) throws SQLException, RemoteException
+  @Override public void createLead(Lead lead) throws SQLException, RemoteException
   {
-    communicator.addLead(lead);
+    communicator.createLead(lead);
+  }
+
+  @Override public void createAddress(String street, String city,
+      String country, String postalCode) throws SQLException, RemoteException
+  {
+
+    Address address = new Address(street, city, country,
+        Integer.parseInt(postalCode));
+
+    if(!communicator.checkIfAddressExists(address))
+      communicator.createAddress(address);
+  }
+
+  @Override public void createBusiness(String businessName, String street,
+      String postalCode) throws SQLException, RemoteException
+  {
+    Business business = new Business(businessName, street, Integer.parseInt(postalCode));
+
+    communicator.createBusiness(business);
+  }
+
+  @Override public int getBusinessId(Business business)
+      throws SQLException, RemoteException
+  {
+    return communicator.getBusinessId(business);
+  }
+
+  @Override public void leadAddedFromServer()
+      throws SQLException, RemoteException
+  {
+    leads = communicator.getLeads();
+    support.firePropertyChange("reloadLeads", false, true);
+  }
+
+  @Override public void editLead(Lead oldLead, Lead newLead)
+      throws SQLException, RemoteException
+  {
+    communicator.editLead(oldLead, newLead);
+  }
+
+  @Override public void removeLead(Lead lead)
+      throws SQLException, RemoteException
+  {
+    communicator.removeLead(lead);
   }
 
   @Override public void removeMeeting(Meeting meeting)
+      throws SQLException, RemoteException
   {
+    communicator.removeMeeting(meeting);
   }
 
   @Override public ArrayList<Meeting> getMeetings() {
