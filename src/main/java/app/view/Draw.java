@@ -2,6 +2,7 @@ package app.view;
 
 import app.model.ConstraintChecker;
 import app.shared.*;
+import app.viewmodel.AvailableClientsViewModel;
 import app.viewmodel.LeadsViewModel;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
@@ -1456,7 +1457,7 @@ public class Draw
     Platform.runLater(()->{
       try
       {
-        leadsViewModel.addLead(new Lead(firstName, middleName, lastName, email, phone, title, businessID, businessName));
+        leadsViewModel.addLead(new Lead(firstName, middleName, lastName, email, phone, title, businessID, businessName,"Available"));
       }
       catch (Exception e)
       {
@@ -1577,9 +1578,9 @@ public class Draw
     parent.getChildren().addAll(topBar, names, data, buttons);
 
     update.setOnAction(event -> {
-      Lead oldLead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName);
+      Lead oldLead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName,"Available");
       Lead newLead = new Lead(firstnameTextField.getText(), middleNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), phoneTextField.getText(), roleTextField.getText(),
-          business_id, businessName);
+          business_id, businessName,"Available");
       try
       {
         leadsViewModel.editLead(oldLead, newLead);
@@ -1591,7 +1592,7 @@ public class Draw
       }
     });
     delete.setOnAction(event -> {
-      Lead lead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName);
+      Lead lead = new Lead(firstName, middleName, lastName, email, phone, title, business_id, businessName,"Available");
       try
       {
         confirmationToDeleteObject(lead, leadsViewModel, stage);
@@ -1623,10 +1624,73 @@ public class Draw
       {
         Platform.runLater(()->
         {
-          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
+          leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
         });
       }
     }
+  }
+
+  public static void drawAvailableLeads(VBox leadVBox, ObservableList<Lead> leads)
+  {
+    if(leads != null)
+    {
+      for(Node node : leadVBox.getChildren())
+      {
+        if(node instanceof HBox)
+        {
+          Platform.runLater(()-> leadVBox.getChildren().remove(node));
+        }
+      }
+
+      for(Lead lead : leads)
+      {
+        Platform.runLater(()->
+        {
+          leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
+        });
+      }
+    }
+  }
+
+  public static HBox drawAvailableLeadTile(String firstName, String middleName, String lastName, String email, String businessName,  String title, String phone, int business_id)
+  {
+    HBox lead = new HBox();
+
+    lead.setPadding(new Insets(10,10,10,50));
+    lead.setPrefWidth(794);
+    lead.setPrefHeight(60);
+    lead.setStyle("-fx-background-color: #e2e0eb; -fx-background-radius: 15; -fx-border-radius: 15");
+
+    Label nameLabel = new Label(firstName+" "+lastName);
+    nameLabel.setTextFill(Paint.valueOf("White"));
+    nameLabel.setPrefWidth(270);
+    nameLabel.setPrefHeight(46);
+    nameLabel.setStyle(" -fx-background-color: #544997; -fx-font: bold 16pt 'System'; -fx-background-radius: 5px;");
+    nameLabel.setAlignment(Pos.CENTER);
+
+    Label emailLabel = new Label(email);
+    emailLabel.setPrefWidth(270);
+    emailLabel.setPrefHeight(48);
+    emailLabel.setFont(new Font(18));
+    emailLabel.setAlignment(Pos.CENTER);
+    emailLabel.setPadding(new Insets(0));
+
+    Label businessLabel = new Label(businessName);
+    businessLabel.setPrefWidth(270);
+    businessLabel.setPrefHeight(48);
+    businessLabel.setFont(new Font(18));
+    businessLabel.setAlignment(Pos.CENTER);
+    businessLabel.setPadding(new Insets(0));
+
+    Label titleLabel = new Label(title);
+    titleLabel.setPrefWidth(240);
+    titleLabel.setPrefHeight(48);
+    titleLabel.setFont(new Font(18));
+    titleLabel.setAlignment(Pos.CENTER);
+
+    lead.getChildren().addAll(nameLabel, emailLabel, businessLabel, titleLabel);
+
+    return lead;
   }
 
   public static void drawCalendarActivityPopUp(List<CalendarActivity> calendarActivities)

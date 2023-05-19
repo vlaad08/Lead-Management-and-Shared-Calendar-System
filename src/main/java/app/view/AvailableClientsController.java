@@ -1,13 +1,21 @@
 package app.view;
 
+import app.shared.Lead;
 import app.viewmodel.AvailableClientsViewModel;
-import app.viewmodel.MeetingViewModel;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
-public class AvailableClientsController
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+public class AvailableClientsController implements PropertyChangeListener
 {
 
 
@@ -19,19 +27,23 @@ public class AvailableClientsController
   @FXML private Button plansButton;
   @FXML private Button closeButton;
   @FXML private Button manageLeadsButton;
+  @FXML private VBox availableVBox;
 
   private Region root;
   private ViewHandler viewHandler;
-  private AvailableClientsViewModel availableClientsViewModel;
+  private AvailableClientsViewModel availableViewModel;
+  private final ObjectProperty<ObservableList<Lead>> leads = new SimpleObjectProperty<>();
 
   public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
     this.viewHandler = viewHandler;
-    this.availableClientsViewModel = availableClientsViewModel;
+    this.availableViewModel = availableClientsViewModel;
     this.root = root;
 
-
+    availableViewModel.addPropertyChangeListener(this);
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
+    availableViewModel.bindLeads(leads);
 
+    Draw.drawAvailableLeads(availableVBox, leads.get());
   }
 
 
@@ -64,6 +76,17 @@ public class AvailableClientsController
         case "All Clients" -> viewHandler.openView("AllClients");
         case "Manage leads" -> viewHandler.openView("Leads");
       }
+    }
+  }
+
+  @Override public void propertyChange(PropertyChangeEvent evt)
+  {
+    if(evt.getPropertyName().equals("reloadLeads"))
+    {
+      Platform.runLater(()->
+      {
+        Draw.drawAvailableLeads(availableVBox, leads.get());
+      });
     }
   }
 }
