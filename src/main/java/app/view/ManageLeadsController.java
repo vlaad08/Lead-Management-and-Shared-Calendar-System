@@ -90,7 +90,7 @@ public class ManageLeadsController implements PropertyChangeListener
         case "Manage task" -> viewHandler.openView("Task");
         case "Lead", "Available Clients" ->
             viewHandler.openView("AvailableClients");
-        case "All Clients" -> viewHandler.openView("AllClients");
+        case "All Users" -> viewHandler.openView("AllUsers");
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }

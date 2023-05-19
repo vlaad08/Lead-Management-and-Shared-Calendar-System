@@ -87,7 +87,7 @@ public class TaskController implements PropertyChangeListener
         case "Manage meeting" -> viewHandler.openView("Meeting");
         case "Manage task" -> viewHandler.openView("Task");
         case "Lead", "Available Clients" -> viewHandler.openView("AvailableClients");
-        case "All Clients" -> viewHandler.openView("AllUsers");
+        case "All Users" -> viewHandler.openView("AllUsers");
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }

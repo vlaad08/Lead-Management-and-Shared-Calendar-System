@@ -227,7 +227,7 @@ public class ServerImplementation implements Communicator
       throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
-    if(checkIfAddressExists(address))
+    if(!checkIfAddressExists(address))
     {
       connection.createAddress(address);
     }
@@ -238,7 +238,11 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
 
+
+
     Address a = connection.getAddress(address);
+
+
 
 
     if(a != null)
@@ -298,10 +302,11 @@ public class ServerImplementation implements Communicator
     support.firePropertyChange("reloadMeeting", null, "");
   }
 
-  @Override public void addUser(User user) throws SQLException
+  @Override public void addUser(User user) throws SQLException, RemoteException
   {
     connection = SQLConnection.getInstance();
-
+    connection.createUser(user);
+    support.firePropertyChange("reloadUser", null, "");
   }
 
 }

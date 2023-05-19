@@ -73,7 +73,7 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Clients" textFill="WHITE" GridPane.rowIndex="7">
+                  <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Users" textFill="WHITE" GridPane.rowIndex="7">
                      <font>
                         <Font size="18.0" />
                      </font>

@@ -1471,6 +1471,23 @@ public class Draw
   {
     HBox lead = new HBox();
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     lead.setPadding(new Insets(10,10,10,50));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
@@ -1685,7 +1702,7 @@ public class Draw
     stage.show();
   }
 
-  public static void drawUserPopUp(VBox vBox, AllUsersViewModel allUsersViewModel)
+  public static void drawUserPopUp(VBox vbox, AllUsersViewModel allUsersViewModel)
   {
     Stage stage = new Stage();
 
@@ -1767,10 +1784,30 @@ public class Draw
     streetLabel.setPrefWidth(65);
 
     TextField streetField = new TextField();
-    streetField.setText("Street: "); // Set the default value
 
     //streetBox.getChildren().addAll(streetLabel, streetField);
     //----------------------------------
+
+
+    HBox city = new HBox();
+    Label cityLabel = new Label("City: ");
+    cityLabel.setPrefWidth(65);
+    TextField cityField = new TextField();
+    cityField.setText("");
+    city.setSpacing(20);
+    city.setPadding(new Insets(20, 0, 0, 20));
+    city.getChildren().addAll(cityLabel, cityField);
+
+    HBox country = new HBox();
+    Label countryLabel = new Label("Country: ");
+    countryLabel.setPrefWidth(65);
+    TextField countryField = new TextField();
+    countryField.setText("");
+    country.setSpacing(20);
+    country.setPadding(new Insets(20, 0, 0, 20));
+    country.getChildren().addAll(countryLabel, countryField);
+
+
 
     Button create = new Button("Create");
     create.setPrefWidth(60);
@@ -1791,29 +1828,38 @@ public class Draw
     postalCodeLabel.setPrefWidth(85);
 
     TextField postalCodeField = new TextField();
-    postalCodeField.setText("Postal Code: "); // Set the default value
 
     postalCodeBox.getChildren().addAll(postalCodeLabel, postalCodeField);
 
-    insert.addAll(topBar, name,email, phone, roleBox, streetBox, postalCodeBox);
+    insert.addAll(topBar, name,email, phone, roleBox, streetBox, postalCodeBox, city, country);
 
 
     create.setOnAction(event -> {
       if (ConstraintChecker.checkFillOut(firstNameTextField) &&
           ConstraintChecker.checkFillOut(lastNameTextField)  &&
           ConstraintChecker.checkFillOut(emailField) &&
-          ConstraintChecker.checkFillOut(phoneField) &&
+          ConstraintChecker.checkFillOut(phoneField) &&  //new checks for only numbers to be there
           ConstraintChecker.checkFillOut(streetField) &&
-          ConstraintChecker.checkFillOut(postalCodeField)
+          ConstraintChecker.checkFillOut(postalCodeField) &&
+          ConstraintChecker.checkInt(postalCodeField.getText()) &&
+          ConstraintChecker.checkFillOut(countryField) &&
+          ConstraintChecker.checkFillOut(cityField)
       )
       {
-        createUserObject(parent,allUsersViewModel,firstNameTextField.getText(),lastNameTextField.getText(),emailField.getText(),phoneField.getText(),roleComboBox.getValue(),
-            streetField.getText(), postalCodeField.getText());
+        try
+        {
+          createUserObject(allUsersViewModel,firstNameTextField.getText(),lastNameTextField.getText(),emailField.getText(),phoneField.getText(),roleComboBox.getValue(),
+              streetField.getText(), postalCodeField.getText(),countryField.getText() , cityField.getText());
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
         stage.close();
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Text field must not be empty");
+        A.setContentText("Text field must not be empty and postal code is a number!");
         A.show();
       }
 
@@ -1826,18 +1872,18 @@ public class Draw
 
   }
 
-  public static void createUserObject(VBox vBox, AllUsersViewModel allUsersViewModel, String firstName,String lastName, String email, String phone, String role, String street, String postalCode)
+  public static void createUserObject(AllUsersViewModel allUsersViewModel, String firstName,String lastName, String email, String phone, String role, String street, String  postalCode, String country, String city)
+      throws SQLException, RemoteException
   {
-    vBox.getChildren().add(drawUserTile(vBox, allUsersViewModel, firstName, lastName, email, role));
-    boolean roleBoolean;
+    allUsersViewModel.createAddress(street, city, country, postalCode);
     if(role.equals("Manager"))
     {
-      roleBoolean = true;
-
       Platform.runLater(() ->{
         try
         {
-          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,roleBoolean,street,Integer.parseInt(postalCode)));
+
+          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
+              true,street,Integer.parseInt(postalCode)));
         }
         catch (Exception e)
         {
@@ -1848,29 +1894,29 @@ public class Draw
     }
     else
     {
-      roleBoolean = false;
-
-      Platform.runLater(() ->{
+      Platform.runLater(()->{
         try
         {
-          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,roleBoolean,street,Integer.parseInt(postalCode)));
+          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
+              false,street,Integer.parseInt(postalCode)));
         }
-        catch (Exception e)
+        catch (SQLException | RemoteException e)
         {
           throw new RuntimeException(e);
         }
-      });
 
+      });
     }
 
   }
 
-  public static HBox drawUserTile(VBox vBox, AllUsersViewModel allUsersViewModel, String firstName, String lastName, String email,  String role)
+  public static HBox drawUserTile(String firstName, String lastName, String email,  String role)
   {
     HBox user = new HBox();
-    user.setPadding(new Insets(10,10,10,50));
+    user.setPadding(new Insets(20,20,20,50));
     user.setPrefWidth(794);
     user.setPrefHeight(60);
+    user.setStyle("-fx-background-color: #e2e0eb; -fx-background-radius: 15; -fx-border-radius: 15");
 
     Label nameLabel = new Label(firstName+" "+lastName);
     nameLabel.setTextFill(Paint.valueOf("White"));
@@ -1878,6 +1924,7 @@ public class Draw
     nameLabel.setPrefHeight(46);
     nameLabel.setStyle(" -fx-background-color: #544997; -fx-font: bold 16pt 'System'; -fx-background-radius: 5px;");
     nameLabel.setAlignment(Pos.CENTER);
+
 
     Label emailLabel = new Label(email);
     emailLabel.setPrefWidth(270);
@@ -1895,9 +1942,33 @@ public class Draw
     user.getChildren().addAll(nameLabel, emailLabel, roleLabel);
 
     user.setOnMouseClicked(event -> {
-      //drawManageTaskPopUp( vBox, leadsViewModel,  title, description, datePicker.getValue(), status);
+      //drawUserPopUp( vBox, leadsViewModel,  title, description,);
     });
 
+    //vBox.getChildren().add(user);
+
     return user;
+  }
+
+  public static void drawUser(VBox parent, ObservableList<User> users, AllUsersViewModel viewModel)
+  {
+    if(users != null)
+    {
+      for(Node node : parent.getChildren())
+      {
+        if(node instanceof HBox)
+        {
+          Platform.runLater(()-> parent.getChildren().remove(node));
+        }
+      }
+
+      for(User user : users)
+      {
+        if(user.isManager())
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(user.getFirstName(), user.getLastName(), user.getEmail(), "Manager")));
+        else
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(user.getFirstName(), user.getLastName(), user.getEmail(), "Employee")));
+      }
+    }
   }
 }

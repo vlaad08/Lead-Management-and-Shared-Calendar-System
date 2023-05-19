@@ -29,7 +29,7 @@ public class LeadTest
   void test_getLeads() throws Exception {
     List<Lead> expectedLeads = new ArrayList<>();
 
-    Lead expectedLead = new Lead("John", "Doe", "Lead 1", "lead1@example.com", "1234567890", "Manager", 1001);
+    Lead expectedLead = new Lead("John", "Doe", "Lead 1", "lead1@example.com", "1234567890", "Manager", 1001, "");
     expectedLeads.add(expectedLead);
 
     when(connection.getLeads()).thenReturn((ArrayList<Lead>) expectedLeads);
@@ -52,7 +52,7 @@ public class LeadTest
 
   @Test
   void add_a_lead_and_test_if_list_contain_that_lead() throws Exception {
-    Lead lead = new Lead("Ion", "Marian", "Giogre", "testlead@gmail.com", "896213654", "manager", 7456);
+    Lead lead = new Lead("Ion", "Marian", "Giogre", "testlead@gmail.com", "896213654", "manager", 7456, "");
     List<Lead> leads = new ArrayList<>();
     leads.add(lead);
 

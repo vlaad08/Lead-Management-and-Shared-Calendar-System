@@ -90,7 +90,14 @@ public class User implements Serializable
   {
     return manager;
   }
-
+  public String toStringManager(){
+    if(isManager()){
+      return "Manager";
+    }
+    else{
+      return "Employee";
+    }
+  }
   public String getStreet()
   {
     return street;
