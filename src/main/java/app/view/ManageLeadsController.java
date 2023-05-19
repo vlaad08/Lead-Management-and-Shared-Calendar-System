@@ -22,11 +22,7 @@ public class ManageLeadsController
   @FXML private Button plansButton;
   @FXML private Button closeButton;
   @FXML private TilePane tilePane;
-
-  //Experimental Code
   @FXML private VBox leadVBox;
-  //
-
 
 
   private Region root;
@@ -38,13 +34,7 @@ public class ManageLeadsController
     this.leadsViewModel = leadsViewModel;
     this.root = root;
 
-
     Draw.hoverButtonNavbar(calendarButton, availableClientsButton, plansButton, meetingButton, tasksButton, clientsButton, closeButton);
-
-
-    //Experimental Code
-
-    //Close of experimental code
   }
 
   public void hoverButtonNavbar(Button b)
@@ -77,13 +67,11 @@ public class ManageLeadsController
 
       switch (b.getText())
       {
-        case "Calendar", "Plans" ->
-            viewHandler.openView("Calendar");
+        case "Calendar", "Plans" -> viewHandler.openView("Calendar");
         case "Manage meeting" -> viewHandler.openView("Meeting");
         case "Manage task" -> viewHandler.openView("Task");
-        case "Lead", "Available Clients" ->
-            viewHandler.openView("AvailableClients");
-        case "All Clients" -> viewHandler.openView("AllClients");
+        case "Lead", "Available Clients" -> viewHandler.openView("AvailableClients");
+        case "All Clients" -> viewHandler.openView("AllUsers");
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }

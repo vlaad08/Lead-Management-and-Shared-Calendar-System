@@ -169,6 +169,13 @@ public class ServerImplementation implements Communicator
     connection.createLead(lead);
   }
 
+  @Override public void addUser(User user) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.createUser(user);
+  }
+
+
   //Syncronization of Users
 
 

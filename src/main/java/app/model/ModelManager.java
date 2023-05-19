@@ -126,6 +126,10 @@ public class ModelManager implements Model
     communicator.addLead(lead);
   }
 
+  @Override public void addUser(User user) throws SQLException, RemoteException
+  {
+    communicator.addUser(user);
+  }
   @Override public void removeMeeting(Meeting meeting)
       throws SQLException, RemoteException
   {

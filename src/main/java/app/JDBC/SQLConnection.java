@@ -389,7 +389,9 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
   {
     try(
         Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")) {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")
+       )
+    {
       statement.setString(1, lead.getFirstname());
       statement.setString(2, lead.getMiddleName());
       statement.setString(3, lead.getLastname());
@@ -400,4 +402,26 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.executeUpdate();
     }
   }
+
+  public void createUser(User user) throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("insert into user(firstname, middlename, lastname, email, phone, role, street, postalcode) values (?,?,?,?,?,?,?,?)")
+        )
+    {
+      statement.setString(1, user.getFirstName());
+      statement.setString(2, user.getMiddleName());
+      statement.setString(3, user.getLastName());
+      statement.setString(4, user.getEmail());
+      statement.setString(5, user.getPhone());
+      statement.setBoolean(6, user.isManager());
+      statement.setString(7, user.getStreet());
+      statement.setString(8, user.getStreet());
+      statement.setInt(9, user.getPostalCode());
+      statement.executeUpdate();
+    }
+  }
+
+
 }

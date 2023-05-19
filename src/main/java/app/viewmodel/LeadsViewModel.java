@@ -9,15 +9,18 @@ public class LeadsViewModel
 {
   private Model model;
 
-  public LeadsViewModel(Model model){
+  public LeadsViewModel(Model model)
+  {
     this.model = model;
   }
 
-  public void addLead(Lead lead) throws Exception{
+  public void addLead(Lead lead) throws Exception
+  {
     model.addLead(lead);
   }
 
-  public ArrayList<Lead> getLeads() throws Exception{
+  public ArrayList<Lead> getLeads() throws Exception
+  {
     return model.getLeads();
   }
 

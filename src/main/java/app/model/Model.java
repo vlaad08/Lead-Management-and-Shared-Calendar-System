@@ -42,4 +42,5 @@ public interface Model
   ArrayList<String> getAssignedUsers(Task task) throws SQLException, RemoteException;
   void removeTask(Task tasks) throws SQLException, RemoteException;
   void addLead(Lead lead) throws SQLException, RemoteException;
+  void addUser(User user) throws SQLException, RemoteException;
 }

@@ -2,6 +2,7 @@ package app.view;
 
 import app.model.ConstraintChecker;
 import app.shared.*;
+import app.viewmodel.AllUsersViewModel;
 import app.viewmodel.LeadsViewModel;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
@@ -1304,6 +1305,81 @@ public class Draw
 
   }
 
+  public static void createUserObject(VBox vBox, AllUsersViewModel allUsersViewModel, String firstName,String lastName, String email, String phone, String role, String street, String postalCode)
+  {
+    vBox.getChildren().add(drawUserTile(vBox, allUsersViewModel, firstName, lastName, email, role));
+    boolean roleBoolean;
+    if(role.equals("Manager"))
+    {
+      roleBoolean = true;
+
+      Platform.runLater(() ->{
+        try
+        {
+          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,roleBoolean,street,Integer.parseInt(postalCode)));
+        }
+        catch (Exception e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
+
+    }
+    else
+    {
+      roleBoolean = false;
+
+       Platform.runLater(() ->{
+         try
+         {
+           allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,roleBoolean,street,Integer.parseInt(postalCode)));
+          }
+         catch (Exception e)
+         {
+           throw new RuntimeException(e);
+          }
+        });
+
+    }
+
+  }
+
+  public static HBox drawUserTile(VBox vBox, AllUsersViewModel allUsersViewModel, String firstName, String lastName, String email,  String role)
+  {
+    HBox user = new HBox();
+    user.setPadding(new Insets(10,10,10,50));
+    user.setPrefWidth(794);
+    user.setPrefHeight(60);
+
+    Label nameLabel = new Label(firstName+" "+lastName);
+    nameLabel.setTextFill(Paint.valueOf("White"));
+    nameLabel.setPrefWidth(270);
+    nameLabel.setPrefHeight(46);
+    nameLabel.setStyle(" -fx-background-color: #544997; -fx-font: bold 16pt 'System'; -fx-background-radius: 5px;");
+    nameLabel.setAlignment(Pos.CENTER);
+
+    Label emailLabel = new Label(email);
+    emailLabel.setPrefWidth(270);
+    emailLabel.setPrefHeight(48);
+    emailLabel.setFont(new Font(18));
+    emailLabel.setAlignment(Pos.CENTER);
+    emailLabel.setPadding(new Insets(0));
+
+    Label roleLabel = new Label(role);
+    roleLabel.setPrefWidth(240);
+    roleLabel.setPrefHeight(48);
+    roleLabel.setFont(new Font(18));
+    roleLabel.setAlignment(Pos.CENTER);
+
+    user.getChildren().addAll(nameLabel, emailLabel, roleLabel);
+
+    user.setOnMouseClicked(event -> {
+      //drawManageTaskPopUp( vBox, leadsViewModel,  title, description, datePicker.getValue(), status);
+    });
+
+    return user;
+  }
+
   public static HBox drawLeadTile(VBox vBox, LeadsViewModel leadsViewModel, String firstName, String lastName, String email,  String title)
   {
     HBox lead = new HBox();
@@ -1342,6 +1418,147 @@ public class Draw
     });
 
     return lead;
+  }
+
+  public static void drawUserPopUp(VBox vBox, AllUsersViewModel allUsersViewModel)
+  {
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+
+    HBox name = new HBox();
+    Label firstNameLabel = new Label("First Name: ");
+    firstNameLabel.setPrefWidth(65);
+    TextField firstNameTextField = new TextField();
+    firstNameTextField.setText("");
+    Label lastNameLabel = new Label("Last Name: ");
+    TextField lastNameTextField = new TextField();
+    lastNameTextField.setText("");
+    name.setSpacing(20);
+    name.setPadding(new Insets(20, 0, 0, 20));
+    name.getChildren().addAll(firstNameLabel, firstNameTextField,lastNameLabel,lastNameTextField);
+
+    HBox email = new HBox();
+    Label emailLabel = new Label("Email: ");
+    emailLabel.setPrefWidth(65);
+    TextField emailField = new TextField();
+    emailField.setText("example@gmail.com");
+    email.setSpacing(20);
+    email.setPadding(new Insets(20,0,0,20));
+    email.getChildren().addAll(emailLabel,emailField);
+
+    HBox phone = new HBox();
+    Label phoneLabel = new Label("Phone: ");
+    phoneLabel.setPrefWidth(65);
+    TextField phoneField = new TextField();
+    phoneField.setText("");
+    phone.setSpacing(20);
+    phone.setPadding(new Insets(20,0,0,20));
+    phone.getChildren().addAll(phoneLabel,phoneField);
+
+    //HBox title = new HBox();
+    //Label titleLabel = new Label("Title: ");
+    //titleLabel.setPrefWidth(65);
+    //TextField titleTextField = new TextField();
+    //titleTextField.setText("");
+    //title.setSpacing(20);
+    //title.setPadding(new Insets(20, 0, 0, 20));
+    //title.getChildren().addAll(titleLabel, titleTextField);
+    //----------------------------------
+    HBox roleBox = new HBox();
+    Label roleLabel = new Label("Role: ");
+    roleLabel.setPrefWidth(65);
+    ComboBox<String> roleComboBox = new ComboBox<>();
+    roleComboBox.getItems().addAll("Employee", "Manager");
+    roleComboBox.setValue("Employee"); // Set the default value
+
+    roleBox.setSpacing(20);
+    roleBox.setPadding(new Insets(20, 0, 0, 20));
+    roleBox.getChildren().addAll(roleLabel, roleComboBox);
+    //_--------------------------
+
+    //HBox businessID = new HBox();
+    //businessID.setPadding(new Insets(5));
+    //businessID.setSpacing(20);
+    //Label businessLabel = new Label("Business ID:");
+    //businessLabel.setPrefWidth(65);
+    //TextField businessField = new TextField();
+    //businessField.setText("7456");
+    //--------------------------------
+    HBox streetBox = new HBox();
+    streetBox.setPadding(new Insets(5));
+    streetBox.setSpacing(20);
+
+    Label streetLabel = new Label("Street:");
+    streetLabel.setPrefWidth(65);
+
+    TextField streetField = new TextField();
+    streetField.setText("Street: "); // Set the default value
+
+    //streetBox.getChildren().addAll(streetLabel, streetField);
+    //----------------------------------
+
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+
+    streetBox.getChildren().add(streetLabel);
+    streetBox.getChildren().add(streetField);
+    streetBox.getChildren().add(create);
+
+    streetBox.setPadding(new Insets(20, 0, 0, 20));
+
+    HBox postalCodeBox = new HBox();
+    postalCodeBox.setPadding(new Insets(5));
+    postalCodeBox.setSpacing(20);
+
+    Label postalCodeLabel = new Label("Postal Code:");
+    postalCodeLabel.setPrefWidth(85);
+
+    TextField postalCodeField = new TextField();
+    postalCodeField.setText("Postal Code: "); // Set the default value
+
+    postalCodeBox.getChildren().addAll(postalCodeLabel, postalCodeField);
+
+    insert.addAll(topBar, name,email, phone, roleBox, streetBox, postalCodeBox);
+
+
+    create.setOnAction(event -> {
+      if (ConstraintChecker.checkFillout(firstNameTextField) &&
+          ConstraintChecker.checkFillout(lastNameTextField)  &&
+          ConstraintChecker.checkFillout(emailField) &&
+          ConstraintChecker.checkFillout(phoneField) &&
+          ConstraintChecker.checkFillout(streetField) &&
+          ConstraintChecker.checkFillout(postalCodeField)
+      )
+      {
+        createUserObject(parent,allUsersViewModel,firstNameTextField.getText(),lastNameTextField.getText(),emailField.getText(),phoneField.getText(),roleComboBox.getValue(),
+            streetField.getText(), postalCodeField.getText());
+        stage.close();
+      }else
+      {
+        Alert A = new Alert(Alert.AlertType.ERROR);
+        A.setContentText("Text field must not be empty");
+        A.show();
+      }
+
+    });
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
   }
 
 

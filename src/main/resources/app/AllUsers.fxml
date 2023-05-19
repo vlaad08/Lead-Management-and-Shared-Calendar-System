@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.AllClientsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.AllUsersController">
     <left>
         <BorderPane prefHeight="615.0" prefWidth="295.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
             <top>
@@ -99,6 +99,9 @@
                             </children>
                         </HBox>
                     </top>
+               <right>
+                  <Button fx:id="addUserButton" mnemonicParsing="false" onAction="#addUser" prefHeight="43.0" prefWidth="53.0" text="+" BorderPane.alignment="CENTER" />
+               </right>
                 </BorderPane>
             </top>
         </BorderPane>

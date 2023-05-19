@@ -1,13 +1,13 @@
 package app.view;
 
-import app.viewmodel.AllClientsViewModel;
-import app.viewmodel.MeetingViewModel;
+import app.viewmodel.AllUsersViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
-public class AllClientsController
+public class AllUsersController
 {
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
@@ -17,15 +17,17 @@ public class AllClientsController
   @FXML private Button plansButton;
   @FXML private Button closeButton;
   @FXML private Button manageLeadsButton;
+  @FXML private Button addUserButton;
+  @FXML private VBox userVBox;
 
 
   private Region root;
   private ViewHandler viewHandler;
-  private AllClientsViewModel allClientsViewModel;
+  private AllUsersViewModel allUsersViewModel;
 
-  public void init(ViewHandler viewHandler, AllClientsViewModel allClientsViewModel, Region root){
+  public void init(ViewHandler viewHandler, AllUsersViewModel allUsersViewModel, Region root){
     this.viewHandler = viewHandler;
-    this.allClientsViewModel = allClientsViewModel;
+    this.allUsersViewModel = allUsersViewModel;
     this.root = root;
 
 
@@ -33,8 +35,6 @@ public class AllClientsController
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, availableClientsButton, manageLeadsButton, closeButton);
 
   }
-
-
 
   public void onCloseButton()
   {
@@ -62,9 +62,15 @@ public class AllClientsController
         case "Manage task" -> viewHandler.openView("Task");
         case "Lead", "Available Clients" ->
             viewHandler.openView("AvailableClients");
-        case "All Clients" -> viewHandler.openView("AllClients");
+        case "All Clients" -> viewHandler.openView("AllUsers");
         case "Manage leads" -> viewHandler.openView("Leads");
       }
     }
   }
+//get Users
+  public void addUser()
+  {
+    Draw.drawUserPopUp(userVBox, allUsersViewModel);
+  }
+
 }

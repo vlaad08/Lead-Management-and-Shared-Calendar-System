@@ -111,13 +111,11 @@ public class CalendarController {
 
                 switch (b.getText())
                 {
-                    case "Calendar", "Plans" ->
-                        viewHandler.openView("Calendar");
+                    case "Calendar", "Plans" -> viewHandler.openView("Calendar");
                     case "Manage meeting" -> viewHandler.openView("Meeting");
                     case "Manage task" -> viewHandler.openView("Task");
-                    case "Lead", "Available Clients" ->
-                        viewHandler.openView("AvailableClients");
-                    case "All Clients" -> viewHandler.openView("AllClients");
+                    case "Lead", "Available Clients" -> viewHandler.openView("AvailableClients");
+                    case "All Clients" -> viewHandler.openView("AllUsers");
                     case "Manage leads" -> viewHandler.openView("Leads");
                 }
             }
