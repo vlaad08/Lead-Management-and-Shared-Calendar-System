@@ -2,7 +2,6 @@ package app.view;
 
 import app.model.ConstraintChecker;
 import app.shared.*;
-import app.viewmodel.AvailableClientsViewModel;
 import app.viewmodel.LeadsViewModel;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
@@ -1624,7 +1623,7 @@ public class Draw
       {
         Platform.runLater(()->
         {
-          leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
+          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
         });
       }
     }
@@ -1646,13 +1645,14 @@ public class Draw
       {
         Platform.runLater(()->
         {
-          leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
+          leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(),
+              lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone()));
         });
       }
     }
   }
 
-  public static HBox drawAvailableLeadTile(String firstName, String middleName, String lastName, String email, String businessName,  String title, String phone, int business_id)
+  public static HBox drawAvailableLeadTile(String firstName, String lastName, String email, String businessName,  String title, String phone)
   {
     HBox lead = new HBox();
 

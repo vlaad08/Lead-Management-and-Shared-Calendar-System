@@ -31,17 +31,15 @@ public class AvailableClientsController implements PropertyChangeListener
 
   private Region root;
   private ViewHandler viewHandler;
-  private AvailableClientsViewModel availableViewModel;
   private final ObjectProperty<ObservableList<Lead>> leads = new SimpleObjectProperty<>();
 
   public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
     this.viewHandler = viewHandler;
-    this.availableViewModel = availableClientsViewModel;
     this.root = root;
 
-    availableViewModel.addPropertyChangeListener(this);
+    availableClientsViewModel.addPropertyChangeListener(this);
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
-    availableViewModel.bindLeads(leads);
+    availableClientsViewModel.bindLeads(leads);
 
     Draw.drawAvailableLeads(availableVBox, leads.get());
   }
