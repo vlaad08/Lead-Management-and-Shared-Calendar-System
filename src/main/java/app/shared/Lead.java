@@ -13,8 +13,9 @@ public class Lead implements Serializable
   private int business_id;
 
   private String businessName;
+  private String status;
 
-  public Lead(String firstname, String middleName, String lastname, String email, String phone,String title, int business_id, String businessName)
+  public Lead(String firstname, String middleName, String lastname, String email, String phone,String title, int business_id, String businessName, String status)
   {
     this.firstname = firstname;
     this.middleName = middleName;
@@ -24,6 +25,7 @@ public class Lead implements Serializable
     this.title = title;
     this.business_id = business_id;
     this.businessName = businessName;
+    this.status = status;
   }
 
   public String getPhone()
@@ -94,6 +96,16 @@ public class Lead implements Serializable
   public void setBusiness_id(int business_id)
   {
     this.business_id = business_id;
+  }
+
+  public void setStatus(String status)
+  {
+    this.status = status;
+  }
+
+  public String getStatus()
+  {
+    return status;
   }
 
   public String toString()

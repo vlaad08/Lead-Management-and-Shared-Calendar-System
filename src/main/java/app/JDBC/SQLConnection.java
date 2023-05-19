@@ -313,7 +313,8 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         String phone = set.getString("phone");
         String title = set.getString("title");
         int business_id = set.getInt("business_id");
-        leads.add(new Lead(firstname,middleName, lastname, email, phone, title, business_id, getBusinessNameByID(business_id)));
+        String status = set.getString("status");
+        leads.add(new Lead(firstname,middleName, lastname, email, phone, title, business_id, getBusinessNameByID(business_id),status));
       }
       return leads;
     }
