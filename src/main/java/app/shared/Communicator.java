@@ -5,7 +5,9 @@ import dk.via.remote.observer.RemotePropertyChangeListener;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public interface Communicator extends Remote
@@ -24,6 +26,8 @@ public interface Communicator extends Remote
 
   ArrayList<Task> getTasks() throws RemoteException, SQLException;
   ArrayList<User> getUsers() throws RemoteException, SQLException;
+
+  ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime) throws RemoteException, SQLException;
   void attendsMeeting(String email, Meeting meeting) throws SQLException, RemoteException;
 
   ArrayList<String> getAttendance(Meeting meeting) throws SQLException, RemoteException;

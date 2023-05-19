@@ -98,17 +98,13 @@ public class Draw
     Label to = new Label("to: ");
     TextField endTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
     endTime.setPrefWidth(60);
-    Button create = new Button("Create");
-    create.setPrefWidth(60);
-    create.setTextFill(Paint.valueOf("White"));
-    create.setStyle("-fx-background-color:  #348e2f");
+    Button refresh = new Button("Refresh \n Employees");
+    refresh.setPrefWidth(60);
+    refresh.setTextFill(Paint.valueOf("White"));
+    refresh.setStyle("-fx-background-color:  grey");
 
-    dateTime.getChildren().add(startDate);
-    dateTime.getChildren().add(datePicker);
-    dateTime.getChildren().add(startTime);
-    dateTime.getChildren().add(to);
-    dateTime.getChildren().add(endTime);
-    dateTime.getChildren().add(create);
+
+    dateTime.getChildren().addAll(startDate,datePicker,startTime,to,endTime, refresh);
 
     HBox descr = new HBox();
     descr.setSpacing(20);
@@ -118,8 +114,14 @@ public class Draw
     descrTextField.setAlignment(Pos.TOP_LEFT);
     descrTextField.setPrefWidth(330);
     descrTextField.setPrefHeight(100);
-    descr.getChildren().add(description);
-    descr.getChildren().add(descrTextField);
+
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+
+
+    descr.getChildren().addAll(description, descrTextField, create);
     descr.setLayoutY(10);
 
 
@@ -174,6 +176,38 @@ public class Draw
     descr.setPadding(new Insets(20, 0, 10, 20));
 
     insert.addAll(topBar, title,lead, dateTime, descr, employeeAttendance);
+
+
+    Platform.runLater(() -> refresh.setOnAction(event -> {
+      try
+      {
+        attendance.getItems().clear();
+        ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
+
+
+        Time start = Time.valueOf(LocalTime.parse(startTime.getText()));
+        Time end = Time.valueOf(LocalTime.parse(endTime.getText()));
+        ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), start, end);
+
+        System.out.println(availableUsers);
+
+        for(User user : availableUsers)
+        {
+          availableUserList.add(new UserTableRow(user));
+        }
+
+        attendance.setItems(availableUserList);
+
+
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+
+
+    }));
+
 
     Platform.runLater(()-> create.setOnAction(event -> {
 

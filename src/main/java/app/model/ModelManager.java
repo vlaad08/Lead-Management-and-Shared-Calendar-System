@@ -78,16 +78,11 @@ public class ModelManager implements Model
     support.firePropertyChange("reloadTasks", false, true);
   }
 
-  @Override public void reloadUsers() throws SQLException, RemoteException
-  {
-    users = communicator.getUsers();
-    support.firePropertyChange("reloadUsers", false, true);
-  }
 
   @Override public ArrayList<User> getUsers()
       throws SQLException, RemoteException
   {
-    reloadUsers();
+    users = communicator.getUsers();
     return users;
   }
 
@@ -139,7 +134,6 @@ public class ModelManager implements Model
     Address address = new Address(street, city, country,
         Integer.parseInt(postalCode));
 
-    if(!communicator.checkIfAddressExists(address))
       communicator.createAddress(address);
   }
 
@@ -174,6 +168,12 @@ public class ModelManager implements Model
       throws SQLException, RemoteException
   {
     communicator.removeLead(lead);
+  }
+
+  @Override public ArrayList<User> getAvailableUsers(Date date, Time startTime,
+      Time endTime) throws SQLException, RemoteException
+  {
+    return communicator.getAvailableUsers(date, startTime, endTime);
   }
 
   @Override public void removeMeeting(Meeting meeting)

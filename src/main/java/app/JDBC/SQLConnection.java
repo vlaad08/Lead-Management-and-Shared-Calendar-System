@@ -167,11 +167,7 @@ public class SQLConnection
 
         users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode));
       }
-      if(!users.isEmpty())
-      {
-        return users;
-      }
-      return new ArrayList<>();
+      return users;
     }
 
   }
@@ -449,18 +445,17 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.setString(3, address.getCountry());
       statement.setInt(4, address.getPostalCode());
       ResultSet set = statement.executeQuery();
-      String street = null;
-      String city = null;
-      String country = null;
-      int postalCode = 0;
+      Address a = null;
       if (set.next())
       {
-        street = set.getString("street");
-        city = set.getString("city");
-        country = set.getString("country");
-        postalCode = set.getInt("postalcode");
+        String street = set.getString("street");
+        String city = set.getString("city");
+        String country = set.getString("country");
+        int postalCode = set.getInt("postalcode");
+        a = new Address(street, city, country, postalCode);
       }
-      return new Address(street, city, country, postalCode);
+
+      return a;
     }
   }
 
@@ -582,6 +577,49 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.setString(5, lead.getTitle());
       statement.setInt(6, lead.getBusiness_id());
       statement.executeUpdate();
+    }
+  }
+
+  public User getUserByEmail(String email) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("select * from \"user\""
+                + " where email = ?")
+            )
+    {
+      statement.setString(1, email);
+      ResultSet set = statement.executeQuery();
+      User user = null;
+      if(set.next())
+      {
+        boolean manager = false;
+
+        String firstname = set.getString("firstname");
+        String middleName = set.getString("middlename");
+
+        if(middleName == null)
+        {
+          middleName = "";
+        }
+
+        String lastname = set.getString("lastname");
+        String e = set.getString("email");
+        String phone = set.getString("phone");
+        String role = set.getString("role");
+
+        if(role.equals("manager"))
+        {
+          manager = true;
+        }
+
+        String street = set.getString("street");
+        int postalCode = set.getInt("postalcode");
+
+        user = new User(firstname, middleName, lastname, e, phone, manager, street, postalCode);
+      }
+      return user;
     }
   }
 }
