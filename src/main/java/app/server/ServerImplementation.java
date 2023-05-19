@@ -298,4 +298,9 @@ public class ServerImplementation implements Communicator
     support.firePropertyChange("reloadMeeting", null, "");
   }
 
+  @Override public ArrayList<String> getAvailableUser(Date selectedDate,
+      Time startTime, Time endTime) throws SQLException, RemoteException
+  {
+    return connection.getAvailableUser(selectedDate,startTime,endTime);
+  }
 }
