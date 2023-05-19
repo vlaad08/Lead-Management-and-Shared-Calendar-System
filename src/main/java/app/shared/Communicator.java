@@ -46,4 +46,5 @@ public interface Communicator extends Remote
   int getBusinessId(Business business) throws SQLException, RemoteException;
   void editLead(Lead oldLead, Lead newLead) throws SQLException,
       RemoteException;
+  ArrayList<String> getAvailableUser(Date selectedDate, Time startTime, Time endTime) throws SQLException, RemoteException;
 }

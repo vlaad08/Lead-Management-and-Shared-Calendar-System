@@ -32,6 +32,7 @@ public interface Model
   ArrayList<User> getUsers() throws SQLException, RemoteException;
   ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException;
+  ArrayList<String> getAvailableUserForMeeting(Date date,Time startTime, Time endTime) throws SQLException, RemoteException;
 
   ArrayList<Lead> getLeads() ;
 
