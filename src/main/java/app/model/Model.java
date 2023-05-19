@@ -50,4 +50,5 @@ public interface Model
   void removeLead(Lead lead) throws SQLException, RemoteException;
   ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime)
       throws SQLException, RemoteException;
+  void addUser(User user);
 }

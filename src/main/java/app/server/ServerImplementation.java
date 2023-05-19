@@ -298,4 +298,10 @@ public class ServerImplementation implements Communicator
     support.firePropertyChange("reloadMeeting", null, "");
   }
 
+  @Override public void addUser(User user) throws SQLException
+  {
+    connection = SQLConnection.getInstance();
+
+  }
+
 }
