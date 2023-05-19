@@ -189,7 +189,7 @@ public class Draw
         Time end = Time.valueOf(LocalTime.parse(endTime.getText()));
         ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), start, end);
 
-        System.out.println(availableUsers);
+
 
         for(User user : availableUsers)
         {

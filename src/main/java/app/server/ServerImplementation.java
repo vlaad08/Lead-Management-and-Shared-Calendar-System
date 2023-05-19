@@ -156,7 +156,15 @@ public class ServerImplementation implements Communicator
           User user = connection.getUserByEmail(email);
 
 
-          if(meeting.getDate().equals(date) && meeting.getStartTime().before(startTime) && meeting.getEndTime().after(endTime))
+          if(meeting.getDate().equals(date) &&
+              (
+                  (meeting.getStartTime().before(startTime) && meeting.getEndTime().before(endTime) && meeting.getEndTime().after(startTime))
+                      || (meeting.getStartTime().after(startTime) && meeting.getEndTime().before(endTime))
+                  || (meeting.getStartTime().before(startTime) && meeting.getEndTime().after(endTime))
+                      || (meeting.getStartTime().after(startTime) && meeting.getEndTime().after(endTime) && meeting.getStartTime().before(endTime))
+                  || (meeting.getStartTime().equals(startTime) && meeting.getEndTime().equals(endTime))
+              )
+          )
           {
               users.remove(user);
           }
