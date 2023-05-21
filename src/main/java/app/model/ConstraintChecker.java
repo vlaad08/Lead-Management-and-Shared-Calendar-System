@@ -8,11 +8,10 @@ import java.time.LocalTime;
 
 public class ConstraintChecker
 {
-  public static boolean checkTime(String startTime, String endTime)
+  public static boolean checkTime(Time startTime, Time endTime)
   {
-    Time start=Time.valueOf(LocalTime.parse(startTime));
-    Time end=Time.valueOf(LocalTime.parse(endTime));
-    if (end.before(start))
+
+    if (endTime.before(startTime))
     {
       return false;
     }
@@ -28,19 +27,13 @@ public class ConstraintChecker
     return false;
   }
 
-  public static boolean checkDateAndTime(LocalDate date, String startTime, String endTime){
+  public static boolean checkDateAndTime(LocalDate date, Time startTime, Time endTime){
     if(!checkDate(date)){
-      return false;
-    }
-    try{
-      Time start=Time.valueOf(LocalTime.parse(startTime));
-      Time end=Time.valueOf(LocalTime.parse(endTime));
-    }catch (Exception e){
       return false;
     }
 
     if(LocalDate.now().isEqual(date)){
-      if(LocalTime.parse(startTime).isAfter(LocalTime.now())){
+      if(startTime.after(Time.valueOf(LocalTime.now()))){
         return true;
       }else return false;
     }else if(LocalDate.now().isBefore(date) && checkTime(startTime, endTime)){

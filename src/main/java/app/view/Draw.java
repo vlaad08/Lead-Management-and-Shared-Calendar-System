@@ -35,12 +35,23 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
 public class Draw
 {
+
+  private static final ArrayList<Integer> hours = new ArrayList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23));
+  private static final ArrayList<Integer> minutes = new ArrayList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+      10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+      20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+      30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+      40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      50, 51, 52, 53, 54, 55, 56, 57, 58, 59));
+
 
 
 
@@ -53,7 +64,7 @@ public class Draw
     VBox parent = new VBox();
     parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
-    parent.setPrefWidth(600);
+    parent.setPrefWidth(700);
     parent.setAlignment(Pos.TOP_LEFT);
     ObservableList<Node> insert = parent.getChildren();
 
@@ -92,19 +103,23 @@ public class Draw
     startDate.setPrefWidth(75);
     DatePicker datePicker = new DatePicker(LocalDate.now());
     datePicker.setPrefWidth(170);
-    TextField startTime = new TextField(
-        LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-    startTime.setPrefWidth(60);
+
+    ComboBox<Integer> startTimeHours = new ComboBox<>(FXCollections.observableArrayList(hours));
+    ComboBox<Integer> startTimeMinutes = new ComboBox<>(FXCollections.observableArrayList(minutes));
+    startTimeHours.setPromptText("hh");
+    startTimeMinutes.setPromptText("mm");
+    startTimeHours.setPrefWidth(60);
     Label to = new Label("to: ");
-    TextField endTime = new TextField(LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm")));
-    endTime.setPrefWidth(60);
-    Button refresh = new Button("Refresh \n Employees");
-    refresh.setPrefWidth(60);
-    refresh.setTextFill(Paint.valueOf("White"));
-    refresh.setStyle("-fx-background-color:  grey");
+
+    ComboBox<Integer> endTimeHours = new ComboBox<>(FXCollections.observableArrayList(hours));
+    endTimeHours.setPromptText("hh");
+    ComboBox<Integer> endTimeMinutes = new ComboBox<>(FXCollections.observableArrayList(minutes));
+    endTimeMinutes.setPromptText("mm");
 
 
-    dateTime.getChildren().addAll(startDate,datePicker,startTime,to,endTime, refresh);
+
+
+    dateTime.getChildren().addAll(startDate,datePicker,startTimeHours, startTimeMinutes,to,endTimeHours, endTimeMinutes);
 
     HBox descr = new HBox();
     descr.setSpacing(20);
@@ -115,13 +130,23 @@ public class Draw
     descrTextField.setPrefWidth(330);
     descrTextField.setPrefHeight(100);
 
+    VBox buttons = new VBox(10);
+
     Button create = new Button("Create");
-    create.setPrefWidth(60);
+    create.setPrefWidth(120);
     create.setTextFill(Paint.valueOf("White"));
     create.setStyle("-fx-background-color:  #348e2f");
 
 
-    descr.getChildren().addAll(description, descrTextField, create);
+    Button refresh = new Button("Refresh Employees");
+    refresh.setPrefWidth(120);
+    refresh.setTextFill(Paint.valueOf("White"));
+    refresh.setStyle("-fx-background-color:  grey");
+
+    buttons.getChildren().addAll(create, refresh);
+
+
+    descr.getChildren().addAll(description, descrTextField, buttons);
     descr.setLayoutY(10);
 
 
@@ -165,7 +190,7 @@ public class Draw
 
 
     attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    attendance.setPrefWidth(600);
+    attendance.setPrefWidth(700);
     attendance.setPrefHeight(150);
     attendance.setPadding(Insets.EMPTY);
     employeeAttendance.getChildren().add(attendance);
@@ -185,8 +210,10 @@ public class Draw
         ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
 
 
-        Time start = Time.valueOf(LocalTime.parse(startTime.getText()));
-        Time end = Time.valueOf(LocalTime.parse(endTime.getText()));
+        Time start = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+        Time end = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+
+
         ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), start, end);
 
 
@@ -211,8 +238,10 @@ public class Draw
 
     Platform.runLater(()-> create.setOnAction(event -> {
 
+      Time startTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+      Time endTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
 
-      if (ConstraintChecker.checkTime(startTime.getText(),endTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
+      if (ConstraintChecker.checkTime(startTime,endTime) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
         ArrayList<String> emails = new ArrayList<>();
         for(UserTableRow row : attendance.getItems())
@@ -222,7 +251,7 @@ public class Draw
             emails.add(row.getEmail());
           }
         }
-        createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime.getText(), endTime.getText(), descrTextField.getText(), emails);
+        createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime, endTime, descrTextField.getText(), emails);
         stage.close();
       }else
       {
@@ -241,7 +270,7 @@ public class Draw
   }
 
   public static void createMeetingObject(MeetingViewModel meetingViewModel, String title, Lead lead,
-      DatePicker datePicker, String startTime, String endTime,
+      DatePicker datePicker, Time startTime, Time endTime,
       String description, ArrayList<String> emails)
   {
 
@@ -250,7 +279,7 @@ public class Draw
 
         try
         {
-          meetingViewModel.addMeeting(title,description,date, Time.valueOf(LocalTime.parse(startTime)),Time.valueOf(LocalTime.parse(endTime)),lead.getEmail(),emails);
+          meetingViewModel.addMeeting(title,description,date, startTime,endTime,lead.getEmail(),emails);
         }
         catch (SQLException | RemoteException e)
         {
@@ -272,8 +301,8 @@ public class Draw
     meeting.setPadding(new Insets(10));
 
     meeting.setStyle("-fx-background-color: #544997; -fx-background-radius: 20px;");
-    meeting.setPrefWidth(200);
-    meeting.setPrefHeight(200);
+    meeting.setPrefWidth(250);
+    meeting.setPrefHeight(250);
 
     datePicker.setDisable(true);
 
@@ -368,7 +397,7 @@ public class Draw
     //container
     VBox parent = new VBox();
     parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
-    parent.setPrefWidth(600);
+    parent.setPrefWidth(700);
     parent.setPrefHeight(400);
     parent.setAlignment(Pos.TOP_LEFT);
     ObservableList<Node> insert = parent.getChildren();
@@ -427,23 +456,23 @@ public class Draw
     DatePicker newDatePicker = new DatePicker(datePicker.getValue());
     newDatePicker.setPrefWidth(170);
 
-    TextField newStartTime = new TextField(startTime);
-    newStartTime.setPrefWidth(60);
+    ComboBox<Integer> startTimeHours = new ComboBox<>(FXCollections.observableArrayList(hours));
+    ComboBox<Integer> startTimeMinutes = new ComboBox<>(FXCollections.observableArrayList(minutes));
+    startTimeHours.setPrefWidth(60);
     Label to = new Label("to: ");
-    TextField newEndTime = new TextField(endTime);
-    newEndTime.setPrefWidth(60);
 
-    Button update = new Button("Update");
-    update.setPrefWidth(60);
-    update.setTextFill(Paint.valueOf("White"));
-    update.setStyle("-fx-background-color:  #348e2f");
+    ComboBox<Integer> endTimeHours = new ComboBox<>(FXCollections.observableArrayList(hours));
+    ComboBox<Integer> endTimeMinutes = new ComboBox<>(FXCollections.observableArrayList(minutes));
 
-    dateTime.getChildren().add(startDate);
-    dateTime.getChildren().add(newDatePicker);
-    dateTime.getChildren().add(newStartTime);
-    dateTime.getChildren().add(to);
-    dateTime.getChildren().add(newEndTime);
-    dateTime.getChildren().add(update);
+    endTimeHours.setPrefWidth(60);
+
+    startTimeHours.setPromptText("hh");
+    startTimeMinutes.setPromptText("mm");
+    endTimeHours.setPromptText("hh");
+    endTimeMinutes.setPromptText("mm");
+
+    dateTime.getChildren().addAll(startDate, newDatePicker, startTimeHours, startTimeMinutes, to, endTimeHours, endTimeMinutes);
+
 
     HBox descr = new HBox();
     descr.setSpacing(20);
@@ -452,13 +481,26 @@ public class Draw
     TextArea descrText = new TextArea(description);
     descrText.setPrefWidth(330);
     descrText.setPrefHeight(100);
+
+    VBox buttons = new VBox(10);
+
+    Button update = new Button("Update");
+    update.setPrefWidth(120);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color:  #348e2f");
     Button delete = new Button("Delete");
-    delete.setPrefWidth(60);
+    delete.setPrefWidth(120);
     delete.setTextFill(Paint.valueOf("White"));
     delete.setStyle("-fx-background-color: #d93f3f");
+    Button refresh = new Button("Refresh Employees");
+    refresh.setPrefWidth(120);
+    refresh.setTextFill(Paint.valueOf("White"));
+    refresh.setStyle("-fx-background-color:  grey");
+
+    buttons.getChildren().addAll(update, delete, refresh);
 
 
-    descr.getChildren().addAll(newDescription, descrText, delete);
+    descr.getChildren().addAll(newDescription, descrText, buttons);
     descr.setLayoutY(10);
 
 
@@ -486,7 +528,7 @@ public class Draw
     attends.setCellFactory(ComboBoxTableCell.forTableColumn("Yes", "No"));
 
     attendance.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    attendance.setPrefWidth(600);
+    attendance.setPrefWidth(700);
     attendance.setPrefHeight(150);
     attendance.setPadding(Insets.EMPTY);
 
@@ -534,9 +576,45 @@ public class Draw
 
     insert.addAll(topBar, newTitle,lead, dateTime, descr, employeeAttendance);
 
+    Platform.runLater(() -> refresh.setOnAction(event -> {
+      try
+      {
+        attendance.getItems().clear();
+        ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
+
+
+        Time newStart = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+        Time newEnd = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+
+
+        ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), newStart, newEnd);
+
+
+
+        for(User user : availableUsers)
+        {
+          availableUserList.add(new UserTableRow(user));
+        }
+
+        attendance.setItems(availableUserList);
+
+
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+
+
+    }));
+
     update.setOnAction(event -> {
 
-      if (ConstraintChecker.checkTime(newStartTime.getText(),newEndTime.getText()) && ConstraintChecker.checkDate(datePicker.getValue()))
+      Time newStartTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+      Time newEndTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+
+
+      if (ConstraintChecker.checkTime(newStartTime,newEndTime) && ConstraintChecker.checkDate(datePicker.getValue()))
       {
         ArrayList<String> emailsUpdated = new ArrayList<>();
         for(UserTableRow row : attendance.getItems())
@@ -551,7 +629,7 @@ public class Draw
           Meeting oldMeeting = new Meeting(title, description, Date.valueOf(
               datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
               endTime), leadEmail);
-          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrText.getText(), Date.valueOf(newDatePicker.getValue()), Time.valueOf(newStartTime.getText()), Time.valueOf(newEndTime.getText()), leads.getValue().getEmail());
+          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrText.getText(), Date.valueOf(newDatePicker.getValue()), newStartTime, newEndTime, leads.getValue().getEmail());
 
           updateMeetingObject(meetingViewModel,oldMeeting,newMeeting, emailsUpdated);
           stage.close();
@@ -1319,7 +1397,12 @@ public class Draw
     Label businessLabel = new Label("Business: ");
     businessLabel.setPrefWidth(65);
     ComboBox<Business> businessComboBox = new ComboBox<>();
-    businessComboBox.setItems(FXCollections.observableArrayList(leadsViewModel.getBusinesses()));
+    ArrayList<Business> list = leadsViewModel.getBusinesses();
+    list.add(0, new Business("null", null, 0));
+
+
+    businessComboBox.setItems(FXCollections.observableArrayList(list));
+
 
 
     businesses.setSpacing(20);
@@ -1390,7 +1473,7 @@ public class Draw
           ConstraintChecker.checkFillOut(titleTextField))
       {
 
-        if(businessComboBox.getValue() == null)
+        if(businessComboBox.getValue().getName().equals("null") || businessComboBox.getValue() == null)
         {
 
             Platform.runLater(()->{
@@ -1506,9 +1589,8 @@ public class Draw
 
     lead.getChildren().addAll(nameLabel, emailLabel, businessLabel, titleLabel);
 
-    lead.setOnMouseClicked(event -> {
-      drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id);
-    });
+    lead.setOnMouseClicked(event ->
+      drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id));
 
     return lead;
   }
@@ -1622,9 +1704,8 @@ public class Draw
       for(Lead lead : leads)
       {
         Platform.runLater(()->
-        {
-          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
-        });
+
+          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id())));
       }
     }
   }
@@ -1644,10 +1725,9 @@ public class Draw
       for(Lead lead : leads)
       {
         Platform.runLater(()->
-        {
+
           leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(),
-              lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone()));
-        });
+              lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone())));
       }
     }
   }
