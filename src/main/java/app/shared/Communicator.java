@@ -47,4 +47,5 @@ public interface Communicator extends Remote
   void editLead(Lead oldLead, Lead newLead) throws SQLException,
       RemoteException;
   ArrayList<String> getAvailableUser(Date selectedDate, Time startTime, Time endTime) throws SQLException, RemoteException;
+  void addUser(User user) throws SQLException, RemoteException;
 }

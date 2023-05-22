@@ -316,4 +316,11 @@ public class ServerImplementation implements Communicator
   {
     return connection.getAvailableUser(selectedDate,startTime,endTime);
   }
+  @Override public void addUser(User user) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.createUser(user);
+    support.firePropertyChange("reloadUser", null, "");
+  }
+
 }

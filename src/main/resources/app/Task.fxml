@@ -48,17 +48,17 @@
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#changeView" prefHeight="79.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
+                        <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="71.0" prefWidth="309.0" style="-fx-background-color: #786FAC;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
+                        <Button mnemonicParsing="false" prefHeight="80.0" prefWidth="309.0" style="-fx-background-color: #786FAC;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button fx:id="meetingButton" mnemonicParsing="false" onAction="#changeView" prefHeight="71.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage meeting" textFill="WHITE" GridPane.rowIndex="2">
+                        <Button fx:id="meetingButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage meeting" textFill="WHITE" GridPane.rowIndex="2">
                             <font>
                                 <Font size="18.0" />
                             </font>
@@ -69,17 +69,17 @@
                                 <Font size="22.0" />
                             </font>
                         </Button>
-                        <Button fx:id="availableButton" mnemonicParsing="false" onAction="#changeView" prefHeight="52.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
+                        <Button fx:id="availableButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="34.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Clients" textFill="WHITE" GridPane.rowIndex="7">
+                        <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Users" textFill="WHITE" GridPane.rowIndex="7">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
-                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="68.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
+                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
                             <font>
                                 <Font size="18.0" />
                             </font>

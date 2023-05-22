@@ -15,7 +15,11 @@ public class User implements Serializable
   private String street;
   private int postalCode;
 
-  public User(String firstName, String middleName, String lastName, String email, String phone, boolean manager, String street, int postalCode) {
+  private String city;
+
+  private String country;
+
+  public User(String firstName, String middleName, String lastName, String email, String phone, boolean manager, String street, int postalCode, String city, String country) {
       this.firstName = firstName;
       this.middleName = middleName;
       this.lastName = lastName;
@@ -24,6 +28,28 @@ public class User implements Serializable
       this.manager = manager;
       this.street = street;
       this.postalCode = postalCode;
+      this.city = city;
+      this.country = country;
+  }
+
+  public String getCity()
+  {
+    return city;
+  }
+
+  public void setCity(String city)
+  {
+    this.city = city;
+  }
+
+  public String getCountry()
+  {
+    return country;
+  }
+
+  public void setCountry(String country)
+  {
+    this.country = country;
   }
 
   public void setLastName(String lastName)
@@ -90,7 +116,14 @@ public class User implements Serializable
   {
     return manager;
   }
-
+  public String toStringManager(){
+    if(isManager()){
+      return "Manager";
+    }
+    else{
+      return "Employee";
+    }
+  }
   public String getStreet()
   {
     return street;

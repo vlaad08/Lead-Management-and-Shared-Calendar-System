@@ -18,6 +18,15 @@ public class ConstraintChecker
     return true;
   }
 
+  public static boolean checkInt(String input){
+    try {
+      Integer.parseInt(input);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
   public static boolean checkDate(LocalDate date)
   {
     if (LocalDate.now().isEqual(date) || LocalDate.now().isBefore(date))
@@ -46,4 +55,6 @@ public class ConstraintChecker
   {
     return !textField.getText().equals("");
   }
+
+
 }

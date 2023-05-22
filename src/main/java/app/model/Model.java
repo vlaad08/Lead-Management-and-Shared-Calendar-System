@@ -29,7 +29,7 @@ public interface Model
 
   void addPropertyChangeListener(PropertyChangeListener listener);
   void taskAddedFromServer() throws SQLException, RemoteException;
-  ArrayList<User> getUsers() throws SQLException, RemoteException;
+  ArrayList<User> getUsers();
   ArrayList<String> getAttendance(Meeting meeting)
       throws SQLException, RemoteException;
   ArrayList<String> getAvailableUserForMeeting(Date date,Time startTime, Time endTime) throws SQLException, RemoteException;
@@ -51,4 +51,6 @@ public interface Model
   void removeLead(Lead lead) throws SQLException, RemoteException;
   ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime)
       throws SQLException, RemoteException;
+  void addUser(User user) throws SQLException, RemoteException;
+  void userAddedFromServer() throws SQLException, RemoteException;
 }

@@ -10,11 +10,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -93,13 +91,11 @@ public class CalendarController implements PropertyChangeListener
 
                 switch (b.getText())
                 {
-                    case "Calendar", "Plans" ->
-                        viewHandler.openView("Calendar");
+                    case "Calendar", "Plans" -> viewHandler.openView("Calendar");
                     case "Manage meeting" -> viewHandler.openView("Meeting");
                     case "Manage task" -> viewHandler.openView("Task");
-                    case "Lead", "Available Clients" ->
-                        viewHandler.openView("AvailableClients");
-                    case "All Clients" -> viewHandler.openView("AllClients");
+                    case "Lead", "Available Clients" -> viewHandler.openView("AvailableClients");
+                    case "All Users" -> viewHandler.openView("AllUsers");
                     case "Manage leads" -> viewHandler.openView("Leads");
                 }
             }
@@ -181,6 +177,8 @@ public class CalendarController implements PropertyChangeListener
 
     private void createCalendarActivity(List<CalendarActivity> calendarActivities, double rectangleHeight, double rectangleWidth, StackPane stackPane) {
         VBox calendarActivityBox = new VBox();
+        VBox smallBox = new VBox(5);
+        ScrollPane scrollPane = new ScrollPane();
         calendarActivityBox.setPadding(new Insets(2));
         calendarActivityBox.setStyle("-fx-background-radius: 10px;");
         for (CalendarActivity activity : calendarActivities) {
@@ -201,7 +199,9 @@ public class CalendarController implements PropertyChangeListener
             }
 
 
-            calendarActivityBox.getChildren().add(text);
+            smallBox.getChildren().add(text);
+            text.setCursor(Cursor.DEFAULT);
+            text.setBackground(Background.EMPTY);
             text.setOnMouseClicked(event -> Draw.drawCalendarActivityPopUp(calendarActivities));
         }
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
@@ -211,6 +211,10 @@ public class CalendarController implements PropertyChangeListener
         calendarActivityBox.setOnMouseClicked(event ->
             Draw.drawCalendarActivityPopUp(calendarActivities)
         );
+
+        scrollPane.setContent(smallBox);
+        calendarActivityBox.getChildren().add(scrollPane);
+
         stackPane.getChildren().add(calendarActivityBox);
     }
 

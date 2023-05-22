@@ -2,6 +2,7 @@ package app.view;
 
 import app.model.ConstraintChecker;
 import app.shared.*;
+import app.viewmodel.AllUsersViewModel;
 import app.viewmodel.LeadsViewModel;
 import app.viewmodel.MeetingViewModel;
 import app.viewmodel.TasksViewModel;
@@ -37,22 +38,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
+import java.util.Optional;
 
 public class Draw
 {
 
   private static final ArrayList<Integer> hours = new ArrayList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23));
-  private static final ArrayList<Integer> minutes = new ArrayList<>(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-      10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-      20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-      30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
-      40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-      50, 51, 52, 53, 54, 55, 56, 57, 58, 59));
-
-
+  private static final ArrayList<Integer> minutes = new ArrayList<>(List.of(0, 15, 30, 45));
 
 
   public static void drawMeetingPopUp(MeetingViewModel meetingViewModel)
@@ -1162,6 +1154,8 @@ public class Draw
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.setWidth(300);
+    stage.setHeight(150);
     VBox parent = new VBox();
     parent.setPadding(new Insets(20));
     Label label = new Label("Are you sure you want to delete this ");
@@ -1473,7 +1467,7 @@ public class Draw
           ConstraintChecker.checkFillOut(titleTextField))
       {
 
-        if(businessComboBox.getValue().getName().equals("null") || businessComboBox.getValue() == null)
+        if(businessComboBox.getValue() == null || businessComboBox.getValue().getName() == null ||  businessComboBox.getValue().getName().equals("null"))
         {
 
             Platform.runLater(()->{
@@ -1553,6 +1547,8 @@ public class Draw
   {
     HBox lead = new HBox();
 
+
+
     lead.setPadding(new Insets(10,10,10,50));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
@@ -1591,7 +1587,6 @@ public class Draw
 
     lead.setOnMouseClicked(event ->
       drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id));
-
     return lead;
   }
 
@@ -1603,9 +1598,10 @@ public class Draw
 
     VBox parent = new VBox();
     parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
-    parent.setPrefHeight(500);
-    parent.setPrefWidth(700);
+    parent.setPrefHeight(300);
+    parent.setPrefWidth(900);
     parent.setAlignment(Pos.TOP_LEFT);
+
 
 
     HBox topBar = new HBox();
@@ -1622,7 +1618,8 @@ public class Draw
 
 
     HBox names = new HBox();
-    names.setAlignment(Pos.CENTER);
+    names.setPadding(new Insets(5, 5, 30, 5));
+    names.setSpacing(10);
     Label firstNameLabel = new Label("First Name: ");
     TextField firstnameTextField = new TextField(firstName);
     Label middleNameLabel = new Label("Middle Name: ");
@@ -1630,10 +1627,24 @@ public class Draw
     Label lastNameLabel = new Label("Last Name: ");
     TextField lastNameTextField = new TextField(lastName);
 
+    firstNameLabel.setFont(new Font(15));
+    firstnameTextField.setFont(new Font(15));
+    middleNameLabel.setFont(new Font(15));
+    middleNameTextField.setFont(new Font(15));
+    lastNameLabel.setFont(new Font(15));
+    lastNameTextField.setFont(new Font(15));
+
+    firstNameLabel.setPadding(new Insets(5, 0, 0, 0));
+    middleNameLabel.setPadding(new Insets(5, 0, 0, 0));
+    lastNameLabel.setPadding(new Insets(5, 0, 0, 0));
+
+
     names.getChildren().addAll(firstNameLabel,firstnameTextField, middleNameLabel, middleNameTextField, lastNameLabel, lastNameTextField);
 
     HBox data = new HBox();
-    data.setAlignment(Pos.CENTER);
+
+    data.setPadding(new Insets(5, 5, 50, 5));
+    data.setSpacing(10);
     Label emailLabel = new Label("Email: ");
     TextField emailTextField = new TextField(email);
     Label phoneLabel = new Label("Phone: ");
@@ -1641,16 +1652,35 @@ public class Draw
     Label role= new Label("Role: ");
     TextField roleTextField = new TextField(title);
 
+    emailLabel.setPrefWidth(78);
+    phoneLabel.setPrefWidth(100);
+    role.setPrefWidth(78);
+
+    emailLabel.setFont(new Font(15));
+    emailTextField.setFont(new Font(15));
+    phoneLabel.setFont(new Font(15));
+    phoneTextField.setFont(new Font(15));
+    role.setFont(new Font(15));
+    roleTextField.setFont(new Font(15));
+
+    emailLabel.setPadding(new Insets(5,0,0,0));
+    phoneLabel.setPadding(new Insets(5,0,0,0));
+    role.setPadding(new Insets(5,0,0,0));
+
     data.getChildren().addAll(emailLabel, emailTextField, phoneLabel, phoneTextField, role, roleTextField);
 
     HBox buttons = new HBox();
     buttons.setAlignment(Pos.CENTER);
+    buttons.setPadding(new Insets(10));
+    buttons.setSpacing(20);
     Button update = new Button("Update");
-    update.setPrefWidth(60);
+    update.setPrefWidth(80);
+    update.setPrefHeight(50);
     update.setTextFill(Paint.valueOf("White"));
     update.setStyle("-fx-background-color:  #348e2f");
     Button delete = new Button("Delete");
-    delete.setPrefWidth(60);
+    delete.setPrefWidth(80);
+    delete.setPrefHeight(50);
     delete.setTextFill(Paint.valueOf("White"));
     delete.setStyle("-fx-background-color: #d93f3f");
 
@@ -1778,6 +1808,8 @@ public class Draw
     Stage stage = new Stage();
     stage.initStyle(StageStyle.UNDECORATED);
 
+
+
     VBox parent = new VBox();
     parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
@@ -1801,9 +1833,12 @@ public class Draw
 
     parent.getChildren().add(topBar);
 
+    ScrollPane scrollPane = new ScrollPane();
+    scrollPane.setPrefHeight(360);
+    VBox activity = new VBox();
     for (CalendarActivity calendarActivity : calendarActivities)
     {
-      HBox activity = new HBox();
+
       activity.setSpacing(20);
       activity.setPadding(new Insets(20));
       Text text = new Text();
@@ -1818,13 +1853,417 @@ public class Draw
       }
 
       activity.getChildren().add(text);
-      parent.getChildren().add(activity);
     }
+
+    scrollPane.setContent(activity);
+    parent.getChildren().add(scrollPane);
 
 
 
     Scene scene =new Scene(parent);
     stage.setScene(scene);
     stage.show();
+  }
+
+  public static void drawEditUserPopUp(AllUsersViewModel allUsersViewModel, String oldfirstname, String oldmiddlename, String oldlastname, String oldemail, String oldphone, String oldcity, String oldcountry, String oldrole, String oldstreet, String oldpostalcode) {
+
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefSize(600, 400);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color: #544997");
+
+    HBox name = new HBox();
+    Label firstNameLabel = new Label("Name:");
+    firstNameLabel.setPrefWidth(100);
+    TextField namefield = new TextField();
+    namefield.setText(oldfirstname + " " + oldmiddlename + " " + oldlastname);
+    namefield.setPrefWidth(200);
+    name.setSpacing(20);
+    name.setPadding(new Insets(20));
+    name.getChildren().addAll(firstNameLabel, namefield);
+
+    HBox email = new HBox();
+    Label emailLabel = new Label("Email:");
+    emailLabel.setPrefWidth(100);
+    TextField emailField = new TextField();
+    emailField.setText(oldemail);
+    emailField.setPrefWidth(200);
+    email.setSpacing(20);
+    email.setPadding(new Insets(20));
+    email.getChildren().addAll(emailLabel, emailField);
+
+    HBox phone = new HBox();
+    Label phoneLabel = new Label("Phone:");
+    phoneLabel.setPrefWidth(100);
+    TextField phoneField = new TextField();
+    phoneField.setText(oldphone);
+    phoneField.setPrefWidth(200);
+    phone.setSpacing(20);
+    phone.setPadding(new Insets(20));
+    phone.getChildren().addAll(phoneLabel, phoneField);
+
+    HBox city = new HBox();
+    Label cityLabel = new Label("City:");
+    cityLabel.setPrefWidth(100);
+    TextField cityField = new TextField();
+    cityField.setText(oldcity);
+    cityField.setPrefWidth(200);
+    city.setSpacing(20);
+    city.setPadding(new Insets(20));
+    city.getChildren().addAll(cityLabel, cityField);
+
+    HBox country = new HBox();
+    Label countryLabel = new Label("Country:");
+    countryLabel.setPrefWidth(100);
+    TextField countryField = new TextField();
+    countryField.setText(oldcountry);
+    countryField.setPrefWidth(200);
+    country.setSpacing(20);
+    country.setPadding(new Insets(20));
+    country.getChildren().addAll(countryLabel, countryField);
+
+    HBox roleBox = new HBox();
+    Label roleLabel = new Label("Role:");
+    roleLabel.setPrefWidth(100);
+    ComboBox<String> roleComboBox = new ComboBox<>();
+    roleComboBox.getItems().addAll("Employee", "Manager");
+    roleComboBox.setValue(oldrole);
+    roleComboBox.setPrefWidth(200);
+
+    roleBox.setSpacing(20);
+    roleBox.setPadding(new Insets(20));
+    roleBox.getChildren().addAll(roleLabel, roleComboBox);
+
+    HBox streetBox = new HBox();
+    Label streetLabel = new Label("Street:");
+    streetLabel.setPrefWidth(100);
+    TextField streetField = new TextField();
+    streetField.setText(oldstreet);
+    streetField.setPrefWidth(200);
+
+    Button update = new Button("Update");
+    update.setPrefWidth(60);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color: #348e2f");
+
+    HBox addressBox = new HBox();
+    addressBox.setSpacing(20);
+    addressBox.setPadding(new Insets(20));
+    addressBox.getChildren().addAll(cityLabel, cityField, countryLabel, countryField);
+
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #ff0000");
+
+    delete.setOnAction(event -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setHeaderText(null);
+      alert.setContentText("Do you really want to delete the user with the email: " + emailField.getText());
+
+      ButtonType yesButton = new ButtonType("Yes");
+      ButtonType noButton = new ButtonType("No");
+
+      alert.getButtonTypes().setAll(yesButton, noButton);
+
+      Optional<ButtonType> result = alert.showAndWait();
+
+      if (result.isPresent() && result.get() == yesButton) {
+       /allUsersViewModel.deleteUser(emailField.getText());
+      } else {
+        System.out.println("no clicked");
+      }
+
+      stage.close();
+    });
+
+    update.setOnAction(event -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setHeaderText(null);
+      alert.setContentText("Do you really want to update to this new information? ");
+
+      ButtonType yesButton = new ButtonType("Yes");
+      ButtonType noButton = new ButtonType("No");
+
+      alert.getButtonTypes().setAll(yesButton, noButton);
+
+      Optional<ButtonType> result = alert.showAndWait();
+
+      if (result.isPresent() && result.get() == yesButton) {
+        //allUsersViewModel.updateUser(emailField.getText());
+      } else {
+        System.out.println("no clicked");
+      }
+
+      stage.close();
+    });
+
+
+    HBox buttonBox = new HBox();
+    buttonBox.setSpacing(20);
+    buttonBox.setPadding(new Insets(20));
+    buttonBox.getChildren().addAll(update, delete);
+
+    insert.addAll(topBar, name, email, phone, roleBox, streetBox, addressBox, buttonBox);
+
+    Scene scene = new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  public static void drawUserPopUp(VBox vbox, AllUsersViewModel allUsersViewModel)
+  {
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefHeight(400);
+    parent.setPrefWidth(600);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color:  #544997");
+
+    HBox name = new HBox();
+    Label firstNameLabel = new Label("First Name: ");
+    firstNameLabel.setPrefWidth(65);
+    TextField firstNameTextField = new TextField();
+    firstNameTextField.setText("");
+    Label lastNameLabel = new Label("Last Name: ");
+    TextField lastNameTextField = new TextField();
+    lastNameTextField.setText("");
+    name.setSpacing(20);
+    name.setPadding(new Insets(20, 0, 0, 20));
+    name.getChildren().addAll(firstNameLabel, firstNameTextField,lastNameLabel,lastNameTextField);
+
+    HBox email = new HBox();
+    Label emailLabel = new Label("Email: ");
+    emailLabel.setPrefWidth(65);
+    TextField emailField = new TextField();
+    emailField.setText("example@gmail.com");
+    email.setSpacing(20);
+    email.setPadding(new Insets(20,0,0,20));
+    email.getChildren().addAll(emailLabel,emailField);
+
+    HBox phone = new HBox();
+    Label phoneLabel = new Label("Phone: ");
+    phoneLabel.setPrefWidth(65);
+    TextField phoneField = new TextField();
+    phoneField.setText("");
+    phone.setSpacing(20);
+    phone.setPadding(new Insets(20,0,0,20));
+    phone.getChildren().addAll(phoneLabel,phoneField);
+
+    HBox city = new HBox();
+    Label cityLabel = new Label("City: ");
+    cityLabel.setPrefWidth(65);
+    TextField cityField = new TextField();
+    cityField.setText("");
+    city.setSpacing(20);
+    city.setPadding(new Insets(20, 0, 0, 20));
+    city.getChildren().addAll(cityLabel, cityField);
+
+    HBox country = new HBox();
+    Label countryLabel = new Label("Country: ");
+    countryLabel.setPrefWidth(65);
+    TextField countryField = new TextField();
+    countryField.setText("");
+    country.setSpacing(20);
+    country.setPadding(new Insets(20, 0, 0, 20));
+    country.getChildren().addAll(countryLabel, countryField);
+
+    HBox roleBox = new HBox();
+    Label roleLabel = new Label("Role: ");
+    roleLabel.setPrefWidth(65);
+    ComboBox<String> roleComboBox = new ComboBox<>();
+    roleComboBox.getItems().addAll("Employee", "Manager");
+    roleComboBox.setValue("Employee"); // Set the default value
+
+    roleBox.setSpacing(20);
+    roleBox.setPadding(new Insets(20, 0, 0, 20));
+    roleBox.getChildren().addAll(roleLabel, roleComboBox);
+
+    HBox streetBox = new HBox();
+    streetBox.setPadding(new Insets(5));
+    streetBox.setSpacing(20);
+
+    Label streetLabel = new Label("Street:");
+    streetLabel.setPrefWidth(65);
+
+    TextField streetField = new TextField();
+
+    Button create = new Button("Create");
+    create.setPrefWidth(60);
+    create.setTextFill(Paint.valueOf("White"));
+    create.setStyle("-fx-background-color:  #348e2f");
+
+    streetBox.getChildren().add(streetLabel);
+    streetBox.getChildren().add(streetField);
+    streetBox.getChildren().add(create);
+
+    streetBox.setPadding(new Insets(20, 0, 0, 20));
+
+    HBox postalCodeBox = new HBox();
+    postalCodeBox.setPadding(new Insets(5));
+    postalCodeBox.setSpacing(20);
+
+    Label postalCodeLabel = new Label("Postal Code:");
+    postalCodeLabel.setPrefWidth(85);
+
+    TextField postalCodeField = new TextField();
+
+    postalCodeBox.getChildren().addAll(postalCodeLabel, postalCodeField);
+
+    insert.addAll(topBar, name,email, phone, roleBox, streetBox, postalCodeBox, city, country);
+
+
+    create.setOnAction(event -> {
+      if (ConstraintChecker.checkFillOut(firstNameTextField) &&
+          ConstraintChecker.checkFillOut(lastNameTextField)  &&
+          ConstraintChecker.checkFillOut(emailField) &&
+          ConstraintChecker.checkFillOut(phoneField) &&  //new checks for only numbers to be there
+          ConstraintChecker.checkFillOut(streetField) &&
+          ConstraintChecker.checkFillOut(postalCodeField) &&
+          ConstraintChecker.checkInt(postalCodeField.getText()) &&
+          ConstraintChecker.checkFillOut(countryField) &&
+          ConstraintChecker.checkFillOut(cityField)
+      )
+      {
+        try
+        {
+          createUserObject(allUsersViewModel,firstNameTextField.getText(),lastNameTextField.getText(),emailField.getText(),phoneField.getText(),roleComboBox.getValue(),
+              streetField.getText(), postalCodeField.getText(),countryField.getText() , cityField.getText());
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+        stage.close();
+      }else
+      {
+        Alert A = new Alert(Alert.AlertType.ERROR);
+        A.setContentText("Text field must not be empty and postal code is a number!");
+        A.show();
+      }
+
+    });
+
+
+
+
+    Scene scene = new Scene(parent);
+    stage.setResizable(false);
+    stage.setScene(scene);
+    stage.show();
+
+  }
+
+  public static void createUserObject(AllUsersViewModel allUsersViewModel, String firstName,String lastName, String email, String phone, String role, String street, String  postalCode, String country, String city)
+      throws SQLException, RemoteException
+  {
+    allUsersViewModel.createAddress(street, city, country, postalCode);
+    if(role.equals("Manager"))
+    {
+      Platform.runLater(() ->{
+        try
+        {
+
+          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
+              true,street,Integer.parseInt(postalCode), city, country));
+        }
+        catch (Exception e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
+
+    }
+    else
+    {
+      Platform.runLater(()->{
+        try
+        {
+          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
+              false,street,Integer.parseInt(postalCode), city, country));
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+
+      });
+    }
+
+  }
+
+  public static HBox drawUserTile(AllUsersViewModel allUsersViewModel, String firstName, String lastName, String email,  String role, String phone, String city, String country, String street, String postalcode)
+  {
+    HBox user = new HBox();
+    user.setPadding(new Insets(10,10,10,50));
+    user.setPrefWidth(794);
+    user.setPrefHeight(60);
+    user.setStyle("-fx-background-color: #e2e0eb; -fx-background-radius: 15; -fx-border-radius: 15");
+
+    Label nameLabel = new Label(firstName+" "+lastName);
+    nameLabel.setTextFill(Paint.valueOf("White"));
+    nameLabel.setPrefWidth(270);
+    nameLabel.setPrefHeight(46);
+    nameLabel.setStyle(" -fx-background-color: #544997; -fx-font: bold 16pt 'System'; -fx-background-radius: 5px;");
+    nameLabel.setAlignment(Pos.CENTER);
+
+
+    Label emailLabel = new Label(email);
+    emailLabel.setPrefWidth(270);
+    emailLabel.setPrefHeight(48);
+    emailLabel.setFont(new Font(18));
+    emailLabel.setAlignment(Pos.CENTER);
+    emailLabel.setPadding(new Insets(0));
+
+    Label roleLabel = new Label(role);
+    roleLabel.setPrefWidth(240);
+    roleLabel.setPrefHeight(48);
+    roleLabel.setFont(new Font(18));
+    roleLabel.setAlignment(Pos.CENTER);
+
+    user.getChildren().addAll(nameLabel, emailLabel, roleLabel);
+
+    user.setOnMouseClicked(event -> {
+      drawEditUserPopUp(allUsersViewModel,firstName,"",lastName,email,phone, city, country,role,street,postalcode);
+    });
+
+    //vBox.getChildren().add(user);
+
+    return user;
+  }
+
+  public static void drawUser(VBox parent, ObservableList<User> users, AllUsersViewModel viewModel)
+  {
+    if(users != null)
+    {
+      for(Node node : parent.getChildren())
+      {
+        if(node instanceof HBox)
+        {
+          Platform.runLater(()-> parent.getChildren().remove(node));
+        }
+      }
+
+      for(User user : users)
+      {
+        if(user.isManager())
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getLastName(), user.getEmail(), "Manager", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
+        else
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getLastName(), user.getEmail(), "Employee", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
+      }
+    }
   }
 }
