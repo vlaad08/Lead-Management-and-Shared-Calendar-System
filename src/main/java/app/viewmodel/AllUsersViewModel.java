@@ -74,4 +74,24 @@ public class AllUsersViewModel implements PropertyChangeListener
       support.firePropertyChange("reloadUser", false, true);
     }
   }
+
+  public void deleteUser(String email)
+  {
+
+  }
+
+ public void updateUser(String email)
+ {
+  
+ }
+
+
+
+
+
+
+
+
+
+
 }

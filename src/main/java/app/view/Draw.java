@@ -1976,7 +1976,7 @@ public class Draw
       Optional<ButtonType> result = alert.showAndWait();
 
       if (result.isPresent() && result.get() == yesButton) {
-       /allUsersViewModel.deleteUser(emailField.getText());
+       //allUsersViewModel.deleteUser(emailField.getText());
       } else {
         System.out.println("no clicked");
       }
