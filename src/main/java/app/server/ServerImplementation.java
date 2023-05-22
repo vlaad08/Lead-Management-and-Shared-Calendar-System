@@ -5,7 +5,6 @@ import app.shared.*;
 
 import dk.via.remote.observer.RemotePropertyChangeListener;
 import dk.via.remote.observer.RemotePropertyChangeSupport;
-import org.postgresql.util.OSUtil;
 
 import java.rmi.RemoteException;
 import java.sql.Date;

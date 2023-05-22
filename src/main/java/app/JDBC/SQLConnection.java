@@ -10,7 +10,7 @@ public class SQLConnection
 {
   private static SQLConnection instance;
 
-  private SQLConnection() throws SQLException
+  protected SQLConnection() throws SQLException
   {
     DriverManager.registerDriver(new org.postgresql.Driver());
   }
@@ -24,11 +24,11 @@ public class SQLConnection
     return instance;
   }
 
-  private Connection getConnection() throws SQLException
+  Connection getConnection() throws SQLException
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "1945");
+        "postgres", "password");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException

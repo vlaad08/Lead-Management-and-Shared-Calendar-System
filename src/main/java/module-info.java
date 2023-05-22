@@ -4,13 +4,20 @@ module cl.sep2 {
   requires java.desktop;
   requires remoteobserver;
   requires java.rmi;
+  requires powermock.api.mockito2;
   requires org.postgresql.jdbc;
   requires java.sql;
+  requires java.base;
+
 
   opens app to javafx.fxml;
   opens app.view to javafx.fxml;
+  opens app.JDBC to java.base;
+
+
 
   exports app;
+  exports app.JDBC;
   exports app.view;
   exports app.viewmodel;
   exports app.shared;
