@@ -19,8 +19,6 @@ import java.beans.PropertyChangeListener;
 public class AvailableClientsController implements PropertyChangeListener
 {
 
-
-
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
   @FXML private Button clientsButton;
@@ -43,6 +41,7 @@ public class AvailableClientsController implements PropertyChangeListener
     availableVBox.setSpacing(15);
 
     availableClientsViewModel.addPropertyChangeListener(this);
+
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
     availableClientsViewModel.bindLeads(leads);
 

@@ -198,24 +198,33 @@ public class Draw
     Platform.runLater(() -> refresh.setOnAction(event -> {
       try
       {
-        attendance.getItems().clear();
-        ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
+       if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null)
+       {
+         Alert alert = new Alert(Alert.AlertType.ERROR);
+         alert.setContentText("Please fill out all the time and date fields");
+         alert.show();
+       }
+       else
+       {
+         attendance.getItems().clear();
+         ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
 
 
-        Time start = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
-        Time end = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+         Time start = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+         Time end = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
 
 
-        ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), start, end);
+         ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), start, end);
 
 
 
-        for(User user : availableUsers)
-        {
-          availableUserList.add(new UserTableRow(user));
-        }
+         for(User user : availableUsers)
+         {
+           availableUserList.add(new UserTableRow(user));
+         }
 
-        attendance.setItems(availableUserList);
+         attendance.setItems(availableUserList);
+       }
 
 
       }
@@ -230,27 +239,39 @@ public class Draw
 
     Platform.runLater(()-> create.setOnAction(event -> {
 
-      Time startTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
-      Time endTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
 
-      if (ConstraintChecker.checkTime(startTime,endTime) && ConstraintChecker.checkDate(datePicker.getValue()))
+      if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null
+      || ConstraintChecker.checkFillOut(titleTextField) || leads.getValue() == null || ConstraintChecker.checkFillOut(descrTextField)|| leads.getValue() == null)
       {
-        ArrayList<String> emails = new ArrayList<>();
-        for(UserTableRow row : attendance.getItems())
-        {
-          if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
-          {
-            emails.add(row.getEmail());
-          }
-        }
-        createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime, endTime, descrTextField.getText(), emails);
-        stage.close();
-      }else
-      {
-        Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Check time and date inputs");
-        A.show();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText("Please fill out all the fields");
+        alert.show();
       }
+      else
+      {
+        Time startTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+        Time endTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+
+        if (ConstraintChecker.checkTime(startTime,endTime) && ConstraintChecker.checkDate(datePicker.getValue()))
+        {
+          ArrayList<String> emails = new ArrayList<>();
+          for(UserTableRow row : attendance.getItems())
+          {
+            if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+            {
+              emails.add(row.getEmail());
+            }
+          }
+          createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime, endTime, descrTextField.getText(), emails);
+          stage.close();
+        }else
+        {
+          Alert A = new Alert(Alert.AlertType.ERROR);
+          A.setContentText("Check time and date inputs");
+          A.show();
+        }
+      }
+
 
     }));
 
@@ -571,24 +592,33 @@ public class Draw
     Platform.runLater(() -> refresh.setOnAction(event -> {
       try
       {
-        attendance.getItems().clear();
-        ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
-
-
-        Time newStart = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
-        Time newEnd = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
-
-
-        ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), newStart, newEnd);
-
-
-
-        for(User user : availableUsers)
+        if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null)
         {
-          availableUserList.add(new UserTableRow(user));
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setContentText("Please fill out all the time and date fields");
+          alert.show();
         }
+        else
+        {
+          attendance.getItems().clear();
+          ObservableList<UserTableRow> availableUserList = FXCollections.observableArrayList();
 
-        attendance.setItems(availableUserList);
+
+          Time newStart = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
+          Time newEnd = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+
+
+          ArrayList<User> availableUsers = meetingViewModel.getAvailableUsers(Date.valueOf(datePicker.getValue()), newStart, newEnd);
+
+
+
+          for(User user : availableUsers)
+          {
+            availableUserList.add(new UserTableRow(user));
+          }
+
+          attendance.setItems(availableUserList);
+        }
 
 
       }
@@ -602,40 +632,48 @@ public class Draw
 
     update.setOnAction(event -> {
 
-      Time newStartTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
-      Time newEndTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
-
-
-      if (ConstraintChecker.checkTime(newStartTime,newEndTime) && ConstraintChecker.checkDate(datePicker.getValue()))
+      if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null
+      || ConstraintChecker.checkFillOut(newTitleTextField) || descrText.getText() == null || descrText.getText().equals("") || leads.getValue() == null)
       {
-        ArrayList<String> emailsUpdated = new ArrayList<>();
-        for(UserTableRow row : attendance.getItems())
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText("Please fill out all the fields");
+        alert.show();
+      }
+      else
+      {
+        Time newStartTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(),
+            startTimeMinutes.getValue()));
+        Time newEndTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
+
+        if (ConstraintChecker.checkTime(newStartTime, newEndTime) && ConstraintChecker.checkDate(datePicker.getValue()))
         {
-          if(row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+          ArrayList<String> emailsUpdated = new ArrayList<>();
+          for (UserTableRow row : attendance.getItems())
           {
-            emailsUpdated.add(row.getEmail());
+            if (row.attendsProperty().getValue().equalsIgnoreCase("yes"))
+            {
+              emailsUpdated.add(row.getEmail());
+            }
           }
-        }
-        try
-        {
-          Meeting oldMeeting = new Meeting(title, description, Date.valueOf(
-              datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
-              endTime), leadEmail);
-          Meeting newMeeting = new Meeting(newTitleTextField.getText(), descrText.getText(), Date.valueOf(newDatePicker.getValue()), newStartTime, newEndTime, leads.getValue().getEmail());
+          try
+          {
+            Meeting oldMeeting = new Meeting(title, description, Date.valueOf(datePicker.getValue()), Time.valueOf(startTime),
+                Time.valueOf(endTime), leadEmail);
+            Meeting newMeeting = new Meeting(newTitleTextField.getText(),
+                descrText.getText(), Date.valueOf(newDatePicker.getValue()),
+                newStartTime, newEndTime, leads.getValue().getEmail());
 
-          updateMeetingObject(meetingViewModel,oldMeeting,newMeeting, emailsUpdated);
-          stage.close();
-        }
-        catch(NullPointerException e){
-          e.fillInStackTrace();
-          System.out.println("oldUsers are null");
-        }
+            updateMeetingObject(meetingViewModel, oldMeeting, newMeeting,
+                emailsUpdated);
+            stage.close();
+          }
+          catch (NullPointerException e)
+          {
+            e.fillInStackTrace();
+            System.out.println("oldUsers are null");
+          }
 
-      }else
-      {
-        Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Check time and date inputs");
-        A.show();
+        }
       }
 
     });
