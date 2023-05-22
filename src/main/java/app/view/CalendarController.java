@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -176,6 +177,8 @@ public class CalendarController implements PropertyChangeListener
 
     private void createCalendarActivity(List<CalendarActivity> calendarActivities, double rectangleHeight, double rectangleWidth, StackPane stackPane) {
         VBox calendarActivityBox = new VBox();
+        VBox smallBox = new VBox(5);
+        ScrollPane scrollPane = new ScrollPane();
         calendarActivityBox.setPadding(new Insets(2));
         calendarActivityBox.setStyle("-fx-background-radius: 10px;");
         for (CalendarActivity activity : calendarActivities) {
@@ -196,7 +199,7 @@ public class CalendarController implements PropertyChangeListener
             }
 
 
-            calendarActivityBox.getChildren().add(text);
+            smallBox.getChildren().add(text);
             text.setCursor(Cursor.DEFAULT);
             text.setBackground(Background.EMPTY);
             text.setOnMouseClicked(event -> Draw.drawCalendarActivityPopUp(calendarActivities));
@@ -208,6 +211,10 @@ public class CalendarController implements PropertyChangeListener
         calendarActivityBox.setOnMouseClicked(event ->
             Draw.drawCalendarActivityPopUp(calendarActivities)
         );
+
+        scrollPane.setContent(smallBox);
+        calendarActivityBox.getChildren().add(scrollPane);
+
         stackPane.getChildren().add(calendarActivityBox);
     }
 

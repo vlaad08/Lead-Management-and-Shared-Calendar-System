@@ -1811,6 +1811,8 @@ public class Draw
     Stage stage = new Stage();
     stage.initStyle(StageStyle.UNDECORATED);
 
+
+
     VBox parent = new VBox();
     parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
     parent.setPrefHeight(400);
@@ -1834,9 +1836,12 @@ public class Draw
 
     parent.getChildren().add(topBar);
 
+    ScrollPane scrollPane = new ScrollPane();
+    scrollPane.setPrefHeight(360);
+    VBox activity = new VBox();
     for (CalendarActivity calendarActivity : calendarActivities)
     {
-      HBox activity = new HBox();
+
       activity.setSpacing(20);
       activity.setPadding(new Insets(20));
       Text text = new Text();
@@ -1851,8 +1856,10 @@ public class Draw
       }
 
       activity.getChildren().add(text);
-      parent.getChildren().add(activity);
     }
+
+    scrollPane.setContent(activity);
+    parent.getChildren().add(scrollPane);
 
 
 
