@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "password");
+        "postgres", "1945");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException
@@ -358,35 +358,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public ArrayList<String> getAvailableUser(Date selectedDate, Time startTime, Time endTime) throws SQLException{
-    try(Connection connection = getConnection();
-    PreparedStatement statement = connection.prepareStatement("SELECT distinct email from \"user\""
-        + "WHERE email NOT IN (" + "Select email from attendance"
-        + "    Where date = ? "
-        + "    AND startTime = ? AND endTime = ? "
-        + "    OR  startTime > ? AND  startTime < ?"
-        + "    OR  endTime > ? AND  endTime < ?"
-        + "    OR startTime < ? AND endTime > ?)")){
-      ArrayList<String> user = new ArrayList<>();
-      statement.setDate(1,selectedDate);
-      statement.setTime(2,startTime);
-      statement.setTime(3,endTime);
-      statement.setTime(4,startTime);
-      statement.setTime(5,endTime);
-      statement.setTime(6,startTime);
-      statement.setTime(7,endTime);
-      statement.setTime(8,startTime);
-      statement.setTime(9,endTime);
-      ResultSet set = statement.executeQuery();
-      while(set.next())
-      {
-        String email = set.getString("email");
-        user.add(email);
-      }
 
-      return user;
-    }
-  }
 
   public void removeAttendance(Meeting meeting) throws SQLException
   {

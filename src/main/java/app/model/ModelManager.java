@@ -256,11 +256,6 @@ public class ModelManager implements Model
     return null;
   }
 
-  @Override public ArrayList<String> getAvailableUserForMeeting(Date date,
-      Time startTime, Time endTime) throws SQLException, RemoteException
-  {
-    return communicator.getAvailableUser(date, startTime, endTime);
-  }
 
   @Override public boolean checkUser()
   {

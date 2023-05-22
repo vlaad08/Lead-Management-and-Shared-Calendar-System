@@ -2240,7 +2240,6 @@ public class Draw
       drawEditUserPopUp(allUsersViewModel,firstName,"",lastName,email,phone, city, country,role,street,postalcode);
     });
 
-    //vBox.getChildren().add(user);
 
     return user;
   }

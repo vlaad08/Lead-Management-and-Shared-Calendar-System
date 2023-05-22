@@ -4,7 +4,6 @@ import app.model.Model;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.User;
-import app.shared.UserTableRow;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

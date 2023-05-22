@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -36,6 +37,10 @@ public class AvailableClientsController implements PropertyChangeListener
   public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
     this.viewHandler = viewHandler;
     this.root = root;
+
+
+    availableVBox.setPadding(new Insets(10));
+    availableVBox.setSpacing(15);
 
     availableClientsViewModel.addPropertyChangeListener(this);
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
@@ -79,10 +84,7 @@ public class AvailableClientsController implements PropertyChangeListener
   {
     if(evt.getPropertyName().equals("reloadLeads"))
     {
-      Platform.runLater(()->
-      {
-        Draw.drawAvailableLeads(availableVBox, leads.get());
-      });
+      Platform.runLater(()-> Draw.drawAvailableLeads(availableVBox, leads.get()));
     }
   }
 }
