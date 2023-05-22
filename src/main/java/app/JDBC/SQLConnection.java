@@ -134,22 +134,18 @@ public class SQLConnection
 
   }
 
-  public ArrayList<User> getUsers() throws SQLException
-  {
-    try(Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("select * from \"user\""))
-    {
+  public ArrayList<User> getUsers() throws SQLException {
+    try (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"user\" INNER JOIN address ON \"user\".street = address.street AND \"user\".postalcode = address.postalcode")) {
       ArrayList<User> users = new ArrayList<>();
       ResultSet set = statement.executeQuery();
-      while(set.next())
-      {
+      while (set.next()) {
         boolean manager = false;
 
         String firstname = set.getString("firstname");
         String middleName = set.getString("middlename");
 
-        if(middleName == null)
-        {
+        if (middleName == null) {
           middleName = "";
         }
 
@@ -158,21 +154,22 @@ public class SQLConnection
         String phone = set.getString("phone");
         String role = set.getString("role");
 
-        if(role.equals("manager"))
-        {
+        if (role.equals("manager")) {
           manager = true;
         }
 
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
+        String city = set.getString("city");
+        String country = set.getString("country");
 
-
-        users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode));
+        users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode, city, country));
       }
       return users;
     }
-
   }
+
+
 
 
   public ArrayList<Business> getBusinesses() throws SQLException
@@ -604,27 +601,19 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public User getUserByEmail(String email) throws SQLException
-  {
-    try
-        (
-            Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement("select * from \"user\""
-                + " where email = ?")
-            )
-    {
+  public User getUserByEmail(String email) throws SQLException {
+    try (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"user\" INNER JOIN address ON \"user\".street = address.street AND \"user\".postalcode = address.postalcode WHERE email = ?")) {
       statement.setString(1, email);
       ResultSet set = statement.executeQuery();
       User user = null;
-      if(set.next())
-      {
+      if (set.next()) {
         boolean manager = false;
 
         String firstname = set.getString("firstname");
         String middleName = set.getString("middlename");
 
-        if(middleName == null)
-        {
+        if (middleName == null) {
           middleName = "";
         }
 
@@ -633,17 +622,19 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         String phone = set.getString("phone");
         String role = set.getString("role");
 
-        if(role.equals("manager"))
-        {
+        if (role.equals("manager")) {
           manager = true;
         }
 
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
+        String city = set.getString("city");
+        String country = set.getString("country");
 
-        user = new User(firstname, middleName, lastname, e, phone, manager, street, postalCode);
+        user = new User(firstname, middleName, lastname, e, phone, manager, street, postalCode, city, country);
       }
       return user;
     }
   }
+
 }
