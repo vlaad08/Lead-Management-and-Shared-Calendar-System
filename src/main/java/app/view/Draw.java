@@ -1156,8 +1156,8 @@ public class Draw
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
-    stage.setWidth(150);
-    stage.setHeight(100);
+    stage.setWidth(300);
+    stage.setHeight(150);
     VBox parent = new VBox();
     parent.setPadding(new Insets(20));
     Label label = new Label("Are you sure you want to delete this ");
@@ -1469,7 +1469,7 @@ public class Draw
           ConstraintChecker.checkFillOut(titleTextField))
       {
 
-        if(businessComboBox.getValue().getName().equals("null") || businessComboBox.getValue() == null)
+        if(businessComboBox.getValue() == null || businessComboBox.getValue().getName() == null ||  businessComboBox.getValue().getName().equals("null"))
         {
 
             Platform.runLater(()->{
