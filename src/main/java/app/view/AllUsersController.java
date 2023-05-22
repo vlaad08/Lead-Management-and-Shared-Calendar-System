@@ -1,13 +1,13 @@
 package app.view;
 
-import app.shared.Lead;
-import app.viewmodel.AvailableClientsViewModel;
-import javafx.application.Platform;
+import app.shared.User;
+import app.viewmodel.AllUsersViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -15,35 +15,44 @@ import javafx.scene.layout.VBox;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class AvailableClientsController implements PropertyChangeListener
+public class AllUsersController implements PropertyChangeListener
 {
-
-
-
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
-  @FXML private Button clientsButton;
+  @FXML private Button availableClientsButton;
   @FXML private Button meetingButton;
+
   @FXML private Button plansButton;
   @FXML private Button closeButton;
   @FXML private Button manageLeadsButton;
-  @FXML private VBox availableVBox;
+  @FXML private Button addUserButton;
+  @FXML private VBox userVBox;
+
 
   private Region root;
   private ViewHandler viewHandler;
-  private final ObjectProperty<ObservableList<Lead>> leads = new SimpleObjectProperty<>();
+  private AllUsersViewModel allUsersViewModel;
 
-  public void init(ViewHandler viewHandler, AvailableClientsViewModel availableClientsViewModel, Region root){
+  private final ObjectProperty<ObservableList<User>> users = new SimpleObjectProperty<>();
+
+  public void init(ViewHandler viewHandler, AllUsersViewModel allUsersViewModel, Region root){
     this.viewHandler = viewHandler;
+    this.allUsersViewModel = allUsersViewModel;
     this.root = root;
 
-    availableClientsViewModel.addPropertyChangeListener(this);
-    Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
-    availableClientsViewModel.bindLeads(leads);
+    allUsersViewModel.addPropertyChangeListener(this);
 
-    Draw.drawAvailableLeads(availableVBox, leads.get());
+    allUsersViewModel.bindUsers(users);
+
+    Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, availableClientsButton, manageLeadsButton, closeButton);
+
+
+    Draw.drawUser(userVBox, users.get(), allUsersViewModel);
+
+    userVBox.setPadding(new Insets(10));
+    userVBox.setSpacing(15);
+
   }
-
 
   public void onCloseButton()
   {
@@ -74,15 +83,17 @@ public class AvailableClientsController implements PropertyChangeListener
       }
     }
   }
+//get Users
+  public void addUser()
+  {
+    Draw.drawUserPopUp(userVBox, allUsersViewModel);
+  }
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
-    if(evt.getPropertyName().equals("reloadLeads"))
+    if(evt.getPropertyName().equals("reloadUser"))
     {
-      Platform.runLater(()->
-      {
-        Draw.drawAvailableLeads(availableVBox, leads.get());
-      });
+      Draw.drawUser(userVBox, users.get(), allUsersViewModel);
     }
   }
 }

@@ -8,7 +8,7 @@ public class ViewModelFactory
   private MeetingViewModel meetingViewModel;
   private TasksViewModel tasksViewModel;
   private AvailableClientsViewModel availableClientsViewModel;
-  private AllClientsViewModel allClientsViewModel;
+  private AllUsersViewModel allUsersViewModel;
   private LeadsViewModel leadsViewModel;
   private SelectRoleViewModel selectRoleViewModel;
 
@@ -17,7 +17,7 @@ public class ViewModelFactory
     this.meetingViewModel = new MeetingViewModel(model);
     this.tasksViewModel = new TasksViewModel(model);
     this.availableClientsViewModel = new AvailableClientsViewModel(model);
-    this.allClientsViewModel = new AllClientsViewModel(model);
+    this.allUsersViewModel = new AllUsersViewModel(model);
     this.leadsViewModel = new LeadsViewModel(model);
     this.selectRoleViewModel=new SelectRoleViewModel(model);
   }
@@ -43,8 +43,8 @@ public class ViewModelFactory
     return availableClientsViewModel;
   }
 
-  public AllClientsViewModel getAllClientsViewModel(){
-    return allClientsViewModel;
+  public AllUsersViewModel getAllClientsViewModel(){
+    return allUsersViewModel;
   }
 
   public LeadsViewModel getLeadsViewModel(){

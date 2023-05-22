@@ -1,6 +1,5 @@
 package app.view;
 
-import app.viewmodel.SelectRoleViewModel;
 import app.viewmodel.ViewModelFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Region;
@@ -17,7 +16,7 @@ public class ViewFactory
   private CalendarController calendarController;
   private TaskController taskController;
   private AvailableClientsController availableClientsController;
-  private AllClientsController allClientsController;
+  private AllUsersController allUsersController;
   private ManageLeadsController manageLeadsController;
   private SelectRoleController selectRoleController;
 
@@ -38,7 +37,7 @@ public class ViewFactory
           case "Meeting" -> loadMeetingView();
           case "Task" -> loadTasksView();
           case "AvailableClients" -> loadAvailableClientsView();
-          case "AllClients" -> loadAllClientsView();
+          case "AllUsers" -> loadAllUsersView();
           case "Leads" -> loadLeadsView();
           default -> throw new IllegalArgumentException("Unknow view id: " + id);
         };
@@ -133,24 +132,24 @@ public class ViewFactory
     return availableClientsController.getRoot();
   }
 
-  public Region loadAllClientsView()
+  public Region loadAllUsersView()
   {
-    if (allClientsController == null)
+    if (allUsersController == null)
     {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("/app/Clients.fxml"));
+      loader.setLocation(getClass().getResource("/app/AllUsers.fxml"));
       try
       {
         Region root = loader.load();
-        allClientsController = loader.getController();
-        allClientsController.init(viewHandler, viewModelFactory.getAllClientsViewModel(), root);
+        allUsersController = loader.getController();
+        allUsersController.init(viewHandler, viewModelFactory.getAllClientsViewModel(), root);
       }
       catch (IOException e)
       {
         throw new IOError(e);
       }
     }
-    return allClientsController.getRoot();
+    return allUsersController.getRoot();
   }
 
   public Region loadLeadsView()

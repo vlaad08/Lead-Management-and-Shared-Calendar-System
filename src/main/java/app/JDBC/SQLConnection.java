@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "1945");
+        "postgres", "password");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException
@@ -84,6 +84,8 @@ public class SQLConnection
       statement.executeUpdate();
     }
   }
+
+
 
   public ArrayList<Task> getTasks() throws SQLException
   {
@@ -409,7 +411,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
   {
     try(
         Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?,?,?)")) {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
       statement.setString(1, lead.getFirstname());
       statement.setString(2, lead.getMiddleName());
       statement.setString(3, lead.getLastname());
@@ -417,6 +419,23 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.setString(5, lead.getPhone());
       statement.setString(6, lead.getTitle());
       statement.setInt(7, lead.getBusiness_id());
+      statement.executeUpdate();
+    }
+  }
+
+  public void createUser(User user) throws SQLException
+  {
+    try(Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("INSERT Into \"user\"(firstname, middlename, lastname, email, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?)"))
+    {
+      statement.setString(1, user.getFirstName());
+      statement.setString(2, user.getMiddleName());
+      statement.setString(3, user.getLastName());
+      statement.setString(4, user.getEmail());
+      statement.setString(5, user.getPhone());
+      statement.setString(6, user.toStringManager().toLowerCase());
+      statement.setString(7, user.getStreet());
+      statement.setInt(8, user.getPostalCode());
       statement.executeUpdate();
     }
   }

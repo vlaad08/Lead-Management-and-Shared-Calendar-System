@@ -80,10 +80,14 @@ public class ModelManager implements Model
 
 
   @Override public ArrayList<User> getUsers()
-      throws SQLException, RemoteException
   {
-    users = communicator.getUsers();
-    return users;
+    try{
+      users = communicator.getUsers();
+      return users;
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override public ArrayList<String> getAttendance(Meeting meeting)
@@ -131,6 +135,7 @@ public class ModelManager implements Model
       String country, String postalCode) throws SQLException, RemoteException
   {
 
+
     Address address = new Address(street, city, country,
         Integer.parseInt(postalCode));
 
@@ -174,6 +179,18 @@ public class ModelManager implements Model
       Time endTime) throws SQLException, RemoteException
   {
     return communicator.getAvailableUsers(date, startTime, endTime);
+  }
+
+  @Override public void addUser(User user) throws SQLException, RemoteException
+  {
+    communicator.addUser(user);
+  }
+
+  @Override public void userAddedFromServer()
+      throws SQLException, RemoteException
+  {
+    users = communicator.getUsers();
+    support.firePropertyChange("reloadUser", false, true);
   }
 
   @Override public void removeMeeting(Meeting meeting)
