@@ -38,9 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
+import java.util.Optional;
 
 public class Draw
 {
@@ -1589,7 +1587,6 @@ public class Draw
 
     lead.setOnMouseClicked(event ->
       drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id));
-
     return lead;
   }
 
@@ -1868,6 +1865,159 @@ public class Draw
     stage.show();
   }
 
+  public static void drawEditUserPopUp(AllUsersViewModel allUsersViewModel, String oldfirstname, String oldmiddlename, String oldlastname, String oldemail, String oldphone, String oldcity, String oldcountry, String oldrole, String oldstreet, String oldpostalcode) {
+
+    Stage stage = new Stage();
+
+    VBox parent = new VBox();
+    parent.setPrefSize(600, 400);
+    parent.setAlignment(Pos.TOP_LEFT);
+    ObservableList<Node> insert = parent.getChildren();
+
+    HBox topBar = new HBox();
+    topBar.setPrefHeight(40);
+    topBar.setAlignment(Pos.CENTER_RIGHT);
+    topBar.setStyle("-fx-background-color: #544997");
+
+    HBox name = new HBox();
+    Label firstNameLabel = new Label("Name:");
+    firstNameLabel.setPrefWidth(100);
+    TextField namefield = new TextField();
+    namefield.setText(oldfirstname + " " + oldmiddlename + " " + oldlastname);
+    namefield.setPrefWidth(200);
+    name.setSpacing(20);
+    name.setPadding(new Insets(20));
+    name.getChildren().addAll(firstNameLabel, namefield);
+
+    HBox email = new HBox();
+    Label emailLabel = new Label("Email:");
+    emailLabel.setPrefWidth(100);
+    TextField emailField = new TextField();
+    emailField.setText(oldemail);
+    emailField.setPrefWidth(200);
+    email.setSpacing(20);
+    email.setPadding(new Insets(20));
+    email.getChildren().addAll(emailLabel, emailField);
+
+    HBox phone = new HBox();
+    Label phoneLabel = new Label("Phone:");
+    phoneLabel.setPrefWidth(100);
+    TextField phoneField = new TextField();
+    phoneField.setText(oldphone);
+    phoneField.setPrefWidth(200);
+    phone.setSpacing(20);
+    phone.setPadding(new Insets(20));
+    phone.getChildren().addAll(phoneLabel, phoneField);
+
+    HBox city = new HBox();
+    Label cityLabel = new Label("City:");
+    cityLabel.setPrefWidth(100);
+    TextField cityField = new TextField();
+    cityField.setText(oldcity);
+    cityField.setPrefWidth(200);
+    city.setSpacing(20);
+    city.setPadding(new Insets(20));
+    city.getChildren().addAll(cityLabel, cityField);
+
+    HBox country = new HBox();
+    Label countryLabel = new Label("Country:");
+    countryLabel.setPrefWidth(100);
+    TextField countryField = new TextField();
+    countryField.setText(oldcountry);
+    countryField.setPrefWidth(200);
+    country.setSpacing(20);
+    country.setPadding(new Insets(20));
+    country.getChildren().addAll(countryLabel, countryField);
+
+    HBox roleBox = new HBox();
+    Label roleLabel = new Label("Role:");
+    roleLabel.setPrefWidth(100);
+    ComboBox<String> roleComboBox = new ComboBox<>();
+    roleComboBox.getItems().addAll("Employee", "Manager");
+    roleComboBox.setValue(oldrole);
+    roleComboBox.setPrefWidth(200);
+
+    roleBox.setSpacing(20);
+    roleBox.setPadding(new Insets(20));
+    roleBox.getChildren().addAll(roleLabel, roleComboBox);
+
+    HBox streetBox = new HBox();
+    Label streetLabel = new Label("Street:");
+    streetLabel.setPrefWidth(100);
+    TextField streetField = new TextField();
+    streetField.setText(oldstreet);
+    streetField.setPrefWidth(200);
+
+    Button update = new Button("Update");
+    update.setPrefWidth(60);
+    update.setTextFill(Paint.valueOf("White"));
+    update.setStyle("-fx-background-color: #348e2f");
+
+    HBox addressBox = new HBox();
+    addressBox.setSpacing(20);
+    addressBox.setPadding(new Insets(20));
+    addressBox.getChildren().addAll(cityLabel, cityField, countryLabel, countryField);
+
+    Button delete = new Button("Delete");
+    delete.setPrefWidth(60);
+    delete.setTextFill(Paint.valueOf("White"));
+    delete.setStyle("-fx-background-color: #ff0000");
+
+    delete.setOnAction(event -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setHeaderText(null);
+      alert.setContentText("Do you really want to delete the user with the email: " + emailField.getText());
+
+      ButtonType yesButton = new ButtonType("Yes");
+      ButtonType noButton = new ButtonType("No");
+
+      alert.getButtonTypes().setAll(yesButton, noButton);
+
+      Optional<ButtonType> result = alert.showAndWait();
+
+      if (result.isPresent() && result.get() == yesButton) {
+       /allUsersViewModel.deleteUser(emailField.getText());
+      } else {
+        System.out.println("no clicked");
+      }
+
+      stage.close();
+    });
+
+    update.setOnAction(event -> {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setHeaderText(null);
+      alert.setContentText("Do you really want to update to this new information? ");
+
+      ButtonType yesButton = new ButtonType("Yes");
+      ButtonType noButton = new ButtonType("No");
+
+      alert.getButtonTypes().setAll(yesButton, noButton);
+
+      Optional<ButtonType> result = alert.showAndWait();
+
+      if (result.isPresent() && result.get() == yesButton) {
+        //allUsersViewModel.updateUser(emailField.getText());
+      } else {
+        System.out.println("no clicked");
+      }
+
+      stage.close();
+    });
+
+
+    HBox buttonBox = new HBox();
+    buttonBox.setSpacing(20);
+    buttonBox.setPadding(new Insets(20));
+    buttonBox.getChildren().addAll(update, delete);
+
+    insert.addAll(topBar, name, email, phone, roleBox, streetBox, addressBox, buttonBox);
+
+    Scene scene = new Scene(parent);
+    stage.setScene(scene);
+    stage.show();
+  }
+
   public static void drawUserPopUp(VBox vbox, AllUsersViewModel allUsersViewModel)
   {
     Stage stage = new Stage();
@@ -1913,48 +2063,6 @@ public class Draw
     phone.setPadding(new Insets(20,0,0,20));
     phone.getChildren().addAll(phoneLabel,phoneField);
 
-    //HBox title = new HBox();
-    //Label titleLabel = new Label("Title: ");
-    //titleLabel.setPrefWidth(65);
-    //TextField titleTextField = new TextField();
-    //titleTextField.setText("");
-    //title.setSpacing(20);
-    //title.setPadding(new Insets(20, 0, 0, 20));
-    //title.getChildren().addAll(titleLabel, titleTextField);
-    //----------------------------------
-    HBox roleBox = new HBox();
-    Label roleLabel = new Label("Role: ");
-    roleLabel.setPrefWidth(65);
-    ComboBox<String> roleComboBox = new ComboBox<>();
-    roleComboBox.getItems().addAll("Employee", "Manager");
-    roleComboBox.setValue("Employee"); // Set the default value
-
-    roleBox.setSpacing(20);
-    roleBox.setPadding(new Insets(20, 0, 0, 20));
-    roleBox.getChildren().addAll(roleLabel, roleComboBox);
-    //_--------------------------
-
-    //HBox businessID = new HBox();
-    //businessID.setPadding(new Insets(5));
-    //businessID.setSpacing(20);
-    //Label businessLabel = new Label("Business ID:");
-    //businessLabel.setPrefWidth(65);
-    //TextField businessField = new TextField();
-    //businessField.setText("7456");
-    //--------------------------------
-    HBox streetBox = new HBox();
-    streetBox.setPadding(new Insets(5));
-    streetBox.setSpacing(20);
-
-    Label streetLabel = new Label("Street:");
-    streetLabel.setPrefWidth(65);
-
-    TextField streetField = new TextField();
-
-    //streetBox.getChildren().addAll(streetLabel, streetField);
-    //----------------------------------
-
-
     HBox city = new HBox();
     Label cityLabel = new Label("City: ");
     cityLabel.setPrefWidth(65);
@@ -1973,7 +2081,25 @@ public class Draw
     country.setPadding(new Insets(20, 0, 0, 20));
     country.getChildren().addAll(countryLabel, countryField);
 
+    HBox roleBox = new HBox();
+    Label roleLabel = new Label("Role: ");
+    roleLabel.setPrefWidth(65);
+    ComboBox<String> roleComboBox = new ComboBox<>();
+    roleComboBox.getItems().addAll("Employee", "Manager");
+    roleComboBox.setValue("Employee"); // Set the default value
 
+    roleBox.setSpacing(20);
+    roleBox.setPadding(new Insets(20, 0, 0, 20));
+    roleBox.getChildren().addAll(roleLabel, roleComboBox);
+
+    HBox streetBox = new HBox();
+    streetBox.setPadding(new Insets(5));
+    streetBox.setSpacing(20);
+
+    Label streetLabel = new Label("Street:");
+    streetLabel.setPrefWidth(65);
+
+    TextField streetField = new TextField();
 
     Button create = new Button("Create");
     create.setPrefWidth(60);
@@ -2031,6 +2157,9 @@ public class Draw
 
     });
 
+
+
+
     Scene scene = new Scene(parent);
     stage.setResizable(false);
     stage.setScene(scene);
@@ -2049,7 +2178,7 @@ public class Draw
         {
 
           allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
-              true,street,Integer.parseInt(postalCode)));
+              true,street,Integer.parseInt(postalCode), city, country));
         }
         catch (Exception e)
         {
@@ -2064,7 +2193,7 @@ public class Draw
         try
         {
           allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
-              false,street,Integer.parseInt(postalCode)));
+              false,street,Integer.parseInt(postalCode), city, country));
         }
         catch (SQLException | RemoteException e)
         {
@@ -2076,7 +2205,7 @@ public class Draw
 
   }
 
-  public static HBox drawUserTile(String firstName, String lastName, String email,  String role)
+  public static HBox drawUserTile(AllUsersViewModel allUsersViewModel, String firstName, String lastName, String email,  String role, String phone, String city, String country, String street, String postalcode)
   {
     HBox user = new HBox();
     user.setPadding(new Insets(10,10,10,50));
@@ -2108,7 +2237,7 @@ public class Draw
     user.getChildren().addAll(nameLabel, emailLabel, roleLabel);
 
     user.setOnMouseClicked(event -> {
-      //drawUserPopUp( vBox, leadsViewModel,  title, description,);
+      drawEditUserPopUp(allUsersViewModel,firstName,"",lastName,email,phone, city, country,role,street,postalcode);
     });
 
     //vBox.getChildren().add(user);
@@ -2131,9 +2260,9 @@ public class Draw
       for(User user : users)
       {
         if(user.isManager())
-          Platform.runLater(()->parent.getChildren().add(drawUserTile(user.getFirstName(), user.getLastName(), user.getEmail(), "Manager")));
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getLastName(), user.getEmail(), "Manager", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
         else
-          Platform.runLater(()->parent.getChildren().add(drawUserTile(user.getFirstName(), user.getLastName(), user.getEmail(), "Employee")));
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getLastName(), user.getEmail(), "Employee", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
       }
     }
   }
