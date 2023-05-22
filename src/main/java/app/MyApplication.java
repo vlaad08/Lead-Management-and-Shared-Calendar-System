@@ -24,7 +24,7 @@ public class MyApplication extends Application
 
   @Override public void start(Stage primaryStage) throws Exception
   {
-    Registry registry = LocateRegistry.getRegistry(7000);
+    Registry registry = LocateRegistry.getRegistry(6123);
     Communicator communicator = (Communicator) registry.lookup("communicator");
 
     Model model = new ModelManager(communicator);
