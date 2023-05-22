@@ -49,8 +49,6 @@ public class Draw
   private static final ArrayList<Integer> minutes = new ArrayList<>(List.of(0, 15, 30, 45));
 
 
-
-
   public static void drawMeetingPopUp(MeetingViewModel meetingViewModel)
       throws SQLException, RemoteException
   {
@@ -1158,6 +1156,8 @@ public class Draw
       throws SQLException, RemoteException
   {
     Stage stage = new Stage();
+    stage.setWidth(150);
+    stage.setHeight(100);
     VBox parent = new VBox();
     parent.setPadding(new Insets(20));
     Label label = new Label("Are you sure you want to delete this ");
@@ -1551,10 +1551,6 @@ public class Draw
 
 
 
-
-
-
-
     lead.setPadding(new Insets(10,10,10,50));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
@@ -1605,9 +1601,10 @@ public class Draw
 
     VBox parent = new VBox();
     parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
-    parent.setPrefHeight(500);
-    parent.setPrefWidth(700);
+    parent.setPrefHeight(300);
+    parent.setPrefWidth(900);
     parent.setAlignment(Pos.TOP_LEFT);
+
 
 
     HBox topBar = new HBox();
@@ -1624,7 +1621,8 @@ public class Draw
 
 
     HBox names = new HBox();
-    names.setAlignment(Pos.CENTER);
+    names.setPadding(new Insets(5, 5, 30, 5));
+    names.setSpacing(10);
     Label firstNameLabel = new Label("First Name: ");
     TextField firstnameTextField = new TextField(firstName);
     Label middleNameLabel = new Label("Middle Name: ");
@@ -1632,10 +1630,24 @@ public class Draw
     Label lastNameLabel = new Label("Last Name: ");
     TextField lastNameTextField = new TextField(lastName);
 
+    firstNameLabel.setFont(new Font(15));
+    firstnameTextField.setFont(new Font(15));
+    middleNameLabel.setFont(new Font(15));
+    middleNameTextField.setFont(new Font(15));
+    lastNameLabel.setFont(new Font(15));
+    lastNameTextField.setFont(new Font(15));
+
+    firstNameLabel.setPadding(new Insets(5, 0, 0, 0));
+    middleNameLabel.setPadding(new Insets(5, 0, 0, 0));
+    lastNameLabel.setPadding(new Insets(5, 0, 0, 0));
+
+
     names.getChildren().addAll(firstNameLabel,firstnameTextField, middleNameLabel, middleNameTextField, lastNameLabel, lastNameTextField);
 
     HBox data = new HBox();
-    data.setAlignment(Pos.CENTER);
+
+    data.setPadding(new Insets(5, 5, 50, 5));
+    data.setSpacing(10);
     Label emailLabel = new Label("Email: ");
     TextField emailTextField = new TextField(email);
     Label phoneLabel = new Label("Phone: ");
@@ -1643,16 +1655,35 @@ public class Draw
     Label role= new Label("Role: ");
     TextField roleTextField = new TextField(title);
 
+    emailLabel.setPrefWidth(78);
+    phoneLabel.setPrefWidth(100);
+    role.setPrefWidth(78);
+
+    emailLabel.setFont(new Font(15));
+    emailTextField.setFont(new Font(15));
+    phoneLabel.setFont(new Font(15));
+    phoneTextField.setFont(new Font(15));
+    role.setFont(new Font(15));
+    roleTextField.setFont(new Font(15));
+
+    emailLabel.setPadding(new Insets(5,0,0,0));
+    phoneLabel.setPadding(new Insets(5,0,0,0));
+    role.setPadding(new Insets(5,0,0,0));
+
     data.getChildren().addAll(emailLabel, emailTextField, phoneLabel, phoneTextField, role, roleTextField);
 
     HBox buttons = new HBox();
     buttons.setAlignment(Pos.CENTER);
+    buttons.setPadding(new Insets(10));
+    buttons.setSpacing(20);
     Button update = new Button("Update");
-    update.setPrefWidth(60);
+    update.setPrefWidth(80);
+    update.setPrefHeight(50);
     update.setTextFill(Paint.valueOf("White"));
     update.setStyle("-fx-background-color:  #348e2f");
     Button delete = new Button("Delete");
-    delete.setPrefWidth(60);
+    delete.setPrefWidth(80);
+    delete.setPrefHeight(50);
     delete.setTextFill(Paint.valueOf("White"));
     delete.setStyle("-fx-background-color: #d93f3f");
 

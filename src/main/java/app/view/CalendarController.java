@@ -11,10 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -200,6 +197,8 @@ public class CalendarController implements PropertyChangeListener
 
 
             calendarActivityBox.getChildren().add(text);
+            text.setCursor(Cursor.DEFAULT);
+            text.setBackground(Background.EMPTY);
             text.setOnMouseClicked(event -> Draw.drawCalendarActivityPopUp(calendarActivities));
         }
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
