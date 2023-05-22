@@ -1477,17 +1477,6 @@ public class Draw
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     lead.setPadding(new Insets(10,10,10,50));
     lead.setPrefWidth(794);
     lead.setPrefHeight(60);
@@ -1913,7 +1902,7 @@ public class Draw
   public static HBox drawUserTile(String firstName, String lastName, String email,  String role)
   {
     HBox user = new HBox();
-    user.setPadding(new Insets(20,20,20,50));
+    user.setPadding(new Insets(10,10,10,50));
     user.setPrefWidth(794);
     user.setPrefHeight(60);
     user.setStyle("-fx-background-color: #e2e0eb; -fx-background-radius: 15; -fx-border-radius: 15");
