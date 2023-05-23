@@ -8,7 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -17,6 +19,7 @@ import java.beans.PropertyChangeListener;
 
 public class AllUsersController implements PropertyChangeListener
 {
+  public Button leadButton;
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
   @FXML private Button availableClientsButton;
@@ -27,6 +30,8 @@ public class AllUsersController implements PropertyChangeListener
   @FXML private Button manageLeadsButton;
   @FXML private Button addUserButton;
   @FXML private VBox userVBox;
+
+  @FXML private Label nameLabel;
 
 
   private Region root;
@@ -43,6 +48,7 @@ public class AllUsersController implements PropertyChangeListener
     allUsersViewModel.addPropertyChangeListener(this);
 
     allUsersViewModel.bindUsers(users);
+    allUsersViewModel.bindUserName(nameLabel.textProperty());
 
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, availableClientsButton, manageLeadsButton, closeButton);
 
@@ -52,7 +58,12 @@ public class AllUsersController implements PropertyChangeListener
     userVBox.setPadding(new Insets(10));
     userVBox.setSpacing(15);
 
+
+
+
+
   }
+
 
   public void onCloseButton()
   {
@@ -86,7 +97,16 @@ public class AllUsersController implements PropertyChangeListener
 //get Users
   public void addUser()
   {
-    Draw.drawUserPopUp(userVBox, allUsersViewModel);
+    if(allUsersViewModel.isManager())
+    {
+      Draw.drawUserPopUp(allUsersViewModel);
+    }
+    else
+    {
+      Alert info = new Alert(Alert.AlertType.INFORMATION);
+      info.setContentText("Only a manager can add an user");
+      info.show();
+    }
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)

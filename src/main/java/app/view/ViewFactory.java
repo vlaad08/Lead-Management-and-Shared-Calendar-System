@@ -18,7 +18,7 @@ public class ViewFactory
   private AvailableClientsController availableClientsController;
   private AllUsersController allUsersController;
   private ManageLeadsController manageLeadsController;
-  private SelectRoleController selectRoleController;
+  private LoginController loginController;
 
   public ViewFactory(ViewHandler viewHandler, ViewModelFactory viewModelFactory)
   {
@@ -32,7 +32,7 @@ public class ViewFactory
   {
     return switch (id)
         {
-          case "SelectRole" -> loadSelectRoleView();
+          case "Login" -> loadLoginView();
           case "Calendar" -> loadCalendarView();
           case "Meeting" -> loadMeetingView();
           case "Task" -> loadTasksView();
@@ -174,17 +174,17 @@ public class ViewFactory
     return manageLeadsController.getRoot();
   }
 
-  public Region loadSelectRoleView()
+  public Region loadLoginView()
   {
-    if(selectRoleController == null)
+    if(loginController == null)
     {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("/app/SelectRole.fxml"));
+      loader.setLocation(getClass().getResource("/app/Login.fxml"));
       try
       {
         Region root = loader.load();
-        selectRoleController = loader.getController();
-        selectRoleController.init(viewHandler, viewModelFactory.getSelectRoleViewModel(),
+        loginController = loader.getController();
+        loginController.init(viewHandler, viewModelFactory.getSelectRoleViewModel(),
             root);
       }
       catch (IOException e)
@@ -193,6 +193,6 @@ public class ViewFactory
       }
     }
 
-    return selectRoleController.getRoot();
+    return loginController.getRoot();
   }
 }

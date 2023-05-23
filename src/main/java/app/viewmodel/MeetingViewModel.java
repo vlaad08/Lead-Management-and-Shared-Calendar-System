@@ -6,6 +6,8 @@ import app.shared.Meeting;
 import app.shared.User;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -24,13 +26,27 @@ public class MeetingViewModel implements PropertyChangeListener
 
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Meeting>> meetings;
+  private SimpleStringProperty name;
 
   public MeetingViewModel(Model model){
     this.model = model;
     model.addPropertyChangeListener(this);
     support = new PropertyChangeSupport(this);
     meetings = new SimpleObjectProperty<>();
+
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     meetings.set(FXCollections.observableArrayList(getMeetings()));
+
+  }
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener)
@@ -46,60 +62,115 @@ public class MeetingViewModel implements PropertyChangeListener
   public void addMeeting(String title,String description,Date date, Time startTime,Time endTime, String leadEmail,ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.addMeeting(title,description,date,startTime,endTime, leadEmail, emails);
+    Meeting meeting =new Meeting(title,description,date,startTime,endTime, leadEmail);
+
+    model.addObject(meeting, emails);
   }
 
   public void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.editMeeting(oldMeeting, newMeeting, emails);
+    model.editObjectWithList(oldMeeting,newMeeting,emails);
   }
 
   public void removeMeeting(Meeting meeting)
       throws SQLException, RemoteException
   {
-    model.removeMeeting(meeting);
+    model.removeObject(meeting);
   }
 
   public ArrayList<Meeting> getMeetings()
   {
-    return model.getMeetings();
+    ArrayList<Meeting> meetings1 = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("meetings");
+
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Meeting)
+      {
+        meetings1.add((Meeting) obj);
+      }
+    }
+
+
+    return meetings1;
   }
 
-  public ArrayList<Lead> getLeads() throws SQLException, RemoteException
+
+  public ArrayList<Lead> getLeads()
   {
-    return model.getLeads();
+    ArrayList<Lead> leads = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("leads");
+
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Lead)
+      {
+        leads.add((Lead) obj);
+      }
+    }
+    return leads;
   }
 
-  public ArrayList<User> getUsers() throws SQLException, RemoteException
-  {return model.getUsers();}
+  public ArrayList<User> getUsers()
+  {
+    ArrayList<User> users = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("users");
+
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof User)
+      {
+        users.add((User) obj);
+      }
+    }
+    return users;
+
+  }
 
   public ArrayList<User> getAvailableUsers(Date date, Time startTime, Time endTime)
       throws SQLException, RemoteException
   {
-    return model.getAvailableUsers(date, startTime, endTime);
+    ArrayList<User> users = new ArrayList<>();
+    ArrayList<Object> objects = model.getList(date,startTime,endTime);
+
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof User)
+      {
+        users.add((User) obj);
+      }
+    }
+    return users;
   }
 
   public ArrayList<String> getAttendance(Meeting meeting)
-      throws SQLException, RemoteException
   {
-    return model.getAttendance(meeting);
+    return model.getList(meeting);
   }
 
 
-  public boolean checkUser()
-  {
-    return model.checkUser();
-  }
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
     if(evt.getPropertyName().equals("reloadMeetings"))
     {
-      ArrayList<Meeting> list = model.getMeetings();
+      ArrayList<Meeting> list = getMeetings();
+
+
+
       ObservableList<Meeting> observableList= FXCollections.observableList(list);
       meetings.set(observableList);
       support.firePropertyChange("reloadMeetings", false, true);
+    }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     }
   }
 }

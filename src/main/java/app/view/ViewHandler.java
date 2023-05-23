@@ -4,7 +4,7 @@ import app.viewmodel.ViewModelFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-
+import javafx.stage.StageStyle;
 
 public class ViewHandler
 {
@@ -19,7 +19,7 @@ public class ViewHandler
 
   public void start(Stage primaryStage){
     this.primaryStage = primaryStage;
-    openView("SelectRole");
+    openView("Login");
   }
 
   public void openView(String id){

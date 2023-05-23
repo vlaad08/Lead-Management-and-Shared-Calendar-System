@@ -1,10 +1,13 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.shared.Address;
 import app.shared.Business;
 import app.shared.Lead;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,35 +25,68 @@ public class LeadsViewModel implements PropertyChangeListener
   private final ObjectProperty<ObservableList<Lead>> leads;
 
   private final PropertyChangeSupport support;
+  private SimpleStringProperty name;
 
   public LeadsViewModel(Model model){
     this.model = model;
     support = new PropertyChangeSupport(this);
     model.addPropertyChangeListener(this);
 
-
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     leads = new SimpleObjectProperty<>();
     leads.set(FXCollections.observableArrayList(getLeads()));
   }
 
-  public void addLead(Lead lead) throws Exception{
-    model.createLead(lead);
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public void addLead(Lead lead) throws SQLException, RemoteException
+  {
+    model.addObject(lead);
   }
 
   public void removeLead(Lead lead) throws SQLException, RemoteException
   {
-    model.removeLead(lead);
+    model.removeObject(lead);
   }
 
   public ArrayList<Lead> getLeads()
   {
-    return model.getLeads();
+    ArrayList<Lead> leads1 = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("leads");
+
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Lead)
+      {
+        leads1.add((Lead) obj);
+      }
+    }
+    return leads1;
   }
 
   public ArrayList<Business> getBusinesses()
       throws SQLException, RemoteException
   {
-    return model.getBusinesses();
+    ArrayList<Business> businesses = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("businesses");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Business)
+      {
+        businesses.add((Business) obj);
+      }
+    }
+    return businesses;
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void bindLeads(ObjectProperty<ObservableList<Lead>> property)
@@ -58,16 +94,20 @@ public class LeadsViewModel implements PropertyChangeListener
     property.bindBidirectional(leads);
   }
 
-  public void createAddress(String street, String city, String country, String postalCode)
+  public void createAddress(String street, String city, String country, int postalCode)
       throws SQLException, RemoteException
   {
-    model.createAddress(street, city, country, postalCode);
+    Address address = new Address(street, city, country, postalCode);
+
+    model.addObject(address);
   }
 
-  public void createBusiness(String businessName, String street, String postalCode)
+  public void createBusiness(String businessName, String street, int postalCode)
       throws SQLException, RemoteException
   {
-    model.createBusiness(businessName,street,postalCode);
+    Business business = new Business(businessName,street,postalCode);
+
+    model.addObject(business);
   }
 
   public int getBusinessId(Business business)
@@ -80,10 +120,15 @@ public class LeadsViewModel implements PropertyChangeListener
   {
     if(evt.getPropertyName().equals("reloadLeads"))
     {
-      ArrayList<Lead> list = model.getLeads();
+      ArrayList<Lead> list = getLeads();
       ObservableList<Lead> observableList= FXCollections.observableList(list);
       leads.set(observableList);
       support.firePropertyChange("reloadLeads", false, true);
+    }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     }
   }
 
@@ -95,6 +140,6 @@ public class LeadsViewModel implements PropertyChangeListener
   public void editLead(Lead oldLead, Lead newLead)
       throws SQLException, RemoteException
   {
-    model.editLead(oldLead, newLead);
+    model.editObject(oldLead,newLead);
   }
 }

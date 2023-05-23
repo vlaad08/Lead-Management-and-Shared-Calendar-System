@@ -2,11 +2,12 @@ package app.viewmodel;
 
 import app.model.Model;
 import app.shared.Business;
-import app.shared.Meeting;
 import app.shared.Task;
 import app.shared.User;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,9 +24,10 @@ public class TasksViewModel implements PropertyChangeListener
 {
   private final Model model;
 
-  private final ObjectProperty<ObservableList<Task>> tasks;
+  private final ObjectProperty<ObservableList<Task>> tasks = new SimpleObjectProperty<>();
 
   private final PropertyChangeSupport support;
+  private SimpleStringProperty name;
 
   public TasksViewModel(Model model){
     support = new PropertyChangeSupport(this);
@@ -34,8 +36,34 @@ public class TasksViewModel implements PropertyChangeListener
 
     model.addPropertyChangeListener(this);
 
-    tasks = new SimpleObjectProperty<>();
-    tasks.set(FXCollections.observableArrayList(model.getTasks()));
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
+    tasks.set(FXCollections.observableArrayList(getTasks()));
+
+  }
+
+  public ArrayList<Task> getTasks()
+  {
+    ArrayList<Task> taskArrayList = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("tasks");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Task)
+      {
+        taskArrayList.add((Task) obj);
+      }
+    }
+    return taskArrayList;
+  }
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void bindTask(ObjectProperty<ObservableList<Task>> property)
@@ -52,49 +80,73 @@ public class TasksViewModel implements PropertyChangeListener
   public void addTask(String title, String description, Date date, String status, int business_id, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.addTask(title, description, date, status, business_id, emails);
+    Task task = new Task(title, description, date, status, business_id);
+    model.addObject(task, emails);
   }
 
   public void editTask(Task newTask, Task oldTask, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.editTask(newTask, oldTask, emails);
+
+    model.editObjectWithList(newTask,oldTask,emails);
   }
 
-  public ArrayList<Task> getTasks(){
-   return model.getTasks();
-  }
 
   public ArrayList<Business> getBusinesses()
-      throws SQLException, RemoteException
+
   {
-    return model.getBusinesses();
+    ArrayList<Business> businesses = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("businesses");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Business)
+      {
+        businesses.add((Business) obj);
+      }
+    }
+    return businesses;
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
     if(evt.getPropertyName().equals("reloadTasks"))
     {
-      ArrayList<Task> list = model.getTasks();
+      ArrayList<Task> list = getTasks();
       ObservableList<Task> observableList= FXCollections.observableList(list);
       tasks.set(observableList);
       support.firePropertyChange("reloadTasks", false, true);
     }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
+    }
   }
 
-  public ArrayList<User> getUsers() throws SQLException, RemoteException
+  public ArrayList<User> getUsers()
   {
-    return model.getUsers();
+    ArrayList<User> userArrayList = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("users");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof User)
+      {
+        userArrayList.add((User) obj);
+      }
+    }
+    return userArrayList;
   }
 
   public ArrayList<String> getAssignedUsers(Task task)
-      throws SQLException, RemoteException
+
   {
-    return model.getAssignedUsers(task);
+    return model.getList(task);
   }
 
   public void removeTask(Task task) throws SQLException, RemoteException
   {
-    model.removeTask(task);
+    model.removeObject(task);
   }
 }

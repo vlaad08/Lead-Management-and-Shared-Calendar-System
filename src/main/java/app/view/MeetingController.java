@@ -21,6 +21,7 @@ import java.sql.SQLException;
 public class MeetingController implements PropertyChangeListener
 {
 
+  @FXML  public Label nameLabel;
   private Region root;
   private ViewHandler viewHandler;
   private MeetingViewModel meetingViewModel;
@@ -49,6 +50,8 @@ public class MeetingController implements PropertyChangeListener
 
     meetingViewModel.addPropertyChangeListener(this);
 
+
+    meetingViewModel.bindUserName(nameLabel.textProperty());
 
 
     //bs comes below
@@ -109,7 +112,16 @@ public class MeetingController implements PropertyChangeListener
 
   public void addMeeting() throws SQLException, RemoteException
   {
-    Draw.drawMeetingPopUp(meetingViewModel);
+    if(meetingViewModel.isManager())
+    {
+      Draw.drawMeetingPopUp(meetingViewModel);
+    }
+    else
+    {
+      Alert info = new Alert(Alert.AlertType.INFORMATION);
+      info.setContentText("Only a manager has access to add a meeting");
+      info.show();
+    }
   }
 
 

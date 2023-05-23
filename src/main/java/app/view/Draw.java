@@ -240,8 +240,7 @@ public class Draw
     Platform.runLater(()-> create.setOnAction(event -> {
 
 
-      if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null
-      || ConstraintChecker.checkFillOut(titleTextField) || leads.getValue() == null || ConstraintChecker.checkFillOut(descrTextField)|| leads.getValue() == null)
+      if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null || leads.getValue() == null)
       {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText("Please fill out all the fields");
@@ -303,7 +302,7 @@ public class Draw
 
   }
 
-  private static VBox drawMeetingTile(MeetingViewModel meetingViewModel, String title, String leadEmail, DatePicker datePicker, String startTime, String endTime, String description) throws SQLException
+  private static VBox drawMeetingTile(MeetingViewModel meetingViewModel, String title, String leadEmail, DatePicker datePicker, LocalTime startTime, LocalTime endTime, String description) throws SQLException
   {
 
 
@@ -348,7 +347,7 @@ public class Draw
     HBox time1 = new HBox();
     Label startTimeLabel = new Label("Start Time: ");
     startTimeLabel.setTextFill(Paint.valueOf("White"));
-    TextField startTimeTextField = new TextField(startTime);
+    TextField startTimeTextField = new TextField(startTime.toString());
     startTimeTextField.setEditable(false);
     startTimeTextField.setBackground(null);
     startTimeTextField.setStyle("-fx-text-fill:white");
@@ -357,7 +356,7 @@ public class Draw
     HBox time2 = new HBox();
     Label endTimeLabel = new Label("End Time : ");
     endTimeLabel.setTextFill(Paint.valueOf("White"));
-    TextField endTimeTextField = new TextField(endTime);
+    TextField endTimeTextField = new TextField(endTime.toString());
     endTimeTextField.setEditable(false);
     endTimeTextField.setBackground(null);
     endTimeTextField.setStyle("-fx-text-fill: white");
@@ -389,7 +388,16 @@ public class Draw
 
       try
       {
-        drawManageMeetingPopUp(meetingViewModel, title, leadEmail, datePicker, startTime, endTime, description);
+        if(meetingViewModel.isManager())
+        {
+          drawManageMeetingPopUp(meetingViewModel, title, leadEmail, datePicker, startTime, endTime, description);
+        }
+        else
+        {
+          Alert info = new Alert(Alert.AlertType.INFORMATION);
+          info.setContentText("Only a manager can edit a meeting");
+          info.show();
+        }
       }
       catch (SQLException | RemoteException e)
       {
@@ -400,7 +408,7 @@ public class Draw
     return meeting;
   }
 
-  public static void drawManageMeetingPopUp(MeetingViewModel meetingViewModel, String title, String leadEmail, DatePicker datePicker, String startTime, String endTime, String description)
+  public static void drawManageMeetingPopUp(MeetingViewModel meetingViewModel, String title, String leadEmail, DatePicker datePicker, LocalTime startTime, LocalTime endTime, String description)
       throws SQLException, RemoteException
   {
 
@@ -472,10 +480,17 @@ public class Draw
     ComboBox<Integer> startTimeHours = new ComboBox<>(FXCollections.observableArrayList(hours));
     ComboBox<Integer> startTimeMinutes = new ComboBox<>(FXCollections.observableArrayList(minutes));
     startTimeHours.setPrefWidth(60);
+
+    startTimeHours.setValue(startTime.getHour());
+    startTimeMinutes.setValue(startTime.getMinute());
+
     Label to = new Label("to: ");
 
     ComboBox<Integer> endTimeHours = new ComboBox<>(FXCollections.observableArrayList(hours));
     ComboBox<Integer> endTimeMinutes = new ComboBox<>(FXCollections.observableArrayList(minutes));
+
+    endTimeHours.setValue(endTime.getHour());
+    endTimeMinutes.setValue(endTime.getMinute());
 
     endTimeHours.setPrefWidth(60);
 
@@ -518,8 +533,6 @@ public class Draw
 
 
 
-
-
     HBox employeeAttendance = new HBox();
     TableView<UserTableRow> attendance = new TableView<>();
     attendance.setEditable(true);
@@ -547,8 +560,8 @@ public class Draw
 
 
 
-    Time start = Time.valueOf(LocalTime.parse(startTime));
-    Time end = Time.valueOf(LocalTime.parse(endTime));
+    Time start = Time.valueOf(LocalTime.parse(startTime.toString()));
+    Time end = Time.valueOf(LocalTime.parse(endTime.toString()));
 
 
     Meeting m = new Meeting(title, description, Date.valueOf(datePicker.getValue()), start, end, null);
@@ -633,7 +646,7 @@ public class Draw
     update.setOnAction(event -> {
 
       if(startTimeHours.getValue() == null || startTimeMinutes.getValue() == null || endTimeHours.getValue() == null || endTimeMinutes.getValue() == null
-      || ConstraintChecker.checkFillOut(newTitleTextField) || descrText.getText() == null || descrText.getText().equals("") || leads.getValue() == null)
+      || leads.getValue() == null)
       {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText("Please fill out all the fields");
@@ -681,8 +694,7 @@ public class Draw
 
     delete.setOnAction(event -> {
       Meeting meeting = new Meeting(title, description, Date.valueOf(
-          datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(
-          endTime), leadEmail);
+          datePicker.getValue()), Time.valueOf(startTime), Time.valueOf(endTime), leadEmail);
       try
       {
         confirmationToDeleteObject(meeting, meetingViewModel, stage);
@@ -953,6 +965,8 @@ public class Draw
 
 
 
+
+
     task.setOnMouseClicked(event -> {
       try
       {
@@ -1135,6 +1149,15 @@ public class Draw
 
     insert.addAll(topBar, titleBox, businesses, descr, dueDate,  statusBox, assignTable);
 
+    if(!tasksViewModel.isManager())
+    {
+      descrTextField.setEditable(false);
+      titleTextField.setEditable(false);
+      businessComboBox.setEditable(false);
+      datePicker.setEditable(false);
+      assignTable.setEditable(false);
+    }
+
 
     update.setOnAction(event -> {
       if (ConstraintChecker.checkFillOut(titleTextField))
@@ -1270,6 +1293,23 @@ public class Draw
       });
       noButton.setOnAction(event -> stage.close());
     }
+    else if(obj instanceof String && viewModel instanceof AllUsersViewModel)
+    {
+      label.setText(text + "user?");
+      yesButton.setOnAction(event -> {
+        primaryStage.close();
+        stage.close();
+        try
+        {
+          ((AllUsersViewModel) viewModel).removeUser((String) obj);
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
+      });
+      noButton.setOnAction(event -> stage.close());
+    }
   }
 
    public static void createTaskObject(TilePane tilePane, TasksViewModel tasksViewModel, String title, String description, DatePicker dueDate, String status, Business business, ArrayList<String> emails){
@@ -1323,8 +1363,8 @@ public class Draw
         Platform.runLater(()-> {
           try
           {
-            tilePane.getChildren().add(drawMeetingTile(meetingViewModel, meeting.getTitle(), meeting.getLeadEmail(),datePicker , meeting.getStartTime().toString()
-            , meeting.getEndTime().toString(), meeting.getDescription()));
+            tilePane.getChildren().add(drawMeetingTile(meetingViewModel, meeting.getTitle(), meeting.getLeadEmail(),datePicker , meeting.getStartTime().toLocalTime()
+            , meeting.getEndTime().toLocalTime(), meeting.getDescription()));
           }
           catch (SQLException e)
           {
@@ -1511,7 +1551,7 @@ public class Draw
             Platform.runLater(()->{
               try
               {
-                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), businessPostalCodeTextField.getText());
+                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
               }
               catch (SQLException | RemoteException e)
               {
@@ -1519,7 +1559,7 @@ public class Draw
               }
               try
               {
-                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), businessPostalCodeTextField.getText());
+                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
               }
               catch (SQLException | RemoteException e)
               {
@@ -1624,7 +1664,18 @@ public class Draw
     lead.getChildren().addAll(nameLabel, emailLabel, businessLabel, titleLabel);
 
     lead.setOnMouseClicked(event ->
-      drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id));
+    {
+      if(leadsViewModel.isManager())
+      {
+        drawManageLeadPopUp(leadsViewModel, firstName, middleName, lastName, email, businessName, title, phone, business_id);
+      }
+      else
+      {
+        Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setContentText("Only a manager can edit a lead");
+        info.show();
+      }
+    });
     return lead;
   }
 
@@ -1795,12 +1846,12 @@ public class Draw
         Platform.runLater(()->
 
           leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(),
-              lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone())));
+              lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle())));
       }
     }
   }
 
-  public static HBox drawAvailableLeadTile(String firstName, String lastName, String email, String businessName,  String title, String phone)
+  public static HBox drawAvailableLeadTile(String firstName, String lastName, String email, String businessName,  String title)
   {
     HBox lead = new HBox();
 
@@ -1903,12 +1954,20 @@ public class Draw
     stage.show();
   }
 
-  public static void drawEditUserPopUp(AllUsersViewModel allUsersViewModel, String oldfirstname, String oldmiddlename, String oldlastname, String oldemail, String oldphone, String oldcity, String oldcountry, String oldrole, String oldstreet, String oldpostalcode) {
+  public static void drawManageUserPopUp(AllUsersViewModel allUsersViewModel, String oldfirstname, String oldmiddlename, String oldlastname, String oldemail, String oldphone, String oldcity, String oldcountry, String oldrole, String oldstreet, String oldpostalcode)
+      throws SQLException, RemoteException
+  {
 
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+
 
     VBox parent = new VBox();
-    parent.setPrefSize(600, 400);
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+
+    parent.setPrefHeight(600);
+    parent.setPrefWidth(800);
     parent.setAlignment(Pos.TOP_LEFT);
     ObservableList<Node> insert = parent.getChildren();
 
@@ -1918,24 +1977,32 @@ public class Draw
     topBar.setStyle("-fx-background-color: #544997");
 
     HBox name = new HBox();
-    Label firstNameLabel = new Label("Name:");
-    firstNameLabel.setPrefWidth(100);
-    TextField namefield = new TextField();
-    namefield.setText(oldfirstname + " " + oldmiddlename + " " + oldlastname);
-    namefield.setPrefWidth(200);
+    Label firstNameLabel = new Label("First Name: ");
+    firstNameLabel.setPrefWidth(65);
+    TextField firstNameTextField = new TextField();
+    firstNameTextField.setText(oldfirstname);
+
+    Label middleNameLabel = new Label("Middle Name: ");
+    TextField middleNameTextField = new TextField(oldmiddlename);
+
+    Label lastNameLabel = new Label("Last Name: ");
+    TextField lastNameTextField = new TextField();
+    lastNameTextField.setText(oldlastname);
     name.setSpacing(20);
-    name.setPadding(new Insets(20));
-    name.getChildren().addAll(firstNameLabel, namefield);
+    name.setPadding(new Insets(20, 0, 0, 20));
+    name.getChildren().addAll(firstNameLabel, firstNameTextField, middleNameLabel, middleNameTextField,lastNameLabel,lastNameTextField);
 
     HBox email = new HBox();
-    Label emailLabel = new Label("Email:");
-    emailLabel.setPrefWidth(100);
-    TextField emailField = new TextField();
-    emailField.setText(oldemail);
-    emailField.setPrefWidth(200);
+    Label emailLabel = new Label("Email: ");
+    emailLabel.setPrefWidth(65);
+    TextField emailField = new TextField(oldemail);
     email.setSpacing(20);
-    email.setPadding(new Insets(20));
-    email.getChildren().addAll(emailLabel, emailField);
+    email.setPadding(new Insets(20,0,0,20));
+
+    Label passwordLabel = new Label("Password: ");
+    TextField passwordTextField = new TextField(allUsersViewModel.getUserPassword(oldemail));
+
+    email.getChildren().addAll(emailLabel, emailField, passwordLabel, passwordTextField);
 
     HBox phone = new HBox();
     Label phoneLabel = new Label("Phone:");
@@ -1984,6 +2051,8 @@ public class Draw
     streetLabel.setPrefWidth(100);
     TextField streetField = new TextField();
     streetField.setText(oldstreet);
+    Label postalCodeLabel = new Label("PO: ");
+    TextField postalCodeTextField = new TextField(oldpostalcode);
     streetField.setPrefWidth(200);
 
     Button update = new Button("Update");
@@ -2001,28 +2070,48 @@ public class Draw
     delete.setTextFill(Paint.valueOf("White"));
     delete.setStyle("-fx-background-color: #ff0000");
 
-    delete.setOnAction(event -> {
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-      alert.setHeaderText(null);
-      alert.setContentText("Do you really want to delete the user with the email: " + emailField.getText());
-
-      ButtonType yesButton = new ButtonType("Yes");
-      ButtonType noButton = new ButtonType("No");
-
-      alert.getButtonTypes().setAll(yesButton, noButton);
-
-      Optional<ButtonType> result = alert.showAndWait();
-
-      if (result.isPresent() && result.get() == yesButton) {
-       //allUsersViewModel.deleteUser(emailField.getText());
-      } else {
-        System.out.println("no clicked");
+    Platform.runLater(()->delete.setOnAction(event -> {
+      try
+      {
+        if(allUsersViewModel.isManager())
+        {
+          confirmationToDeleteObject(oldemail, allUsersViewModel, stage);
+        }
+        else
+        {
+          Alert info = new Alert(Alert.AlertType.INFORMATION);
+          info.setContentText("Only a manager can remove an user");
+          info.show();
+        }
       }
-
-      stage.close();
-    });
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    }));
 
     update.setOnAction(event -> {
+
+      User oldUser, newUser;
+      if(oldrole.equalsIgnoreCase("manager"))
+      {
+        oldUser  = new User(oldfirstname, oldmiddlename, oldlastname, oldemail, oldphone, true, oldstreet, Integer.parseInt(oldpostalcode));
+      }
+      else
+      {
+        oldUser  = new User(oldfirstname, oldmiddlename, oldlastname, oldemail, oldphone, false, oldstreet, Integer.parseInt(oldpostalcode));
+      }
+      if(roleComboBox.getValue().equalsIgnoreCase("manager"))
+      {
+        newUser = new User(firstNameTextField.getText(), middleNameTextField.getText(), lastNameTextField.getText(),
+            emailField.getText(), phoneField.getText(),true, streetField.getText(), Integer.parseInt(postalCodeTextField.getText()));
+      }
+      else
+      {
+        newUser = new User(firstNameTextField.getText(), middleNameTextField.getText(), lastNameTextField.getText(),
+            emailField.getText(), phoneField.getText(),false, streetField.getText(), Integer.parseInt(postalCodeTextField.getText()));
+      }
+
       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
       alert.setHeaderText(null);
       alert.setContentText("Do you really want to update to this new information? ");
@@ -2035,7 +2124,7 @@ public class Draw
       Optional<ButtonType> result = alert.showAndWait();
 
       if (result.isPresent() && result.get() == yesButton) {
-        //allUsersViewModel.updateUser(emailField.getText());
+        allUsersViewModel.editUser(oldUser, newUser, passwordTextField.getText());
       } else {
         System.out.println("no clicked");
       }
@@ -2051,18 +2140,28 @@ public class Draw
 
     insert.addAll(topBar, name, email, phone, roleBox, streetBox, addressBox, buttonBox);
 
+    if(allUsersViewModel.isManager())
+    {
+      roleComboBox.setEditable(false);
+    }
+
     Scene scene = new Scene(parent);
     stage.setScene(scene);
     stage.show();
   }
 
-  public static void drawUserPopUp(VBox vbox, AllUsersViewModel allUsersViewModel)
+  public static void drawUserPopUp(AllUsersViewModel allUsersViewModel)
   {
     Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+
+
 
     VBox parent = new VBox();
-    parent.setPrefHeight(400);
-    parent.setPrefWidth(600);
+    parent.setStyle("-fx-border-color: black; -fx-border-width: 1.5");
+
+    parent.setPrefHeight(600);
+    parent.setPrefWidth(800);
     parent.setAlignment(Pos.TOP_LEFT);
     ObservableList<Node> insert = parent.getChildren();
 
@@ -2075,22 +2174,30 @@ public class Draw
     Label firstNameLabel = new Label("First Name: ");
     firstNameLabel.setPrefWidth(65);
     TextField firstNameTextField = new TextField();
-    firstNameTextField.setText("");
+
+
+    Label middleNameLabel = new Label("Middle Name: ");
+    TextField middleNameTextField = new TextField();
+
     Label lastNameLabel = new Label("Last Name: ");
     TextField lastNameTextField = new TextField();
-    lastNameTextField.setText("");
+
     name.setSpacing(20);
     name.setPadding(new Insets(20, 0, 0, 20));
-    name.getChildren().addAll(firstNameLabel, firstNameTextField,lastNameLabel,lastNameTextField);
+    name.getChildren().addAll(firstNameLabel, firstNameTextField, middleNameLabel, middleNameTextField,lastNameLabel,lastNameTextField);
 
     HBox email = new HBox();
     Label emailLabel = new Label("Email: ");
     emailLabel.setPrefWidth(65);
     TextField emailField = new TextField();
-    emailField.setText("example@gmail.com");
     email.setSpacing(20);
     email.setPadding(new Insets(20,0,0,20));
-    email.getChildren().addAll(emailLabel,emailField);
+
+    Label passwordLabel = new Label("Password: ");
+    TextField passwordTextField = new TextField("");
+
+
+    email.getChildren().addAll(emailLabel,emailField, passwordLabel, passwordTextField);
 
     HBox phone = new HBox();
     Label phoneLabel = new Label("Phone: ");
@@ -2178,8 +2285,8 @@ public class Draw
       {
         try
         {
-          createUserObject(allUsersViewModel,firstNameTextField.getText(),lastNameTextField.getText(),emailField.getText(),phoneField.getText(),roleComboBox.getValue(),
-              streetField.getText(), postalCodeField.getText(),countryField.getText() , cityField.getText());
+          createUserObject(allUsersViewModel,firstNameTextField.getText(), middleNameTextField.getText(),lastNameTextField.getText(),emailField.getText(),phoneField.getText(),roleComboBox.getValue(),
+              streetField.getText(), postalCodeField.getText(),countryField.getText() , cityField.getText(), passwordTextField.getText());
         }
         catch (SQLException | RemoteException e)
         {
@@ -2205,18 +2312,18 @@ public class Draw
 
   }
 
-  public static void createUserObject(AllUsersViewModel allUsersViewModel, String firstName,String lastName, String email, String phone, String role, String street, String  postalCode, String country, String city)
+  public static void createUserObject(AllUsersViewModel allUsersViewModel, String firstName, String middleName, String lastName, String email, String phone, String role, String street, String  postalCode, String country, String city, String password)
       throws SQLException, RemoteException
   {
-    allUsersViewModel.createAddress(street, city, country, postalCode);
+    allUsersViewModel.createAddress(street, city, country, Integer.parseInt(postalCode));
     if(role.equals("Manager"))
     {
       Platform.runLater(() ->{
         try
         {
 
-          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
-              true,street,Integer.parseInt(postalCode), city, country));
+          allUsersViewModel.addUser(new User(firstName,middleName,lastName,email,phone,
+              true,street,Integer.parseInt(postalCode)), password);
         }
         catch (Exception e)
         {
@@ -2230,8 +2337,8 @@ public class Draw
       Platform.runLater(()->{
         try
         {
-          allUsersViewModel.addUser(new User(firstName,"",lastName,email,phone,
-              false,street,Integer.parseInt(postalCode), city, country));
+          allUsersViewModel.addUser(new User(firstName,middleName,lastName,email,phone,
+              false,street,Integer.parseInt(postalCode)), password);
         }
         catch (SQLException | RemoteException e)
         {
@@ -2243,7 +2350,7 @@ public class Draw
 
   }
 
-  public static HBox drawUserTile(AllUsersViewModel allUsersViewModel, String firstName, String lastName, String email,  String role, String phone, String city, String country, String street, String postalcode)
+  public static HBox drawUserTile(AllUsersViewModel allUsersViewModel, String firstName, String middleName, String lastName, String email,  String role, String phone, String city, String country, String street, String postalcode)
   {
     HBox user = new HBox();
     user.setPadding(new Insets(10,10,10,50));
@@ -2274,8 +2381,24 @@ public class Draw
 
     user.getChildren().addAll(nameLabel, emailLabel, roleLabel);
 
+
     user.setOnMouseClicked(event -> {
-      drawEditUserPopUp(allUsersViewModel,firstName,"",lastName,email,phone, city, country,role,street,postalcode);
+      try
+      {
+       if(allUsersViewModel.isManager() || allUsersViewModel.getLoggedInUser().getEmail().equals(email))
+       {
+         drawManageUserPopUp(allUsersViewModel,firstName,middleName,lastName,email,phone, city, country,role,street,postalcode);
+       }
+       else
+       {
+         Alert info = new Alert(Alert.AlertType.INFORMATION);
+         info.setContentText("Only a manager can edit a user");
+       }
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
     });
 
 
@@ -2297,9 +2420,9 @@ public class Draw
       for(User user : users)
       {
         if(user.isManager())
-          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getLastName(), user.getEmail(), "Manager", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail(), "Manager", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
         else
-          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getLastName(), user.getEmail(), "Employee", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
+          Platform.runLater(()->parent.getChildren().add(drawUserTile(viewModel, user.getFirstName(), user.getMiddleName(), user.getLastName(), user.getEmail(), "Employee", user.getPhone(), user.getCity(), user.getCountry(), user.getStreet(), Integer.toString(user.getPostalCode()) )));
       }
     }
   }

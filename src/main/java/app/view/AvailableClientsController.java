@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -19,6 +20,7 @@ import java.beans.PropertyChangeListener;
 public class AvailableClientsController implements PropertyChangeListener
 {
 
+  @FXML public Label nameLabel;
   @FXML private Button calendarButton;
   @FXML private Button tasksButton;
   @FXML private Button clientsButton;
@@ -41,6 +43,7 @@ public class AvailableClientsController implements PropertyChangeListener
     availableVBox.setSpacing(15);
 
     availableClientsViewModel.addPropertyChangeListener(this);
+    availableClientsViewModel.bindUserName(nameLabel.textProperty());
 
     Draw.hoverButtonNavbar(calendarButton, plansButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
     availableClientsViewModel.bindLeads(leads);

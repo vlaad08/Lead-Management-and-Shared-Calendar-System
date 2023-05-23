@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -26,7 +27,8 @@ import java.util.List;
 public class CalendarController implements PropertyChangeListener
 {
 
-    ZonedDateTime dateFocus;
+  @FXML  public Label nameLabel;
+  ZonedDateTime dateFocus;
     ZonedDateTime today;
     private ViewHandler viewHandler;
     private CalendarViewModel calendarViewModel;
@@ -64,6 +66,8 @@ public class CalendarController implements PropertyChangeListener
         drawCalendar();
 
         calendarViewModel.addPropertyChangeListener(this);
+        calendarViewModel.bindUserName(nameLabel.textProperty());
+
 
         Draw.hoverButtonNavbar(availableClientsButton, leadButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
 
@@ -201,7 +205,7 @@ public class CalendarController implements PropertyChangeListener
 
             smallBox.getChildren().add(text);
             text.setCursor(Cursor.DEFAULT);
-            text.setBackground(Background.EMPTY);
+            text.setStyle("-fx-background-color: none");
             text.setOnMouseClicked(event -> Draw.drawCalendarActivityPopUp(calendarActivities));
         }
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
@@ -278,13 +282,11 @@ public class CalendarController implements PropertyChangeListener
     {
         if(evt.getPropertyName().equals("reloadCalendar"))
         {
-            for(Node node : calendar.getChildren())
-            {
-                Platform.runLater(() -> {
-                    calendar.getChildren().remove(node);
-                });
-            }
-            drawCalendar();
+          for (Node node : calendar.getChildren())
+          {
+            Platform.runLater(() -> calendar.getChildren().remove(node));
+          }
+            Platform.runLater(this::drawCalendar);
         }
     }
 }
