@@ -96,7 +96,7 @@ public class AllUsersController implements PropertyChangeListener
 //get Users
   public void addUser()
   {
-    Draw.drawUserPopUp(userVBox, allUsersViewModel);
+    Draw.drawUserPopUp(allUsersViewModel);
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)

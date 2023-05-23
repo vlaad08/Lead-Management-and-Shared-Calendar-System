@@ -1529,7 +1529,7 @@ public class Draw
             Platform.runLater(()->{
               try
               {
-                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), businessPostalCodeTextField.getText());
+                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
               }
               catch (SQLException | RemoteException e)
               {
@@ -1537,7 +1537,7 @@ public class Draw
               }
               try
               {
-                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), businessPostalCodeTextField.getText());
+                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
               }
               catch (SQLException | RemoteException e)
               {
@@ -2074,7 +2074,7 @@ public class Draw
     stage.show();
   }
 
-  public static void drawUserPopUp(VBox vbox, AllUsersViewModel allUsersViewModel)
+  public static void drawUserPopUp(AllUsersViewModel allUsersViewModel)
   {
     Stage stage = new Stage();
 
@@ -2105,9 +2105,10 @@ public class Draw
     Label emailLabel = new Label("Email: ");
     emailLabel.setPrefWidth(65);
     TextField emailField = new TextField();
-    emailField.setText("example@gmail.com");
     email.setSpacing(20);
     email.setPadding(new Insets(20,0,0,20));
+    Label passwordLabel = new Label("Password: ");
+    TextField passwordTextField = new TextField("");
     email.getChildren().addAll(emailLabel,emailField);
 
     HBox phone = new HBox();
@@ -2226,7 +2227,7 @@ public class Draw
   public static void createUserObject(AllUsersViewModel allUsersViewModel, String firstName,String lastName, String email, String phone, String role, String street, String  postalCode, String country, String city)
       throws SQLException, RemoteException
   {
-    allUsersViewModel.createAddress(street, city, country, postalCode);
+    allUsersViewModel.createAddress(street, city, country, Integer.parseInt(postalCode));
     if(role.equals("Manager"))
     {
       Platform.runLater(() ->{

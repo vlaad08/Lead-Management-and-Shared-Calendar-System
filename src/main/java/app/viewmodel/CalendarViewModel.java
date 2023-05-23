@@ -37,14 +37,34 @@ public class CalendarViewModel implements PropertyChangeListener
 
   public ArrayList<Meeting> getMeetings()
   {
-    return model.getMeetings();
+    ArrayList<Meeting> meetings = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("meetings");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Meeting)
+      {
+        meetings.add((Meeting) obj);
+      }
+    }
+    return meetings;
   }
 
 
 
   public ArrayList<Task> getTasks()
   {
-    return model.getTasks();
+    ArrayList<Task> taskArrayList = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("tasks");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Task)
+      {
+        taskArrayList.add((Task) obj);
+      }
+    }
+    return taskArrayList;
   }
 
   public void addPropertyChangeListener(

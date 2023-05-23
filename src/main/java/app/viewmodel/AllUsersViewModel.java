@@ -1,6 +1,7 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.shared.Address;
 import app.shared.User;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,12 +16,13 @@ import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AllUsersViewModel implements PropertyChangeListener
 {
 
-  private ObjectProperty<ObservableList<User>> users;
-  private PropertyChangeSupport support;
+  private final ObjectProperty<ObservableList<User>> users;
+  private final PropertyChangeSupport support;
 
   private final Model model;
 
@@ -35,7 +37,11 @@ public class AllUsersViewModel implements PropertyChangeListener
 
     name = new SimpleStringProperty();
     users = new SimpleObjectProperty<>();
-    users.set(FXCollections.observableArrayList(model.getUsers()));
+
+
+
+
+    users.set(FXCollections.observableArrayList(getUsers()));
 
   }
 
@@ -61,25 +67,36 @@ public class AllUsersViewModel implements PropertyChangeListener
 
   public void addUser(User user) throws SQLException, RemoteException
   {
-    model.addUser(user);
+    model.addObject(user);
   }
 
-  public ArrayList<User> getUsers() throws Exception
+  public ArrayList<User> getUsers()
   {
-    return model.getUsers();
+    ArrayList<User> userArrayList = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("users");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof User)
+      {
+        userArrayList.add((User) obj);
+      }
+    }
+    return userArrayList;
   }
 
-  public void createAddress(String street, String city, String country, String postalCode)
+  public void createAddress(String street, String city, String country, int postalCode)
       throws SQLException, RemoteException
   {
-    model.createAddress(street, city, country, postalCode);
+    Address address = new Address(street, city, country, postalCode);
+    model.addObject(address);
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
     if(evt.getPropertyName().equals("reloadUser"))
     {
-      ArrayList<User> list = model.getUsers();
+      ArrayList<User> list = getUsers();
       ObservableList<User> observableList= FXCollections.observableList(list);
       users.set(observableList);
       support.firePropertyChange("reloadUser", false, true);
@@ -90,18 +107,5 @@ public class AllUsersViewModel implements PropertyChangeListener
     }
   }
 
-  public void deleteUser(String email)
-  {
 
-  }
-
- public void updateUser(String email)
- {
-  
- }
-
-  public String getLoggedInUserName()
-  {
-    return model.getLoggedInUserName();
-  }
 }

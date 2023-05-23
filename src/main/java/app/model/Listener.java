@@ -66,5 +66,9 @@ public class Listener extends UnicastRemoteObject implements
         throw new RuntimeException(e);
       }
     }
+    if(remotePropertyChangeEvent.getPropertyName().equals("reloadBusiness"))
+    {
+      model.businessAddedFromServer();
+    }
   }
 }

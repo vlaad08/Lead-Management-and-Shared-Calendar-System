@@ -19,20 +19,17 @@ public class AvailableClientsViewModel implements PropertyChangeListener
   private final Model model;
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Lead>> availableLeads;
-  private SimpleStringProperty name;
+
+  private final SimpleStringProperty name;
 
   public AvailableClientsViewModel(Model model){
     this.model = model;
     support = new PropertyChangeSupport(this);
-    model.addPropertyChangeListener(this);
+
     name = new SimpleStringProperty(model.getLoggedInUserName());
+    model.addPropertyChangeListener(this);
     availableLeads = new SimpleObjectProperty<>();
     availableLeads.set(FXCollections.observableArrayList(getAvailableLeads()));
-  }
-
-  public void bindUserName(StringProperty property)
-  {
-    property.bindBidirectional(name);
   }
 
   public boolean isManager()
@@ -42,7 +39,19 @@ public class AvailableClientsViewModel implements PropertyChangeListener
 
   public ArrayList<Lead> getAvailableLeads(){
     ArrayList<Lead> available = new ArrayList<>();
-    for(Lead element: model.getLeads()){
+
+    ArrayList<Lead> leads = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("leads");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Lead)
+      {
+        leads.add((Lead) obj);
+      }
+    }
+
+    for(Lead element: leads){
       if(element.getStatus().equals("Available")){
         available.add(element);
       }
@@ -64,11 +73,6 @@ public class AvailableClientsViewModel implements PropertyChangeListener
       availableLeads.set(observableList);
       support.firePropertyChange("reloadLeads", false, true);
     }
-
-    if(evt.getPropertyName().equals("reloadLoggedInUser"))
-    {
-      name = new SimpleStringProperty(model.getLoggedInUserName());
-    }
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener)
@@ -76,4 +80,8 @@ public class AvailableClientsViewModel implements PropertyChangeListener
     support.addPropertyChangeListener(listener);
   }
 
+  public void bindUserName(StringProperty textProperty)
+  {
+    textProperty.bindBidirectional(name);
+  }
 }

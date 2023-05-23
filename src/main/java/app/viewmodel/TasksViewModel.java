@@ -37,10 +37,24 @@ public class TasksViewModel implements PropertyChangeListener
     model.addPropertyChangeListener(this);
 
     name = new SimpleStringProperty(model.getLoggedInUserName());
-    tasks.set(FXCollections.observableArrayList(model.getTasks()));
+    tasks.set(FXCollections.observableArrayList(getTasks()));
 
   }
 
+  public ArrayList<Task> getTasks()
+  {
+    ArrayList<Task> taskArrayList = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("tasks");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Task)
+      {
+        taskArrayList.add((Task) obj);
+      }
+    }
+    return taskArrayList;
+  }
 
   public void bindUserName(StringProperty property)
   {
@@ -66,31 +80,39 @@ public class TasksViewModel implements PropertyChangeListener
   public void addTask(String title, String description, Date date, String status, int business_id, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.addTask(title, description, date, status, business_id, emails);
+    Task task = new Task(title, description, date, status, business_id);
+    model.addObject(task, emails);
   }
 
   public void editTask(Task newTask, Task oldTask, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    model.editTask(newTask, oldTask, emails);
-  }
 
-  public ArrayList<Task> getTasks(){
-   return model.getTasks();
+    model.editObjectWithList(newTask,oldTask,emails);
   }
 
 
   public ArrayList<Business> getBusinesses()
       throws SQLException, RemoteException
   {
-    return model.getBusinesses();
+    ArrayList<Business> businesses = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("businesses");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof Business)
+      {
+        businesses.add((Business) obj);
+      }
+    }
+    return businesses;
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
     if(evt.getPropertyName().equals("reloadTasks"))
     {
-      ArrayList<Task> list = model.getTasks();
+      ArrayList<Task> list = getTasks();
       ObservableList<Task> observableList= FXCollections.observableList(list);
       tasks.set(observableList);
       support.firePropertyChange("reloadTasks", false, true);
@@ -102,19 +124,29 @@ public class TasksViewModel implements PropertyChangeListener
     }
   }
 
-  public ArrayList<User> getUsers() throws SQLException, RemoteException
+  public ArrayList<User> getUsers()
   {
-    return model.getUsers();
+    ArrayList<User> userArrayList = new ArrayList<>();
+    ArrayList<Object> objects = model.getList("users");
+
+    for(Object obj : objects)
+    {
+      if(obj instanceof User)
+      {
+        userArrayList.add((User) obj);
+      }
+    }
+    return userArrayList;
   }
 
   public ArrayList<String> getAssignedUsers(Task task)
       throws SQLException, RemoteException
   {
-    return model.getAssignedUsers(task);
+    return model.getList(task);
   }
 
   public void removeTask(Task task) throws SQLException, RemoteException
   {
-    model.removeTask(task);
+    model.removeObject(task);
   }
 }

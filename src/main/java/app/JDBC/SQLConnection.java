@@ -28,16 +28,16 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "password");
+        "postgres", "1945");
   }
 
-  public ArrayList<Meeting> getMeetings() throws SQLException
+  public ArrayList<Object> getMeetings() throws SQLException
   {
     try (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
             "select * from meeting"))
     {
-      ArrayList<Meeting> meetings = new ArrayList<>();
+      ArrayList<Object> meetings = new ArrayList<>();
       ResultSet resultSet = statement.executeQuery();
       while (resultSet.next())
       {
@@ -87,13 +87,13 @@ public class SQLConnection
 
 
 
-  public ArrayList<Task> getTasks() throws SQLException
+  public ArrayList<Object> getTasks() throws SQLException
   {
     try (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
             "select * from task"))
     {
-      ArrayList<Task> tasks = new ArrayList<>();
+      ArrayList<Object> tasks = new ArrayList<>();
       ResultSet resultSet = statement.executeQuery();
       while (resultSet.next())
       {
@@ -134,10 +134,10 @@ public class SQLConnection
 
   }
 
-  public ArrayList<User> getUsers() throws SQLException {
+  public ArrayList<Object> getUsers() throws SQLException {
     try (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"user\" INNER JOIN address ON \"user\".street = address.street AND \"user\".postalcode = address.postalcode")) {
-      ArrayList<User> users = new ArrayList<>();
+      ArrayList<Object> users = new ArrayList<>();
       ResultSet set = statement.executeQuery();
       while (set.next()) {
 
@@ -170,12 +170,12 @@ public class SQLConnection
 
 
 
-  public ArrayList<Business> getBusinesses() throws SQLException
+  public ArrayList<Object> getBusinesses() throws SQLException
   {
     try(Connection connection = getConnection();
     PreparedStatement statement = connection.prepareStatement("select * from business"))
     {
-      ArrayList<Business> businesses = new ArrayList<>();
+      ArrayList<Object> businesses = new ArrayList<>();
       ResultSet set = statement.executeQuery();
       while(set.next())
       {
@@ -294,12 +294,12 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public ArrayList<Lead> getLeads() throws SQLException
+  public ArrayList<Object> getLeads() throws SQLException
   {
     try(Connection connection = getConnection();
     PreparedStatement statement = connection.prepareStatement("select * from lead"))
     {
-      ArrayList<Lead> leads = new ArrayList<>();
+      ArrayList<Object> leads = new ArrayList<>();
       ResultSet set = statement.executeQuery();
       while(set.next())
       {
@@ -650,14 +650,14 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public ArrayList<Task> getTasksByUser(User user) throws SQLException
+  public ArrayList<Object> getTasksByUser(User user) throws SQLException
   {
     try (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
             "select * from task t join assignment a on t.title = a.title and t.duedate = a.duedate and t.business_id = a.business_id\n"
                 + "where a.email = ?"))
     {
-      ArrayList<Task> tasks = new ArrayList<>();
+      ArrayList<Object> tasks = new ArrayList<>();
       statement.setString(1, user.getEmail());
       ResultSet resultSet = statement.executeQuery();
       while (resultSet.next())
