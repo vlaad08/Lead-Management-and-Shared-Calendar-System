@@ -1,9 +1,7 @@
 package app.JDBC;
 
-import app.shared.Business;
-import app.shared.Meeting;
-import app.shared.Task;
-import app.shared.User;
+import app.shared.*;
+import org.checkerframework.checker.units.qual.A;
 import org.mockito.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -13,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -296,8 +293,536 @@ public class SQLConnectionTest {
   }
 
   @Test
-  void assign_Task_changes_the_assignment_table()
+  void assign_Task_changes_the_assignment_table() throws SQLException
   {
+    Date date= Date.valueOf(LocalDate.of( 2023, 5, 22));
+    Task task= new Task("Task","", date,"To do", 7456);
+    String email="lead@gmail.com";
+    sqlConnection.assignTask(task,email);
+    Mockito.verify(connection).prepareStatement("insert into assignment(title, duedate, business_id, email) values (?, ?, ?, ?)");
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2),dateArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(3),integerArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(4),stringArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
 
+    assertEquals("Task",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals(date,dateArgumentCaptor.getValue());
+    assertEquals(7456,integerArgumentCaptor.getValue());
+    assertEquals("lead@gmail.com",stringArgumentCaptor.getAllValues().get(1));
+  }
+
+  @Test
+  void removing_the_attendance_of_a_meeting_updates_the_table() throws SQLException
+  {
+    Date date= Date.valueOf(LocalDate.of( 2023, 5, 22));
+    Task task= new Task("Task","", date,"To do", 7456);
+
+    sqlConnection.removeAssignedUsers(task);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2),dateArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(3),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals(stringArgumentCaptor.getAllValues().get(0),"delete from assignment where title = ? and duedate = ? and business_id = ?");
+    assertEquals(stringArgumentCaptor.getAllValues().get(1),"Task");
+    assertEquals(dateArgumentCaptor.getValue(),date);
+    assertEquals(integerArgumentCaptor.getValue(),7456);
+  }
+
+  @Test
+  void remove_Task_deletes_task_from_the_database() throws SQLException
+  {
+    Date date= Date.valueOf(LocalDate.of( 2023, 5, 22));
+    Task task= new Task("Task","", date,"To do", 7456);
+
+    sqlConnection.removeTask(task);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(3),dateArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(4),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals(stringArgumentCaptor.getAllValues().get(0),"delete from task where title =? and description = ? and duedate = ? and business_id = ?");
+    assertEquals(stringArgumentCaptor.getAllValues().get(1),"Task");
+    assertEquals(stringArgumentCaptor.getAllValues().get(2),"");
+    assertEquals(dateArgumentCaptor.getValue(),date);
+    assertEquals(integerArgumentCaptor.getValue(),7456);
+  }
+
+  @Test
+  void edit_Meeting_edits_the_meeting_in_the_database() throws SQLException
+  {
+    Meeting oldMeeting= new Meeting("Meeting1", "", Date.valueOf(LocalDate.of( 2023, 5, 19)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), "le1@gmail.com");
+    Meeting newMeeting= new Meeting("Meeting2", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), "le2@gmail.com");
+
+    sqlConnection.editMeeting(oldMeeting,newMeeting);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(3), dateArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(4), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(5), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(6), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(7), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(8), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(9), dateArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(10), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(11), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(12), stringArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("update meeting set title = ?, description = ?,"
+        + "  date = ?,  startTime = ?,  endTime = ?,  email = ? where title = ? and description = ? and date = ? and startTime = ? and endTime = ? and email = ?", stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Meeting2", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals("", stringArgumentCaptor.getAllValues().get(2));
+    assertEquals(Date.valueOf(LocalDate.of( 2023, 5, 22)), dateArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(7, 0)), timeArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(11, 0)), timeArgumentCaptor.getAllValues().get(1));
+    assertEquals("le2@gmail.com", stringArgumentCaptor.getAllValues().get(3));
+
+    assertEquals("Meeting1", stringArgumentCaptor.getAllValues().get(4));
+    assertEquals("", stringArgumentCaptor.getAllValues().get(5));
+    assertEquals(Date.valueOf(LocalDate.of( 2023, 5, 19)), dateArgumentCaptor.getAllValues().get(1));
+    assertEquals(Time.valueOf(LocalTime.of(7, 0)), timeArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(11, 0)), timeArgumentCaptor.getAllValues().get(1));
+    assertEquals("le1@gmail.com", stringArgumentCaptor.getAllValues().get(6));
+  }
+
+  @Test
+  void setting_attendance_will_insert_into_attendance_table()
+      throws SQLException
+  {
+    String email="lead@gmail.com";
+    Meeting meeting= new Meeting("Meeting", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), null);
+    sqlConnection.setAttendance(email,meeting);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2), dateArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(3), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(4), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(5), stringArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("insert into attendance (title, date, starttime, endtime, email) values (?,?,?,?,?)", stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Meeting", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(Date.valueOf(LocalDate.of( 2023, 5, 22)), dateArgumentCaptor.getValue());
+    assertEquals(Time.valueOf(LocalTime.of(7, 0)), timeArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(11, 0)), timeArgumentCaptor.getAllValues().get(1));
+    assertEquals(email, stringArgumentCaptor.getAllValues().get(2));
+  }
+
+  @Test
+  void get_Leads_returns_arraylist() throws SQLException
+  {
+    assertEquals(ArrayList.class,sqlConnection.getLeads().getClass());
+  }
+
+
+  @Test
+  void get_Leads_returns_all_lead_from_the_database() throws SQLException
+  {
+    Mockito.when(sqlConnection.getLeads()).thenReturn(new ArrayList<>(List.of(new Lead("Test1", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available")
+            ,new Lead("Test2", null, "Lead", "le2@gmail.com", "+4544554455","CFO", 7456, "BMW Motors", "Available"))));
+
+    ArrayList<Lead> leads=sqlConnection.getLeads();
+    Mockito.verify(connection).prepareStatement("select * from lead");
+    Mockito.verify(statement).executeQuery();
+    assertEquals(2,leads.size());
+
+    Lead lead1=leads.get(0);
+    assertEquals(lead1.getFirstname(),"Test1");
+    assertEquals(lead1.getMiddleName(),null);
+    assertEquals(lead1.getLastname(),"Lead");
+    assertEquals(lead1.getEmail(),"le1@gmail.com");
+    assertEquals(lead1.getPhone(),"+4555445544");
+    assertEquals(lead1.getTitle(),"CEO");
+    assertEquals(lead1.getBusiness_id(),7456);
+    assertEquals(lead1.getBusinessName(),"BMW Motors");
+    assertEquals(lead1.getStatus(),"Available");
+    Lead lead2=leads.get(1);
+    assertEquals(lead2.getFirstname(),"Test2");
+    assertEquals(lead2.getMiddleName(),null);
+    assertEquals(lead2.getLastname(),"Lead");
+    assertEquals(lead2.getEmail(),"le2@gmail.com");
+    assertEquals(lead2.getPhone(),"+4544554455");
+    assertEquals(lead2.getTitle(),"CFO");
+    assertEquals(lead2.getBusiness_id(),7456);
+    assertEquals(lead2.getBusinessName(),"BMW Motors");
+    assertEquals(lead2.getStatus(),"Available");
+  }
+
+  @Test
+  void getting_BusinessName_by_id_will_return_the_exact_BusinessName_from_database()
+      throws SQLException
+  {
+    int id=1234;
+    Mockito.when(sqlConnection.getBusinessNameByID(id)).thenReturn("Test1");
+
+    String name=sqlConnection.getBusinessNameByID(id);
+    System.out.println(name);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(1),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
+
+    assertEquals(name,"Test1");
+    assertEquals(stringArgumentCaptor.getValue(),"select businessname from business where business_id = ?");
+    assertEquals(integerArgumentCaptor.getValue(), id);
+  }
+
+  @Test
+  void getting_BusinessName_by_id_returns_a_string() throws SQLException
+  {
+    assertEquals(sqlConnection.getBusinessNameByID(1234).getClass(),String.class);
+  }
+
+
+  @Test
+  void getAttendance_returns_an_arraylist() throws SQLException
+  {
+    Meeting meeting= new Meeting("Meeting", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), null);
+    Mockito.when(sqlConnection.getAttendance(meeting)).thenReturn(new ArrayList<>(List.of("e1@gmail.com", "e2@gmail.com","e3@gmail.com")));
+    assertEquals(ArrayList.class,sqlConnection.getAttendance(meeting).getClass());
+  }
+  @Test
+  void getting_Attendance_based_on_meeting_gives_back_user_emails()
+      throws SQLException
+  {
+    Meeting meeting= new Meeting("Meeting", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), null);
+    Mockito.when(sqlConnection.getAttendance(meeting)).thenReturn(new ArrayList<>(List.of("e1@gmail.com", "e2@gmail.com","e3@gmail.com")));
+
+    ArrayList<String>emails=sqlConnection.getAttendance(meeting);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2), dateArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(3), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(4), timeArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
+    assertEquals(3, emails.size());
+    assertEquals("select * from attendance"
+        + " where title = ? and date = ? and starttime = ? and endtime = ?",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Meeting",stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(Date.valueOf(LocalDate.of( 2023, 5, 22)),dateArgumentCaptor.getValue());
+    assertEquals(Time.valueOf(LocalTime.of(7, 0)),timeArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(11, 0)),timeArgumentCaptor.getAllValues().get(1));
+  }
+
+  @Test
+  void removing_the_attendances_of_a_meeting_will_delete_them_from_the_attendance_table()
+      throws SQLException
+  {
+    Meeting meeting = new Meeting("Meeting", "",
+        Date.valueOf(LocalDate.of(2023, 5, 22)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11, 0)),
+        null);
+    sqlConnection.removeAttendance(meeting);
+
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2), dateArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(3), timeArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(4), timeArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("delete from attendance where" + " title = ? and date = ? and starttime = ? and endtime = ? ",
+        stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Meeting", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(Date.valueOf(LocalDate.of(2023, 5, 22)), dateArgumentCaptor.getValue());
+    assertEquals(Time.valueOf(LocalTime.of(7, 0)),
+        timeArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(11, 0)),
+        timeArgumentCaptor.getAllValues().get(1));
+  }
+
+  @Test
+  void creating_new_lead_will_update_lead_table() throws SQLException
+  {
+    Lead lead=new Lead("Test", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available");
+    sqlConnection.createLead(lead);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(3),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(4),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(6),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(7),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("INSERT INTO Lead(firstName, middleName, lastName, email, phone, title, business_id) VALUES (?, ?, ?, ?, ?, ?, ?)",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Test",stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(null,stringArgumentCaptor.getAllValues().get(2));
+    assertEquals("Lead",stringArgumentCaptor.getAllValues().get(3));
+    assertEquals("le1@gmail.com",stringArgumentCaptor.getAllValues().get(4));
+    assertEquals("+4555445544",stringArgumentCaptor.getAllValues().get(5));
+    assertEquals("CEO",stringArgumentCaptor.getAllValues().get(6));
+    assertEquals(7456, integerArgumentCaptor.getValue());
+  }
+
+  @Test
+  void creating_new_user_will_update_user_table() throws SQLException
+  {
+    User user=new User("Test", null, "User", "user@gmail.com", "+4544556677",false,"Street 1", 8700, "Horsens", "Denmark");
+    sqlConnection.createUser(user);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(3),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(4),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(6),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(7),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(8),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals(stringArgumentCaptor.getAllValues().get(0), "INSERT Into \"user\"(firstname, middlename, lastname, email, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?)");
+    assertEquals(stringArgumentCaptor.getAllValues().get(1),"Test");
+    assertEquals(stringArgumentCaptor.getAllValues().get(2),null);
+    assertEquals(stringArgumentCaptor.getAllValues().get(3),"User");
+    assertEquals(stringArgumentCaptor.getAllValues().get(4),"user@gmail.com");
+    assertEquals(stringArgumentCaptor.getAllValues().get(5),"+4544556677");
+    assertEquals(stringArgumentCaptor.getAllValues().get(6),"employee");
+    assertEquals(stringArgumentCaptor.getAllValues().get(7),"Street 1");
+    assertEquals(integerArgumentCaptor.getValue(),8700);
+  }
+
+  @Test
+  void creating_new_address_will_update_address_table() throws SQLException
+  {
+    Address address=new Address("Street 1", "Horsens", "Denmark", 8700);
+    sqlConnection.createAddress(address);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(3),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(4),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("insert into address(street,city,country,postalcode) values(?,?,?,?)", stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Street 1", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals("Horsens", stringArgumentCaptor.getAllValues().get(2));
+    assertEquals("Denmark", stringArgumentCaptor.getAllValues().get(3));
+    assertEquals(8700, integerArgumentCaptor.getValue());
+  }
+
+  @Test
+  void getting_address_returns_an_Address() throws SQLException
+  {
+    Address address=new Address("Street 1", "Horsens", "Denmark", 8700);
+    Mockito.when(sqlConnection.getAddress(address)).thenReturn(address);
+    assertEquals(Address.class, sqlConnection.getAddress(address).getClass());
+  }
+
+  @Test
+  void getting_an_address_by_address_will_return_an_address_from_the_database()
+      throws SQLException
+  {
+    Address address=new Address("Street 1", "Horsens", "Denmark", 8700);
+    Mockito.when(sqlConnection.getAddress(address)).thenReturn(address);
+    Address result=sqlConnection.getAddress(address);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(3),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(4),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
+    assertEquals(stringArgumentCaptor.getAllValues().get(0),"select * from address where street = ? and city = ? and country = ? and postalcode = ?");
+    assertEquals(result.getStreet(),stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(result.getCity(),stringArgumentCaptor.getAllValues().get(2));
+    assertEquals(result.getCountry(),stringArgumentCaptor.getAllValues().get(3));
+    assertEquals(result.getPostalCode(),integerArgumentCaptor.getValue());
+  }
+
+  @Test
+  void creating_a_business_will_update_business_table() throws SQLException
+  {
+    Business business=new Business("Test1", "Street 1",1122);
+    sqlConnection.createBusiness(business);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(3), integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+    assertEquals("insert into business(businessname, street, postalcode) values (?,?,?)",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Test1", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals("Street 1", stringArgumentCaptor.getAllValues().get(2));
+    assertEquals(1122, integerArgumentCaptor.getValue());
+  }
+
+  @Test
+  void getting_Business_id_returns_an_int() throws SQLException
+  {
+    Business business=new Business("Test1", "Street 1",1122);
+    Mockito.when(sqlConnection.getBusinessID(business)).thenReturn(1122);
+    int id=sqlConnection.getBusinessID(business);
+    assertEquals(1122, id);
+  }
+
+  @Test
+  void getBusinessID_gives_back_the_id_of_the_business_in_database()
+      throws SQLException
+  {
+    Business business=new Business("Test", "Street 1",1122);
+    Mockito.when(sqlConnection.getBusinessID(business)).thenReturn(business.getBusiness_id());
+    int result=sqlConnection.getBusinessID(business);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(3), integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
+    assertEquals(stringArgumentCaptor.getAllValues().get(0),"select business_id from business where businessname = ? and street = ? and postalcode = ?");
+    assertEquals(stringArgumentCaptor.getAllValues().get(1),"Test");
+    assertEquals(stringArgumentCaptor.getAllValues().get(2),"Street 1");
+    assertEquals(integerArgumentCaptor.getValue(),1122);
+    assertEquals(result,business.getBusiness_id());
+  }
+
+  @Test
+  void editLead_updates_the_Lead_table() throws SQLException
+  {
+    Lead oldLead=new Lead("Test", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available");
+    Lead newLead=new Lead("Test", null, "Lead", "le@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available");
+    sqlConnection.editLead(oldLead,newLead);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(3),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(4),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(6),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(7),integerArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(8), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(9), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(10), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(11), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(12), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(13), stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(14),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("update lead set firstname = ?, middlename = ?, lastname = ?,"
+        + "email = ?, phone = ?, title = ?, business_id = ? where firstname = ? and middlename = ? and lastname = ? and "
+        + "email = ? and phone = ? and title = ? and business_id = ?",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Test", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(null, stringArgumentCaptor.getAllValues().get(2));
+    assertEquals("Lead", stringArgumentCaptor.getAllValues().get(3));
+    assertEquals("le@gmail.com", stringArgumentCaptor.getAllValues().get(4));
+    assertEquals("+4555445544", stringArgumentCaptor.getAllValues().get(5));
+    assertEquals("CEO", stringArgumentCaptor.getAllValues().get(6));
+    assertEquals(7456, integerArgumentCaptor.getAllValues().get(0));
+    assertEquals("Test", stringArgumentCaptor.getAllValues().get(7));
+    assertEquals(null, stringArgumentCaptor.getAllValues().get(8));
+    assertEquals("Lead", stringArgumentCaptor.getAllValues().get(9));
+    assertEquals("le1@gmail.com", stringArgumentCaptor.getAllValues().get(10));
+    assertEquals("+4555445544", stringArgumentCaptor.getAllValues().get(11));
+    assertEquals("CEO", stringArgumentCaptor.getAllValues().get(12));
+    assertEquals(7456, integerArgumentCaptor.getAllValues().get(1));
+  }
+
+  @Test
+  void getMeetingsByLead_returns_an_arraylist() throws SQLException
+  {
+    Lead lead=new Lead("Test", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available");
+    assertEquals(ArrayList.class,sqlConnection.getMeetingsByLead(lead).getClass());
+  }
+
+  @Test
+  void getting_meetings_by_lead_gives_back_all_the_correct_meetings_wit_the_lead_from_database()
+      throws SQLException
+  {
+    Lead lead=new Lead("Test", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available");
+    Mockito.when(sqlConnection.getMeetingsByLead(lead)).thenReturn(new ArrayList<>(
+        List.of(new Meeting("Meeting1", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
+                Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), "le1@gmail.com"),
+            new Meeting("Meeting2", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
+                Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), "le1@gmail.com"))
+    ));
+
+    ArrayList<Meeting> meetings=sqlConnection.getMeetingsByLead(lead);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
+    assertEquals(2,meetings.size());
+    assertEquals("select * from meeting where email = ?",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("le1@gmail.com",stringArgumentCaptor.getAllValues().get(1));
+  }
+
+  @Test
+  void removing_a_meeting_will_update_the_Meeting_table() throws SQLException
+  {
+    Meeting meeting = new Meeting("Meeting", "",
+        Date.valueOf(LocalDate.of(2023, 5, 22)),
+        Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11, 0)),
+        null);
+    sqlConnection.removeMeeting(meeting);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2),dateArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(3),timeArgumentCaptor.capture());
+    Mockito.verify(statement).setTime(eq(4),timeArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("delete from meeting where title = ? and date = ? and starttime = ? and endtime = ? and email = ?", stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Meeting", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(Date.valueOf(LocalDate.of(2023, 5, 22)), dateArgumentCaptor.getValue());
+    assertEquals(Time.valueOf(LocalTime.of(7, 0)),timeArgumentCaptor.getAllValues().get(0));
+    assertEquals(Time.valueOf(LocalTime.of(11, 0)),timeArgumentCaptor.getAllValues().get(1));
+    assertEquals(null, stringArgumentCaptor.getAllValues().get(2));
+  }
+
+  @Test
+  void removing_a_lead_will_update_the_Lead_table() throws SQLException
+  {
+    Lead lead=new Lead("Test", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available");
+    sqlConnection.removeLead(lead);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(3),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(4),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(6), integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeUpdate();
+
+    assertEquals("delete from lead where firstname = ? and lastname = ? and email = ? and phone = ? and title = ? and business_id = ?", stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Test", stringArgumentCaptor.getAllValues().get(1));
+    assertEquals("Lead", stringArgumentCaptor.getAllValues().get(2));
+    assertEquals("le1@gmail.com", stringArgumentCaptor.getAllValues().get(3));
+    assertEquals("+4555445544", stringArgumentCaptor.getAllValues().get(4));
+    assertEquals("CEO", stringArgumentCaptor.getAllValues().get(5));
+    assertEquals(7456,integerArgumentCaptor.getValue());
+  }
+
+  @Test
+  void getting_user_by_email_returns_a_User() throws SQLException
+  {
+    String email="testuser@gmail.com";
+    User user=new User("Test1", null,"User", "testuser@gmail.com","+4511223344",false,"Street 1",4433, "TestCity", "TestCountry");
+    Mockito.when(sqlConnection.getUserByEmail(email)).thenReturn(user);
+    assertEquals(User.class,sqlConnection.getUserByEmail(email).getClass());
+  }
+
+  @Test
+  void getting_user_by_email_gives_back_the_user_with_matching_email_from_database()
+      throws SQLException
+  {
+    String email="testuser@gmail.com";
+    User user=new User("Test1", null,"User", "testuser@gmail.com","+4511223344",false,"Street 1",4433, "TestCity", "TestCountry");
+    Mockito.when(sqlConnection.getUserByEmail(email)).thenReturn(user);
+    User result=sqlConnection.getUserByEmail(email);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
+    assertSame(user,result);
+    assertEquals("SELECT * FROM \"user\" INNER JOIN address ON \"user\".street = address.street AND \"user\".postalcode = address.postalcode WHERE email = ?", stringArgumentCaptor.getAllValues().get(0));
+    assertEquals(email,stringArgumentCaptor.getAllValues().get(1));
   }
 }
