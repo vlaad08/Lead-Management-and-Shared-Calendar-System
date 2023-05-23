@@ -18,11 +18,6 @@ public class LoginViewModel
   public boolean logIn(String email, String password)
       throws SQLException, RemoteException
   {
-    if(model.logIn(email, password))
-    {
-
-      return true;
-    }
-    return false;
+    return model.logIn(email, password);
   }
 }

@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
@@ -101,7 +102,16 @@ public class ManageLeadsController implements PropertyChangeListener
 
   public void addLead() throws SQLException, RemoteException
   {
-    Draw.drawLeadPopUp(leadsViewModel);
+    if(leadsViewModel.isManager())
+    {
+      Draw.drawLeadPopUp(leadsViewModel);
+    }
+    else
+    {
+      Alert info = new Alert(Alert.AlertType.INFORMATION);
+      info.setContentText("Only a manager can add an user");
+      info.show();
+    }
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)

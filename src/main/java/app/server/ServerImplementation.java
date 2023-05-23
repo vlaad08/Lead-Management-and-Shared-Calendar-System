@@ -79,12 +79,6 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
 
-
-    if(obj instanceof User)
-    {
-      connection.createUser((User) obj);
-      support.firePropertyChange("reloadUser", null, "");
-    }
     if(obj instanceof Lead)
     {
       connection.createLead((Lead) obj);
@@ -99,6 +93,19 @@ public class ServerImplementation implements Communicator
     {
       connection.createBusiness((Business) obj);
       support.firePropertyChange("reloadBusiness",null,"");
+    }
+  }
+
+  @Override public void addObjectWithPassword(Object obj, String password)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+
+
+    if(obj instanceof User)
+    {
+      connection.createUser((User) obj, password);
+      support.firePropertyChange("reloadUser", null, "");
     }
   }
 
@@ -221,6 +228,13 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
 
+    if(obj instanceof String)
+    {
+      connection.removeAssignmentsForUser((String) obj);
+      connection.removeAttendanceForUser((String) obj);
+      connection.removeUser((String) obj);
+      support.firePropertyChange("reloadUser", null, "");
+    }
     if(obj instanceof Meeting)
     {
       connection.removeAttendance((Meeting) obj);
@@ -252,13 +266,13 @@ public class ServerImplementation implements Communicator
   @Override public ArrayList<Object> getListByUser(User user,
       String expectedType) throws SQLException, RemoteException
   {
-    if(expectedType.equalsIgnoreCase("meeting"))
+    if(expectedType.equalsIgnoreCase("meetings"))
     {
-      connection.getMeetingsByUser(user);
+      return connection.getMeetingsByUser(user);
     }
     if(expectedType.equalsIgnoreCase("tasks"))
     {
-      connection.getTasksByUser(user);
+      return connection.getTasksByUser(user);
     }
     return new ArrayList<>();
   }
@@ -326,6 +340,29 @@ public class ServerImplementation implements Communicator
         connection.setAttendance(e, (Meeting) newObj);
       }
       support.firePropertyChange("reloadMeeting", null, "");
+    }
+  }
+
+  @Override public String getUserPassword(String oldEmail) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return  connection.getUserPassword(oldEmail);
+  }
+
+  @Override public void editObjectWithPassword(Object oldObj, Object newObj,
+      String password) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+
+
+    if(oldObj instanceof User && newObj instanceof User)
+    {
+      ArrayList<Object> assignedTasks = connection.getTasksByUser((User) oldObj);
+      ArrayList<Object> assignedMeetings = connection.getAttendanceByUser((User) oldObj);
+
+
+      connection.editUser((User)oldObj, (User)newObj, password);
+      support.firePropertyChange("reloadUser", null, "");
     }
   }
 

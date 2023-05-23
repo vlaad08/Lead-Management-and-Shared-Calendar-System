@@ -34,7 +34,7 @@ public class MeetingViewModel implements PropertyChangeListener
     support = new PropertyChangeSupport(this);
     meetings = new SimpleObjectProperty<>();
 
-    name = new SimpleStringProperty(model.getLoggedInUserName());
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     meetings.set(FXCollections.observableArrayList(getMeetings()));
 
   }
@@ -92,6 +92,8 @@ public class MeetingViewModel implements PropertyChangeListener
         meetings1.add((Meeting) obj);
       }
     }
+
+
     return meetings1;
   }
 
@@ -158,6 +160,9 @@ public class MeetingViewModel implements PropertyChangeListener
     if(evt.getPropertyName().equals("reloadMeetings"))
     {
       ArrayList<Meeting> list = getMeetings();
+
+
+
       ObservableList<Meeting> observableList= FXCollections.observableList(list);
       meetings.set(observableList);
       support.firePropertyChange("reloadMeetings", false, true);
@@ -165,7 +170,7 @@ public class MeetingViewModel implements PropertyChangeListener
 
     if(evt.getPropertyName().equals("reloadLoggedInUser"))
     {
-      name = new SimpleStringProperty(model.getLoggedInUserName());
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     }
   }
 }

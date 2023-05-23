@@ -20,13 +20,13 @@ public class AvailableClientsViewModel implements PropertyChangeListener
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Lead>> availableLeads;
 
-  private final SimpleStringProperty name;
+  private SimpleStringProperty name;
 
   public AvailableClientsViewModel(Model model){
     this.model = model;
     support = new PropertyChangeSupport(this);
 
-    name = new SimpleStringProperty(model.getLoggedInUserName());
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     model.addPropertyChangeListener(this);
     availableLeads = new SimpleObjectProperty<>();
     availableLeads.set(FXCollections.observableArrayList(getAvailableLeads()));
@@ -72,6 +72,10 @@ public class AvailableClientsViewModel implements PropertyChangeListener
       ObservableList<Lead> observableList= FXCollections.observableList(list);
       availableLeads.set(observableList);
       support.firePropertyChange("reloadLeads", false, true);
+    }
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     }
   }
 

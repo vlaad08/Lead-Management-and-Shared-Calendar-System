@@ -16,16 +16,15 @@ public interface Communicator extends Remote
   void addListener(RemotePropertyChangeListener<String> listener) throws
       RemoteException;
 
-
-
-
   int getBusinessId(Business business) throws SQLException, RemoteException;
   boolean logIn(String email, String password) throws SQLException, RemoteException;
 
   User getUserByEmail(String email) throws SQLException, RemoteException;
 
-
   void addObject(Object obj) throws SQLException, RemoteException;
+
+  void addObjectWithPassword(Object obj, String password) throws SQLException, RemoteException;
+
   void addObject(Object obj, ArrayList<String> emails) throws SQLException, RemoteException;
   ArrayList<Object> getList(String expectedType) throws SQLException,
       RemoteException;
@@ -42,4 +41,7 @@ public interface Communicator extends Remote
 
   void editObjectWithList(Object oldObj, Object newObj, ArrayList<String> emails) throws
       SQLException, RemoteException;
+  String getUserPassword(String oldEmail) throws SQLException, RemoteException;
+  void editObjectWithPassword(Object oldObj, Object newObj, String password)
+      throws SQLException, RemoteException;
 }

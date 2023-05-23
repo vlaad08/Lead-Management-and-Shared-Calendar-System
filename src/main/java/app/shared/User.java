@@ -19,7 +19,7 @@ public class User implements Serializable
 
   private String country;
 
-  public User(String firstName, String middleName, String lastName, String email, String phone, boolean manager, String street, int postalCode, String city, String country) {
+  public User(String firstName, String middleName, String lastName, String email, String phone, boolean manager, String street, int postalCode) {
       this.firstName = firstName;
       this.middleName = middleName;
       this.lastName = lastName;
@@ -29,7 +29,6 @@ public class User implements Serializable
       this.street = street;
       this.postalCode = postalCode;
       this.city = city;
-      this.country = country;
   }
 
   public String getCity()

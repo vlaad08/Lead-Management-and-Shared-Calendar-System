@@ -44,7 +44,6 @@ public class LoginController
     {
       if(loginViewModel.logIn(emailTextField.getText(), passwordField.getText()))
       {
-
         viewHandler.openView("Calendar");
       }
       else

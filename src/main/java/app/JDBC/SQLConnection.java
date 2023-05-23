@@ -155,12 +155,10 @@ public class SQLConnection
         boolean manager = set.getBoolean("role");
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
-        String city = set.getString("city");
-        String country = set.getString("country");
 
         if(!email.equals("a@a.aa"))
         {
-          users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode, city, country));
+          users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode));
         }
       }
       return users;
@@ -390,19 +388,20 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public void createUser(User user) throws SQLException
+  public void createUser(User user, String password) throws SQLException
   {
     try(Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement("INSERT Into \"user\"(firstname, middlename, lastname, email, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?)"))
+        PreparedStatement statement = connection.prepareStatement("INSERT Into \"user\"(firstname, middlename, lastname, email, password, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?,?)"))
     {
       statement.setString(1, user.getFirstName());
       statement.setString(2, user.getMiddleName());
       statement.setString(3, user.getLastName());
       statement.setString(4, user.getEmail());
-      statement.setString(5, user.getPhone());
-      statement.setString(6, user.toStringManager().toLowerCase());
-      statement.setString(7, user.getStreet());
-      statement.setInt(8, user.getPostalCode());
+      statement.setString(5, password);
+      statement.setString(6, user.getPhone());
+      statement.setBoolean(7, user.isManager());
+      statement.setString(8, user.getStreet());
+      statement.setInt(9, user.getPostalCode());
       statement.executeUpdate();
     }
   }
@@ -593,10 +592,9 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         boolean manager = set.getBoolean("role");
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
-        String city = set.getString("city");
-        String country = set.getString("country");
 
-        user = new User(firstname, middleName, lastname, e, phone, manager, street, postalCode, city, country);
+
+        user = new User(firstname, middleName, lastname, e, phone, manager, street, postalCode);
       }
       return user;
     }
@@ -624,7 +622,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public ArrayList<Meeting> getMeetingsByUser(User user) throws  SQLException
+  public ArrayList<Object> getMeetingsByUser(User user) throws  SQLException
   {
     try (Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement(
@@ -633,7 +631,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     {
 
       statement.setString(1, user.getEmail());
-      ArrayList<Meeting> meetings = new ArrayList<>();
+      ArrayList<Object> meetings = new ArrayList<>();
       ResultSet resultSet = statement.executeQuery();
       while (resultSet.next())
       {
@@ -671,5 +669,91 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       }
       return tasks;
     }
+  }
+
+  public String getUserPassword(String oldEmail) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("select password from \"user\" where email = ?")
+            )
+    {
+      statement.setString(1, oldEmail);
+      ResultSet set = statement.executeQuery();
+      if(set.next())
+      {
+        return set.getString("password");
+      }
+      return null;
+    }
+  }
+
+  public void removeUser(String email) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement =connection.prepareStatement("delete from \"user\" where email = ?")
+            )
+    {
+      statement.setString(1, email);
+      statement.executeUpdate();
+    }
+  }
+
+  public void removeAssignmentsForUser(String email) throws SQLException
+  {
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+            "delete from assignment where email = ?")
+        )
+    {
+      statement.setString(1, email);
+      statement.executeUpdate();
+    }
+  }
+
+  public void removeAttendanceForUser(String email) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from attendance where email = ?"))
+    {
+      statement.setString(1, email);
+      statement.executeUpdate();
+
+    }
+  }
+
+  public void editUser(User oldUser, User newUser, String password) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(
+                "update \"user\" set firstname = ?, middlename = ?, lastname = ?, email = ?, password = ?, phone = ?, role = ?, street = ?, postalcode = ? where "
+                    + "email = ?"
+            )
+            )
+    {
+      statement.setString(1, newUser.getFirstName());
+      statement.setString(2, newUser.getMiddleName());
+      statement.setString(3, newUser.getLastName());
+      statement.setString(4, newUser.getEmail());
+      statement.setString(5, password);
+      statement.setString(6, newUser.getPhone());
+      statement.setBoolean(7, newUser.isManager());
+      statement.setString(8, newUser.getStreet());
+      statement.setInt(9, newUser.getPostalCode());
+      statement.setString(10, oldUser.getEmail());
+      statement.executeUpdate();
+    }
+  }
+
+  public ArrayList<Object> getAttendanceByUser(User oldObj)
+  {
+    
   }
 }

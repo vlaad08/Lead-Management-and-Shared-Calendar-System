@@ -205,7 +205,7 @@ public class CalendarController implements PropertyChangeListener
 
             smallBox.getChildren().add(text);
             text.setCursor(Cursor.DEFAULT);
-            text.setBackground(Background.EMPTY);
+            text.setStyle("-fx-background-color: none");
             text.setOnMouseClicked(event -> Draw.drawCalendarActivityPopUp(calendarActivities));
         }
         calendarActivityBox.setTranslateY((rectangleHeight / 2) * 0.20);
@@ -282,13 +282,11 @@ public class CalendarController implements PropertyChangeListener
     {
         if(evt.getPropertyName().equals("reloadCalendar"))
         {
-            for(Node node : calendar.getChildren())
-            {
-                Platform.runLater(() -> {
-                    calendar.getChildren().remove(node);
-                });
-            }
-            drawCalendar();
+          for (Node node : calendar.getChildren())
+          {
+            Platform.runLater(() -> calendar.getChildren().remove(node));
+          }
+            Platform.runLater(this::drawCalendar);
         }
     }
 }

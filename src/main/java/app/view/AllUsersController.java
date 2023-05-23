@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
@@ -96,7 +97,16 @@ public class AllUsersController implements PropertyChangeListener
 //get Users
   public void addUser()
   {
-    Draw.drawUserPopUp(allUsersViewModel);
+    if(allUsersViewModel.isManager())
+    {
+      Draw.drawUserPopUp(allUsersViewModel);
+    }
+    else
+    {
+      Alert info = new Alert(Alert.AlertType.INFORMATION);
+      info.setContentText("Only a manager can add an user");
+      info.show();
+    }
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)

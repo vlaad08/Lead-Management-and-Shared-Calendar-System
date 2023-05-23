@@ -36,7 +36,7 @@ public class TasksViewModel implements PropertyChangeListener
 
     model.addPropertyChangeListener(this);
 
-    name = new SimpleStringProperty(model.getLoggedInUserName());
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     tasks.set(FXCollections.observableArrayList(getTasks()));
 
   }
@@ -93,7 +93,7 @@ public class TasksViewModel implements PropertyChangeListener
 
 
   public ArrayList<Business> getBusinesses()
-      throws SQLException, RemoteException
+
   {
     ArrayList<Business> businesses = new ArrayList<>();
     ArrayList<Object> objects = model.getList("businesses");
@@ -120,7 +120,7 @@ public class TasksViewModel implements PropertyChangeListener
 
     if(evt.getPropertyName().equals("reloadLoggedInUser"))
     {
-      name = new SimpleStringProperty(model.getLoggedInUserName());
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     }
   }
 
@@ -140,7 +140,7 @@ public class TasksViewModel implements PropertyChangeListener
   }
 
   public ArrayList<String> getAssignedUsers(Task task)
-      throws SQLException, RemoteException
+
   {
     return model.getList(task);
   }

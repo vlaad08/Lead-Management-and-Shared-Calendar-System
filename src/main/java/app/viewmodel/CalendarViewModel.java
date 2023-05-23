@@ -22,7 +22,7 @@ public class CalendarViewModel implements PropertyChangeListener
     this.model = model;
     model.addPropertyChangeListener(this);
     support = new PropertyChangeSupport(this);
-    name = new SimpleStringProperty(model.getLoggedInUserName());
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
   }
 
   public void bindUserName(StringProperty property)
@@ -81,7 +81,7 @@ public class CalendarViewModel implements PropertyChangeListener
     }
     if(evt.getPropertyName().equals("reloadLoggedInUser"))
     {
-      name = new SimpleStringProperty(model.getLoggedInUserName());
+      name = new SimpleStringProperty(model.getLoggedInUser().getLastName());
     }
   }
 }

@@ -13,29 +13,19 @@ public class ModelManager implements Model
 {
   private final Communicator communicator;
 
-
-  private ArrayList<Object> meetings;
-  private ArrayList<Object> tasks;
-  private ArrayList<Object> users;
-  private ArrayList<Object> businesses;
-  private ArrayList<Object> leads;
-
-  private User loggedInUser = new User("", "", "", "", "", true, "", 41412, "", "");
+  private User loggedInUser = new User("", "", "", "", "", true, "", 41412);
 
   private final PropertyChangeSupport support;
+
+
 
   public ModelManager(Communicator communicator)
   {
     this.communicator = communicator;
 
-    meetings = getList("meeting");
-    tasks = getList("tasks");
-    users = getList("users");
-    leads = getList("leads");
-    businesses = getList("businesses");
-
-
     support = new PropertyChangeSupport(this);
+
+
 
   }
 
@@ -56,11 +46,28 @@ public class ModelManager implements Model
   {
       try
       {
-        return  communicator.getList(expectedType);
+        if(expectedType.equalsIgnoreCase("meetings") || expectedType.equalsIgnoreCase("tasks"))
+        {
+
+          if(isManager())
+          {
+
+            return communicator.getList(expectedType);
+          }
+          else
+          {
+
+            return communicator.getListByUser(loggedInUser, expectedType);
+          }
+        }
+        else
+        {
+          return communicator.getList(expectedType);
+        }
       }
       catch (SQLException | RemoteException e)
       {
-        throw new RuntimeException();
+        throw new RuntimeException(e);
       }
 
   }
@@ -131,11 +138,10 @@ public class ModelManager implements Model
     return false;
   }
 
-  @Override public String getLoggedInUserName()
+  @Override public User getLoggedInUser()
   {
-    return loggedInUser.getFirstName();
+    return loggedInUser;
   }
-
 
   @Override public boolean isManager()
   {
@@ -145,30 +151,43 @@ public class ModelManager implements Model
 
   @Override public void businessAddedFromServer()
   {
-   businesses = getList("businesses");
+  }
+
+  @Override public String getUserPassword(String oldEmail)
+      throws SQLException, RemoteException
+  {
+    return communicator.getUserPassword(oldEmail);
+  }
+
+  @Override public void addObjectWithPassword(User user, String password)
+      throws SQLException, RemoteException
+  {
+    communicator.addObjectWithPassword(user, password);
+  }
+
+  @Override public void editObjectWithPassword(Object oldObj, Object newObj, String password)
+  {
+    communicator.editObjectWithPassword(oldObj,newObj,password);
   }
 
   @Override public void meetingAddedFromServer()
   {
-    meetings = getList("meetings");
     support.firePropertyChange("reloadMeetings", false, true);
+
   }
 
   @Override public void leadAddedFromServer()
   {
-    leads = getList("leads");
     support.firePropertyChange("reloadLeads", false, true);
   }
 
   @Override public void userAddedFromServer()
   {
-    users = getList("users");
-    support.firePropertyChange("reloadUsers", false, true);
+    support.firePropertyChange("reloadUser", false, true);
   }
 
   @Override public void taskAddedFromServer()
   {
-    tasks = getList("tasks");
     support.firePropertyChange("reloadTasks", false, true);
   }
 

@@ -17,7 +17,6 @@ import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LeadsViewModel implements PropertyChangeListener
 {
@@ -33,7 +32,7 @@ public class LeadsViewModel implements PropertyChangeListener
     support = new PropertyChangeSupport(this);
     model.addPropertyChangeListener(this);
 
-    name = new SimpleStringProperty(model.getLoggedInUserName());
+    name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     leads = new SimpleObjectProperty<>();
     leads.set(FXCollections.observableArrayList(getLeads()));
   }
@@ -129,7 +128,7 @@ public class LeadsViewModel implements PropertyChangeListener
 
     if(evt.getPropertyName().equals("reloadLoggedInUser"))
     {
-      name = new SimpleStringProperty(model.getLoggedInUserName());
+      name = new SimpleStringProperty(model.getLoggedInUser().getFirstName());
     }
   }
 
