@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "1945");
+        "postgres", "password");
   }
 
   public ArrayList<Meeting> getMeetings() throws SQLException
@@ -131,7 +131,51 @@ public class SQLConnection
 
       statement.executeUpdate();
     }
+  }
 
+  public void updateUser(User oldUser, User newUser) throws SQLException
+  {
+    Address oldAddy = new Address(oldUser.getStreet(),oldUser.getCity(),oldUser.getCountry(),oldUser.getPostalCode());
+    Address newAddy = new Address(newUser.getStreet(),newUser.getCity(), newUser.getCountry(),newUser.getPostalCode());
+
+    try(Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("update address set street = ?, city = ?, country = ?, postalcode = ?"
+            + " where street = ? and city = ? and country = ? and postalcode = ?"))
+    {
+      statement.setString(1,newAddy.getStreet());
+      statement.setString(2,newAddy.getCity());
+      statement.setString(3,newAddy.getCountry());
+      statement.setInt(4,newAddy.getPostalCode());
+
+      statement.setString(5,oldAddy.getStreet());
+      statement.setString(6,oldAddy.getCity());
+      statement.setString(7,oldAddy.getCountry());
+      statement.setInt(8,oldAddy.getPostalCode());
+
+      statement.executeUpdate();   //DO IT IN THE SAME TRY-CATCH
+    }
+
+    try(
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("update \"user\" set firstname = ?, middlename = ?, lastname = ?, email = ?, phone = ?, role = ?"
+            + " where firstname = ? and middlename = ? and lastname = ? and email = ? and phone = ? and role = ?"))
+    {
+      statement.setString(1,newUser.getFirstName());
+      statement.setString(2,newUser.getMiddleName());
+      statement.setString(3,newUser.getLastName());
+      statement.setString(4,newUser.getEmail());
+      statement.setString(5,newUser.getPhone());
+      statement.setBoolean(6,newUser.isManager());
+
+      statement.setString(7,oldUser.getFirstName());
+      statement.setString(8,oldUser.getMiddleName());
+      statement.setString(9,oldUser.getLastName());
+      statement.setString(10,oldUser.getEmail());
+      statement.setString(11,oldUser.getPhone());
+      statement.setBoolean(12,oldUser.isManager());
+
+      statement.executeUpdate();
+    }
   }
 
   public ArrayList<User> getUsers() throws SQLException {

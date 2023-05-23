@@ -169,6 +169,11 @@ public class ModelManager implements Model
     communicator.editLead(oldLead, newLead);
   }
 
+  @Override public void updateUser(User oldUser, User newUser) throws SQLException, RemoteException
+  {
+    communicator.updateUser(oldUser, newUser);
+  }
+
   @Override public void removeLead(Lead lead)
       throws SQLException, RemoteException
   {

@@ -1975,9 +1975,15 @@ public class Draw
     roleComboBox.setValue(oldrole);
     roleComboBox.setPrefWidth(200);
 
+    Label postalcodeLabel = new Label("Postal code: ");
+    postalcodeLabel.setPrefWidth(100);
+    TextField postalcodeField = new TextField();
+    postalcodeField.setText(oldpostalcode);
+    postalcodeField.setPrefWidth(150);
+
     roleBox.setSpacing(20);
     roleBox.setPadding(new Insets(20));
-    roleBox.getChildren().addAll(roleLabel, roleComboBox);
+    roleBox.getChildren().addAll(roleLabel, roleComboBox, postalcodeLabel, postalcodeField);
 
     HBox streetBox = new HBox();
     Label streetLabel = new Label("Street:");
@@ -2014,7 +2020,52 @@ public class Draw
       Optional<ButtonType> result = alert.showAndWait();
 
       if (result.isPresent() && result.get() == yesButton) {
-       //allUsersViewModel.deleteUser(emailField.getText());
+        boolean temprole;
+        if(oldrole.equals("Manager")){
+          temprole = true;
+        }
+        else{
+          temprole = false;
+        }
+        User oldUser = new User(oldfirstname,oldmiddlename,oldlastname,oldemail,oldphone,temprole,oldstreet,Integer.parseInt(oldpostalcode), oldcity,oldcountry);
+
+        String input = namefield.getText();
+        String[] parts = input.split(" ");
+
+        String firstName = "";
+        String middleName = "";
+        String lastName = "";
+
+        if (parts.length >= 1) {
+          firstName = parts[0];
+        }
+
+        if (parts.length >= 2) {
+          lastName = parts[parts.length - 1];
+        }
+
+        if (parts.length >= 3) {
+          StringBuilder middleNameBuilder = new StringBuilder();
+          for (int i = 1; i < parts.length - 1; i++) {
+            middleNameBuilder.append(parts[i]);
+            middleNameBuilder.append(" ");
+          }
+          middleName = middleNameBuilder.toString().trim();
+        }
+
+        System.out.println("First Name: " + firstName);
+        System.out.println("Middle Name: " + middleName);
+        System.out.println("Last Name: " + lastName);
+
+        boolean tempboolean2;
+        if(roleComboBox.getValue().equals("Manager")){
+          tempboolean2 = true;
+        }else{
+          tempboolean2 = false;
+        }
+
+        User newUser = new User(firstName,middleName,lastName,emailField.getText(),phoneField.getText(),tempboolean2,streetField.getText(),Integer.parseInt(postalcodeField.getText()),cityField.getText(),countryField.getText());
+        allUsersViewModel.deleteUser(oldUser,newUser);
       } else {
         System.out.println("no clicked");
       }
@@ -2035,7 +2086,59 @@ public class Draw
       Optional<ButtonType> result = alert.showAndWait();
 
       if (result.isPresent() && result.get() == yesButton) {
-        //allUsersViewModel.updateUser(emailField.getText());
+        boolean temprole;
+        if(oldrole.equals("Manager")){
+          temprole = true;
+        }
+        else{
+          temprole = false;
+        }
+        User oldUser = new User(oldfirstname,oldmiddlename,oldlastname,oldemail,oldphone,temprole,oldstreet,Integer.parseInt(oldpostalcode), oldcity,oldcountry);
+
+        String input = namefield.getText();
+        String[] parts = input.split(" ");
+
+        String firstName = "";
+        String middleName = "";
+        String lastName = "";
+
+        if (parts.length >= 1) {
+          firstName = parts[0];
+        }
+
+        if (parts.length >= 2) {
+          lastName = parts[parts.length - 1];
+        }
+
+        if (parts.length >= 3) {
+          StringBuilder middleNameBuilder = new StringBuilder();
+          for (int i = 1; i < parts.length - 1; i++) {
+            middleNameBuilder.append(parts[i]);
+            middleNameBuilder.append(" ");
+          }
+          middleName = middleNameBuilder.toString().trim();
+        }
+
+        System.out.println("First Name: " + firstName);
+        System.out.println("Middle Name: " + middleName);
+        System.out.println("Last Name: " + lastName);
+
+        boolean tempboolean2;
+        if(roleComboBox.getValue().equals("Manager")){
+          tempboolean2 = true;
+        }else{
+          tempboolean2 = false;
+        }
+
+        User newUser = new User(firstName,middleName,lastName,emailField.getText(),phoneField.getText(),tempboolean2,streetField.getText(),Integer.parseInt(postalcodeField.getText()),cityField.getText(),countryField.getText());
+        try
+        {
+          allUsersViewModel.updateUser(oldUser,newUser);
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
       } else {
         System.out.println("no clicked");
       }

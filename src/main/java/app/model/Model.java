@@ -52,4 +52,5 @@ public interface Model
       throws SQLException, RemoteException;
   void addUser(User user) throws SQLException, RemoteException;
   void userAddedFromServer() throws SQLException, RemoteException;
+  void updateUser(User olUser, User newUser) throws SQLException, RemoteException;
 }

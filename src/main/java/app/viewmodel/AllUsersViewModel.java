@@ -75,15 +75,16 @@ public class AllUsersViewModel implements PropertyChangeListener
     }
   }
 
-  public void deleteUser(String email)
+ public void updateUser(User oldUser, User newUser) throws SQLException, RemoteException
+ {
+   model.updateUser(oldUser,newUser);
+ }
+
+  public void deleteUser(User oldUser, User newUser)
   {
 
   }
 
- public void updateUser(String email)
- {
-  
- }
 
 
 

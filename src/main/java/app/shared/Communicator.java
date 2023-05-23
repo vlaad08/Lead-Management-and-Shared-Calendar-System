@@ -46,5 +46,6 @@ public interface Communicator extends Remote
   int getBusinessId(Business business) throws SQLException, RemoteException;
   void editLead(Lead oldLead, Lead newLead) throws SQLException,
       RemoteException;
+  void updateUser(User oldUser, User newUser) throws SQLException, RemoteException;
   void addUser(User user) throws SQLException, RemoteException;
 }

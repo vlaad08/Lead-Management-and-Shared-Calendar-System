@@ -311,6 +311,14 @@ public class ServerImplementation implements Communicator
     support.firePropertyChange("reloadMeeting", null, "");
   }
 
+  @Override public void updateUser(User oldUser, User newUser)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    connection.updateUser(oldUser,newUser);
+    support.firePropertyChange("reloadUser",null,"");
+
+  }
 
   @Override public void addUser(User user) throws SQLException, RemoteException
   {
