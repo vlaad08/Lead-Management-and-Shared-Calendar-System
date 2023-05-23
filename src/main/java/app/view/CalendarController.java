@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -26,7 +27,8 @@ import java.util.List;
 public class CalendarController implements PropertyChangeListener
 {
 
-    ZonedDateTime dateFocus;
+  @FXML  public Label nameLabel;
+  ZonedDateTime dateFocus;
     ZonedDateTime today;
     private ViewHandler viewHandler;
     private CalendarViewModel calendarViewModel;
@@ -64,6 +66,8 @@ public class CalendarController implements PropertyChangeListener
         drawCalendar();
 
         calendarViewModel.addPropertyChangeListener(this);
+        calendarViewModel.bindUserName(nameLabel.textProperty());
+
 
         Draw.hoverButtonNavbar(availableClientsButton, leadButton, meetingButton, tasksButton, clientsButton, manageLeadsButton, closeButton);
 

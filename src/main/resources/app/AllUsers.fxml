@@ -4,11 +4,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -16,13 +20,6 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.AllUsersController">
     <left>
         <BorderPane prefHeight="615.0" prefWidth="295.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
-            <top>
-                <Label alignment="CENTER" prefHeight="98.0" prefWidth="295.0" text="NameOfTheCompany" textFill="WHITE">
-                    <font>
-                        <Font name="Verdana" size="22.0" />
-                    </font>
-                </Label>
-            </top>
             <center>
                 <GridPane alignment="BOTTOM_CENTER" prefHeight="523.0" prefWidth="295.0" BorderPane.alignment="CENTER">
                     <columnConstraints>
@@ -40,51 +37,67 @@
                         <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
                     </rowConstraints>
-                    <children>
-                        <Button fx:id="calendarButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Calendar" textFill="WHITE">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="tasksButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="meetingButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage meeting" textFill="WHITE" GridPane.rowIndex="2">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4" />
-                        <Button fx:id="leadButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="availableClientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button mnemonicParsing="false" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="All Users" textFill="WHITE" GridPane.rowIndex="7">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                    </children>
+                    <Button fx:id="calendarButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Calendar" textFill="WHITE">
+                        <font>
+                            <Font size="22.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="tasksButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="meetingButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage meeting" textFill="WHITE" GridPane.rowIndex="2">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Button>
+                    <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4" />
+                    <Button fx:id="leadButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
+                        <font>
+                            <Font size="22.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="availableClientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Button>
+                    <Button mnemonicParsing="false" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="All Users" textFill="WHITE" GridPane.rowIndex="7">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Button>
+                    <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
+                        <font>
+                            <Font size="18.0" />
+                        </font>
+                    </Button>
                 </GridPane>
             </center>
+         <top>
+             <StackPane prefHeight="142.0" prefWidth="295.0"
+                        BorderPane.alignment="CENTER">
+                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <ImageView fitHeight="146.0" fitWidth="294.0"
+                                pickOnBounds="true">
+                         <Image url="@logo.png"/>
+                     </ImageView>
+                     <Label fx:id="nameLabel" layoutX="24.0" layoutY="111.0"
+                            prefHeight="53.0" prefWidth="266.0" text="Label"
+                            textFill="WHITE">
+                         <font>
+                             <Font size="36.0"/>
+                         </font>
+                     </Label>
+                 </AnchorPane>
+             </StackPane>
+         </top>
         </BorderPane>
     </left>
     <center>
@@ -93,52 +106,46 @@
                 <BorderPane prefHeight="119.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
                     <top>
                         <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
-                            <children>
-                                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
-                                    <font>
-                                        <Font size="20.0" />
-                                    </font>
-                                </Button>
-                            </children>
+                            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
+                                <font>
+                                    <Font size="20.0" />
+                                </font>
+                            </Button>
                         </HBox>
                     </top>
                <bottom>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Label prefHeight="37.0" prefWidth="273.0" text="Name">
-                           <font>
+                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                       <Label prefHeight="37.0" prefWidth="273.0" text="Name">
+                          <font>
                               <Font name="Arial Black" size="24.0" />
-                           </font>
-                           <HBox.margin>
+                          </font>
+                          <HBox.margin>
                               <Insets left="20.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Label prefHeight="37.0" prefWidth="273.0" text="Email">
-                           <font>
+                          </HBox.margin>
+                       </Label>
+                       <Label prefHeight="37.0" prefWidth="273.0" text="Email">
+                          <font>
                               <Font name="Arial Black" size="24.0" />
-                           </font>
-                        </Label>
-                        <Label prefWidth="273.0" text="Role">
-                           <font>
+                          </font>
+                       </Label>
+                       <Label prefWidth="273.0" text="Role">
+                          <font>
                               <Font name="Arial Black" size="24.0" />
-                           </font>
-                        </Label>
-                        <Button fx:id="addUserButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addUser" prefHeight="36.0" prefWidth="51.0" style="-fx-background-color: #348e2f;" text="+" textFill="WHITE">
-                           <font>
+                          </font>
+                       </Label>
+                       <Button fx:id="addUserButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#addUser" prefHeight="36.0" prefWidth="51.0" style="-fx-background-color: #348e2f;" text="+" textFill="WHITE">
+                          <font>
                               <Font name="System Bold" size="20.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </HBox>
-               </bottom>
+                          </font>
+                       </Button>
+                   </HBox>
+               </bottom>    
                 </BorderPane>
             </top>
          <center>
-            <ScrollPane prefHeight="651.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
-               <content>
-                  <VBox fx:id="userVBox" prefHeight="633.0" prefWidth="1128.0" />
-               </content>
-            </ScrollPane>
+             <ScrollPane prefHeight="651.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
+                 <VBox fx:id="userVBox" prefHeight="633.0" prefWidth="1128.0" />
+             </ScrollPane>
          </center>
         </BorderPane>
     </center>

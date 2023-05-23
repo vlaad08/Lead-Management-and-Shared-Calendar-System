@@ -5,6 +5,8 @@ import app.shared.Business;
 import app.shared.Lead;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,15 +24,21 @@ public class LeadsViewModel implements PropertyChangeListener
   private final ObjectProperty<ObservableList<Lead>> leads;
 
   private final PropertyChangeSupport support;
+  private SimpleStringProperty name;
 
   public LeadsViewModel(Model model){
     this.model = model;
     support = new PropertyChangeSupport(this);
     model.addPropertyChangeListener(this);
 
-
+    name = new SimpleStringProperty(model.getLoggedInUserName());
     leads = new SimpleObjectProperty<>();
     leads.set(FXCollections.observableArrayList(getLeads()));
+  }
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
   }
 
   public void addLead(Lead lead) throws Exception{
@@ -51,6 +59,11 @@ public class LeadsViewModel implements PropertyChangeListener
       throws SQLException, RemoteException
   {
     return model.getBusinesses();
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void bindLeads(ObjectProperty<ObservableList<Lead>> property)
@@ -84,6 +97,11 @@ public class LeadsViewModel implements PropertyChangeListener
       ObservableList<Lead> observableList= FXCollections.observableList(list);
       leads.set(observableList);
       support.firePropertyChange("reloadLeads", false, true);
+    }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUserName());
     }
   }
 

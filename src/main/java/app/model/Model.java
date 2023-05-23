@@ -23,7 +23,7 @@ public interface Model
   void editMeeting(Meeting oldMeeting, Meeting newMeeting, ArrayList<String> emails) throws SQLException, RemoteException;
 
   ArrayList<Task> getTasks();
-  boolean checkUser();
+  boolean isManager();
   void meetingAddedFromServer()
       throws SQLException, RemoteException;
 
@@ -52,4 +52,8 @@ public interface Model
       throws SQLException, RemoteException;
   void addUser(User user) throws SQLException, RemoteException;
   void userAddedFromServer() throws SQLException, RemoteException;
+  boolean logIn(String email, String password)
+      throws SQLException, RemoteException;
+
+  String getLoggedInUserName();
 }

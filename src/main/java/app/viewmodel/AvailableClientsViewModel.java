@@ -4,6 +4,8 @@ import app.model.Model;
 import app.shared.Lead;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -17,13 +19,25 @@ public class AvailableClientsViewModel implements PropertyChangeListener
   private final Model model;
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Lead>> availableLeads;
+  private SimpleStringProperty name;
 
   public AvailableClientsViewModel(Model model){
     this.model = model;
     support = new PropertyChangeSupport(this);
     model.addPropertyChangeListener(this);
+    name = new SimpleStringProperty(model.getLoggedInUserName());
     availableLeads = new SimpleObjectProperty<>();
     availableLeads.set(FXCollections.observableArrayList(getAvailableLeads()));
+  }
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public ArrayList<Lead> getAvailableLeads(){
@@ -49,6 +63,11 @@ public class AvailableClientsViewModel implements PropertyChangeListener
       ObservableList<Lead> observableList= FXCollections.observableList(list);
       availableLeads.set(observableList);
       support.firePropertyChange("reloadLeads", false, true);
+    }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUserName());
     }
   }
 

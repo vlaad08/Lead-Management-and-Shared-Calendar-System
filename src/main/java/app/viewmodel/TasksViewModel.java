@@ -2,11 +2,12 @@ package app.viewmodel;
 
 import app.model.Model;
 import app.shared.Business;
-import app.shared.Meeting;
 import app.shared.Task;
 import app.shared.User;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,9 +24,10 @@ public class TasksViewModel implements PropertyChangeListener
 {
   private final Model model;
 
-  private final ObjectProperty<ObservableList<Task>> tasks;
+  private final ObjectProperty<ObservableList<Task>> tasks = new SimpleObjectProperty<>();
 
   private final PropertyChangeSupport support;
+  private SimpleStringProperty name;
 
   public TasksViewModel(Model model){
     support = new PropertyChangeSupport(this);
@@ -34,8 +36,20 @@ public class TasksViewModel implements PropertyChangeListener
 
     model.addPropertyChangeListener(this);
 
-    tasks = new SimpleObjectProperty<>();
+    name = new SimpleStringProperty(model.getLoggedInUserName());
     tasks.set(FXCollections.observableArrayList(model.getTasks()));
+
+  }
+
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void bindTask(ObjectProperty<ObservableList<Task>> property)
@@ -65,6 +79,7 @@ public class TasksViewModel implements PropertyChangeListener
    return model.getTasks();
   }
 
+
   public ArrayList<Business> getBusinesses()
       throws SQLException, RemoteException
   {
@@ -79,6 +94,11 @@ public class TasksViewModel implements PropertyChangeListener
       ObservableList<Task> observableList= FXCollections.observableList(list);
       tasks.set(observableList);
       support.firePropertyChange("reloadTasks", false, true);
+    }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUserName());
     }
   }
 

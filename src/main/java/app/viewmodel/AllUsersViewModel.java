@@ -1,14 +1,13 @@
 package app.viewmodel;
 
 import app.model.Model;
-import app.shared.Meeting;
 import app.shared.User;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -25,6 +24,8 @@ public class AllUsersViewModel implements PropertyChangeListener
 
   private final Model model;
 
+  private SimpleStringProperty name;
+
   public AllUsersViewModel(Model model)
   {
 
@@ -32,9 +33,20 @@ public class AllUsersViewModel implements PropertyChangeListener
     support = new PropertyChangeSupport(this);
     model.addPropertyChangeListener(this);
 
+    name = new SimpleStringProperty();
     users = new SimpleObjectProperty<>();
     users.set(FXCollections.observableArrayList(model.getUsers()));
 
+  }
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void bindUsers(ObjectProperty<ObservableList<User>> property)
@@ -60,7 +72,6 @@ public class AllUsersViewModel implements PropertyChangeListener
   public void createAddress(String street, String city, String country, String postalCode)
       throws SQLException, RemoteException
   {
-    System.out.println("ass");
     model.createAddress(street, city, country, postalCode);
   }
 
@@ -72,6 +83,10 @@ public class AllUsersViewModel implements PropertyChangeListener
       ObservableList<User> observableList= FXCollections.observableList(list);
       users.set(observableList);
       support.firePropertyChange("reloadUser", false, true);
+    }
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUserName());
     }
   }
 
@@ -85,13 +100,8 @@ public class AllUsersViewModel implements PropertyChangeListener
   
  }
 
-
-
-
-
-
-
-
-
-
+  public String getLoggedInUserName()
+  {
+    return model.getLoggedInUserName();
+  }
 }

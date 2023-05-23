@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
@@ -20,10 +21,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskController implements PropertyChangeListener
 {
+  public Button addButton;
+  public StackPane addRectangle;
+  @FXML  public Label nameLabel;
   @FXML private Button plansButton;
   @FXML private  Button meetingButton;
   @FXML private  Button leadButton;
@@ -54,6 +59,8 @@ public class TaskController implements PropertyChangeListener
     tasksViewModel.bindTask(tasks);
 
     tasksViewModel.addPropertyChangeListener(this);
+
+    tasksViewModel.bindUserName(nameLabel.textProperty());
 
     //bs comes below
     Draw.hoverButtonNavbar(plansButton, meetingButton, leadButton, availableButton, clientsButton, manageLeadsButton, closeButton);
@@ -95,7 +102,16 @@ public class TaskController implements PropertyChangeListener
 
   public void addTask() throws SQLException, RemoteException
   {
-    Draw.drawTaskPopUp(tilePane, tasksViewModel);
+    if(tasksViewModel.isManager())
+    {
+      Draw.drawTaskPopUp(tilePane, tasksViewModel);
+    }
+    else
+    {
+      Alert info = new Alert(Alert.AlertType.INFORMATION);
+      info.setContentText("Only a manager can add a task");
+      info.show();
+    }
   }
 
   @Override public void propertyChange(PropertyChangeEvent evt)

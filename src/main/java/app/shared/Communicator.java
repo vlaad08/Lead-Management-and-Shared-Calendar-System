@@ -47,4 +47,10 @@ public interface Communicator extends Remote
   void editLead(Lead oldLead, Lead newLead) throws SQLException,
       RemoteException;
   void addUser(User user) throws SQLException, RemoteException;
+  boolean logIn(String email, String password) throws SQLException, RemoteException;
+
+  User getUserByEmail(String email) throws SQLException, RemoteException;
+  ArrayList<Meeting> getMeetingsByUser(User user) throws SQLException,
+      RemoteException;
+  ArrayList<Task> getTasksByUser(User user) throws SQLException, RemoteException;
 }

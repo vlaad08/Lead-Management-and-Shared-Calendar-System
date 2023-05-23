@@ -15,76 +15,135 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.TaskController">
     <left>
         <BorderPane prefHeight="615.0" prefWidth="295.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
             <top>
-                <Label alignment="CENTER" prefHeight="98.0" prefWidth="295.0" text="NameOfTheCompany" textFill="WHITE">
-                    <font>
-                        <Font name="Verdana" size="22.0" />
-                    </font>
-                </Label>
+                <StackPane prefHeight="142.0" prefWidth="295.0"
+                           BorderPane.alignment="CENTER">
+                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <ImageView fitHeight="146.0" fitWidth="294.0"
+                                   pickOnBounds="true">
+                            <Image url="@logo.png"/>
+                        </ImageView>
+                        <Label fx:id="nameLabel" layoutX="24.0" layoutY="111.0"
+                               prefHeight="53.0" prefWidth="266.0" text="Label"
+                               textFill="WHITE">
+                            <font>
+                                <Font size="36.0"/>
+                            </font>
+                        </Label>
+                    </AnchorPane>
+                </StackPane>
             </top>
             <center>
-                <GridPane alignment="BOTTOM_CENTER" prefHeight="523.0" prefWidth="295.0" BorderPane.alignment="CENTER">
+                <GridPane alignment="BOTTOM_CENTER" prefHeight="523.0"
+                          prefWidth="295.0" BorderPane.alignment="CENTER">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                                           prefWidth="100.0"/>
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="261.0" minHeight="10.0" prefHeight="115.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="322.0" minHeight="0.0" prefHeight="54.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="322.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="457.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="457.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="457.0" minHeight="10.0" prefHeight="74.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="261.0" minHeight="10.0"
+                                        prefHeight="115.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="322.0" minHeight="0.0"
+                                        prefHeight="54.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="322.0" minHeight="0.0"
+                                        prefHeight="51.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="457.0" minHeight="10.0"
+                                        prefHeight="49.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="457.0" minHeight="10.0"
+                                        prefHeight="57.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="457.0" minHeight="10.0"
+                                        prefHeight="74.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                        prefHeight="46.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                        prefHeight="47.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                        prefHeight="56.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                        prefHeight="53.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
-                    <children>
-                        <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="Calendar" textFill="WHITE">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #544997;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button mnemonicParsing="false" prefHeight="80.0" prefWidth="309.0" style="-fx-background-color: #786FAC;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="meetingButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage meeting" textFill="WHITE" GridPane.rowIndex="2">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4" />
-                        <Button fx:id="leadButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: none;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
-                            <font>
-                                <Font size="22.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="availableButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Users" textFill="WHITE" GridPane.rowIndex="7">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Button>
-                    </children>
+                    <Button alignment="BOTTOM_LEFT" mnemonicParsing="false"
+                            onAction="#changeView" prefHeight="36.0"
+                            prefWidth="295.0"
+                            style="-fx-background-color: #786FAC;"
+                            text="Calendar" textFill="WHITE">
+                        <font>
+                            <Font size="22.0"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="plansButton" layoutX="10.0" layoutY="11.0"
+                            mnemonicParsing="false" onAction="#changeView"
+                            prefHeight="80.0" prefWidth="295.0"
+                            style="-fx-background-color: #544997;" text="Plans"
+                            textFill="WHITE" GridPane.rowIndex="1">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Button>
+                    <Button mnemonicParsing="false" prefHeight="80.0"
+                            prefWidth="309.0"
+                            style="-fx-background-color: #786FAC;"
+                            text="Manage task" textFill="WHITE"
+                            GridPane.rowIndex="3">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="meetingButton" mnemonicParsing="false"
+                            onAction="#changeView" prefHeight="80.0"
+                            prefWidth="295.0"
+                            style="-fx-background-color: none;"
+                            text="Manage meeting" textFill="WHITE"
+                            GridPane.rowIndex="2">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Button>
+                    <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4"/>
+                    <Button fx:id="leadButton" alignment="BOTTOM_LEFT"
+                            mnemonicParsing="false" onAction="#changeView"
+                            prefHeight="36.0" prefWidth="295.0"
+                            style="-fx-background-color: none;" text="Lead"
+                            textFill="WHITE" GridPane.rowIndex="5">
+                        <font>
+                            <Font size="22.0"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="availableButton" mnemonicParsing="false"
+                            onAction="#changeView" prefHeight="80.0"
+                            prefWidth="295.0"
+                            style="-fx-background-color: none;"
+                            text="Available Clients" textFill="WHITE"
+                            GridPane.rowIndex="6">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="clientsButton" mnemonicParsing="false"
+                            onAction="#changeView" prefHeight="80.0"
+                            prefWidth="295.0"
+                            style="-fx-background-color: none;" text="All Users"
+                            textFill="WHITE" GridPane.rowIndex="7">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Button>
+                    <Button fx:id="manageLeadsButton" mnemonicParsing="false"
+                            onAction="#changeView" prefHeight="80.0"
+                            prefWidth="295.0"
+                            style="-fx-background-color: none;"
+                            text="Manage leads" textFill="WHITE"
+                            GridPane.rowIndex="8">
+                        <font>
+                            <Font size="18.0"/>
+                        </font>
+                    </Button>
                 </GridPane>
             </center>
         </BorderPane>
@@ -94,41 +153,55 @@
             <top>
                 <BorderPane prefHeight="45.0" prefWidth="1130.0" BorderPane.alignment="CENTER">
                     <top>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
-                            <children>
-                                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
-                                    <font>
-                                        <Font size="20.0" />
-                                    </font>
-                                </Button>
-                            </children>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="40.0"
+                              prefWidth="1130.0"
+                              style="-fx-background-color: #544997;"
+                              BorderPane.alignment="CENTER">
+                            <Button fx:id="closeButton" mnemonicParsing="false"
+                                    onAction="#onCloseButton"
+                                    style="-fx-background-color: none;" text="X"
+                                    textFill="WHITE">
+                                <font>
+                                    <Font size="20.0"/>
+                                </font>
+                            </Button>
                         </HBox>
                     </top>
                 </BorderPane>
             </top>
          <center>
-            <ScrollPane prefHeight="732.0" prefWidth="1082.0" BorderPane.alignment="CENTER">
-               <content>
-                   <TilePane fx:id="tilePane" prefHeight="729.0" prefWidth="1123.0">
-                       <padding>
-                           <Insets top="20.0" />
-                       </padding>
-                       <children>
-                           <StackPane fx:id="addRectangle" prefHeight="250.0" prefWidth="250.0">
-                               <children>
-                                   <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#544997" height="250.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-background-color: #544997;" width="250.0" />
-                                   <Line endX="-11.0" startX="-100.0" stroke="WHITE" strokeWidth="4.0" />
-                                   <Line endX="-110.0" endY="90.0" startX="-110.0" stroke="WHITE" strokeWidth="4.0" />
-                                   <Button fx:id="addButton" mnemonicParsing="false" onAction="#addTask" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" textAlignment="CENTER" textFill="TRANSPARENT" />
-                               </children>
-                           </StackPane>
-                       </children>
-                   </TilePane>
-               </content>
-               <padding>
-                  <Insets left="80.0" right="40.0" top="20.0" />
-               </padding>
-            </ScrollPane>
+             <ScrollPane prefHeight="732.0" prefWidth="1082.0"
+                         BorderPane.alignment="CENTER">
+                 <padding>
+                     <Insets left="80.0" right="40.0" top="20.0"/>
+                 </padding>
+                 <TilePane fx:id="tilePane" prefHeight="729.0"
+                           prefWidth="1123.0">
+                     <padding>
+                         <Insets top="20.0"/>
+                     </padding>
+                     <StackPane fx:id="addRectangle" prefHeight="250.0"
+                                prefWidth="250.0">
+                         <Rectangle arcHeight="20.0" arcWidth="20.0"
+                                    fill="#544997" height="250.0"
+                                    stroke="TRANSPARENT"
+                                    strokeType="INSIDE"
+                                    style="-fx-background-color: #544997;"
+                                    width="250.0"/>
+                         <Line endX="-11.0" startX="-100.0"
+                               stroke="WHITE" strokeWidth="4.0"/>
+                         <Line endX="-110.0" endY="90.0" startX="-110.0"
+                               stroke="WHITE" strokeWidth="4.0"/>
+                         <Button fx:id="addButton"
+                                 mnemonicParsing="false"
+                                 onAction="#addTask" prefHeight="200.0"
+                                 prefWidth="200.0"
+                                 style="-fx-background-color: transparent;"
+                                 textAlignment="CENTER"
+                                 textFill="TRANSPARENT"/>
+                     </StackPane>
+                 </TilePane>
+             </ScrollPane>
          </center>
         </BorderPane>
     </center>

@@ -14,77 +14,131 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="1425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.view.CalendarController">
    <left>
       <BorderPane prefHeight="615.0" prefWidth="295.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
          <top>
-            <Label alignment="CENTER" prefHeight="98.0" prefWidth="295.0" text="NameOfTheCompany" textFill="WHITE">
-               <font>
-                  <Font name="Verdana" size="22.0" />
-               </font>
-            </Label>
+             <StackPane prefHeight="142.0" prefWidth="295.0"
+                        BorderPane.alignment="CENTER">
+                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <ImageView fitHeight="146.0" fitWidth="294.0"
+                                pickOnBounds="true">
+                         <Image url="@logo.png"/>
+                     </ImageView>
+                     <Label fx:id="nameLabel" layoutX="24.0" layoutY="111.0"
+                            prefHeight="53.0" prefWidth="266.0" text="Label"
+                            textFill="WHITE">
+                         <font>
+                             <Font size="36.0"/>
+                         </font>
+                     </Label>
+                 </AnchorPane>
+             </StackPane>
          </top>
          <center>
-            <GridPane alignment="BOTTOM_CENTER" prefHeight="523.0" prefWidth="295.0" BorderPane.alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="261.0" minHeight="10.0" prefHeight="115.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="322.0" minHeight="0.0" prefHeight="54.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="322.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="457.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="457.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="457.0" minHeight="10.0" prefHeight="74.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="Calendar" textFill="WHITE">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: #786FAC;" text="Plans" textFill="WHITE" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="tasksButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="309.0" style="-fx-background-color: none;" text="Manage task" textFill="WHITE" GridPane.rowIndex="3">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="meetingButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage meeting" textFill="WHITE" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4" />
-                  <Button fx:id="leadButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#changeView" prefHeight="36.0" prefWidth="295.0" style="-fx-background-color: none;" text="Lead" textFill="WHITE" GridPane.rowIndex="5">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="availableClientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Available Clients" textFill="WHITE" GridPane.rowIndex="6">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="clientsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="All Users" textFill="WHITE" GridPane.rowIndex="7">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="manageLeadsButton" mnemonicParsing="false" onAction="#changeView" prefHeight="80.0" prefWidth="295.0" style="-fx-background-color: none;" text="Manage leads" textFill="WHITE" GridPane.rowIndex="8">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
-               </children>
-            </GridPane>
+             <GridPane alignment="BOTTOM_CENTER" prefHeight="523.0"
+                       prefWidth="295.0" BorderPane.alignment="CENTER">
+                 <columnConstraints>
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                                        prefWidth="100.0"/>
+                 </columnConstraints>
+                 <rowConstraints>
+                     <RowConstraints maxHeight="261.0" minHeight="10.0"
+                                     prefHeight="115.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="322.0" minHeight="0.0"
+                                     prefHeight="54.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="322.0" minHeight="0.0"
+                                     prefHeight="51.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="457.0" minHeight="10.0"
+                                     prefHeight="49.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="457.0" minHeight="10.0"
+                                     prefHeight="57.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="457.0" minHeight="10.0"
+                                     prefHeight="74.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                     prefHeight="46.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                     prefHeight="47.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                     prefHeight="56.0" vgrow="SOMETIMES"/>
+                     <RowConstraints maxHeight="360.0" minHeight="10.0"
+                                     prefHeight="53.0" vgrow="SOMETIMES"/>
+                 </rowConstraints>
+                 <Button alignment="BOTTOM_LEFT" mnemonicParsing="false"
+                         prefHeight="36.0" prefWidth="295.0"
+                         style="-fx-background-color: #786FAC;" text="Calendar"
+                         textFill="WHITE">
+                    <font>
+                        <Font size="22.0"/>
+                    </font>
+                 </Button>
+                 <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false"
+                         prefHeight="80.0" prefWidth="295.0"
+                         style="-fx-background-color: #786FAC;" text="Plans"
+                         textFill="WHITE" GridPane.rowIndex="1">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                 </Button>
+                 <Button fx:id="tasksButton" mnemonicParsing="false"
+                         onAction="#changeView" prefHeight="80.0"
+                         prefWidth="309.0" style="-fx-background-color: none;"
+                         text="Manage task" textFill="WHITE"
+                         GridPane.rowIndex="3">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                 </Button>
+                 <Button fx:id="meetingButton" mnemonicParsing="false"
+                         onAction="#changeView" prefHeight="80.0"
+                         prefWidth="295.0" style="-fx-background-color: none;"
+                         text="Manage meeting" textFill="WHITE"
+                         GridPane.rowIndex="2">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                 </Button>
+                 <Line endX="194.5" startX="-100.0" GridPane.rowIndex="4"/>
+                 <Button fx:id="leadButton" alignment="BOTTOM_LEFT"
+                         mnemonicParsing="false" onAction="#changeView"
+                         prefHeight="36.0" prefWidth="295.0"
+                         style="-fx-background-color: none;" text="Lead"
+                         textFill="WHITE" GridPane.rowIndex="5">
+                    <font>
+                        <Font size="22.0"/>
+                    </font>
+                 </Button>
+                 <Button fx:id="availableClientsButton" mnemonicParsing="false"
+                         onAction="#changeView" prefHeight="80.0"
+                         prefWidth="295.0" style="-fx-background-color: none;"
+                         text="Available Clients" textFill="WHITE"
+                         GridPane.rowIndex="6">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                 </Button>
+                 <Button fx:id="clientsButton" mnemonicParsing="false"
+                         onAction="#changeView" prefHeight="80.0"
+                         prefWidth="295.0" style="-fx-background-color: none;"
+                         text="All Users" textFill="WHITE"
+                         GridPane.rowIndex="7">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                 </Button>
+                 <Button fx:id="manageLeadsButton" mnemonicParsing="false"
+                         onAction="#changeView" prefHeight="80.0"
+                         prefWidth="295.0" style="-fx-background-color: none;"
+                         text="Manage leads" textFill="WHITE"
+                         GridPane.rowIndex="8">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                 </Button>
+             </GridPane>
          </center>
       </BorderPane>
    </left>
@@ -121,15 +175,19 @@
                   </Text>
                </bottom>
                <top>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="1130.0" style="-fx-background-color: #544997;" BorderPane.alignment="CENTER">
-                     <children>
-                        <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButton" style="-fx-background-color: none;" text="X" textFill="WHITE">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </HBox>
+                   <HBox alignment="CENTER_RIGHT" prefHeight="40.0"
+                         prefWidth="1130.0"
+                         style="-fx-background-color: #544997;"
+                         BorderPane.alignment="CENTER">
+                       <Button fx:id="closeButton" mnemonicParsing="false"
+                               onAction="#onCloseButton"
+                               style="-fx-background-color: none;" text="X"
+                               textFill="WHITE">
+                          <font>
+                              <Font size="20.0"/>
+                          </font>
+                       </Button>
+                   </HBox>
                </top>
             </BorderPane>
          </top>
@@ -139,40 +197,53 @@
                   <padding>
                      <Insets left="1.0" top="1.0" />
                   </padding></FlowPane>
-                 <HBox alignment="CENTER" layoutX="-2.0" layoutY="17.0" prefHeight="69.0" prefWidth="1127.0" spacing="120.0">
-                     <children>
-                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Su" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                         <Text layoutX="213.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mo" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                         <Text layoutX="222.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tu" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                         <Text layoutX="232.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                         <Text layoutX="241.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Th" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                         <Text layoutX="251.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fr" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                         <Text layoutX="266.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sa" textAlignment="CENTER">
-                        <font>
-                           <Font size="30.0" />
-                        </font></Text>
-                     </children>
+                 <HBox alignment="CENTER" layoutX="-2.0" layoutY="17.0"
+                       prefHeight="69.0" prefWidth="1127.0" spacing="120.0">
                      <padding>
-                         <Insets right="9.0" />
+                         <Insets right="9.0"/>
                      </padding>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Su"
+                           textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
+                     <Text layoutX="213.0" layoutY="37.0" strokeType="OUTSIDE"
+                           strokeWidth="0.0" text="Mo" textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
+                     <Text layoutX="222.0" layoutY="37.0" strokeType="OUTSIDE"
+                           strokeWidth="0.0" text="Tu" textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
+                     <Text layoutX="232.0" layoutY="37.0" strokeType="OUTSIDE"
+                           strokeWidth="0.0" text="We" textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
+                     <Text layoutX="241.0" layoutY="37.0" strokeType="OUTSIDE"
+                           strokeWidth="0.0" text="Th" textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
+                     <Text layoutX="251.0" layoutY="37.0" strokeType="OUTSIDE"
+                           strokeWidth="0.0" text="Fr" textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
+                     <Text layoutX="266.0" layoutY="37.0" strokeType="OUTSIDE"
+                           strokeWidth="0.0" text="Sa" textAlignment="CENTER">
+                         <font>
+                             <Font size="30.0"/>
+                         </font>
+                     </Text>
                  </HBox>
 
              </AnchorPane>

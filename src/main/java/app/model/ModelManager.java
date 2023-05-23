@@ -1,9 +1,6 @@
 package app.model;
 
 import app.shared.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.collections.ObservableList;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
@@ -23,6 +20,8 @@ public class ModelManager implements Model
   private ArrayList<Business> businesses;
   private ArrayList<Lead> leads;
 
+  private User loggedInUser = new User("", "", "", "", "", true, "", 41412, "", "");
+
   private final PropertyChangeSupport support;
 
   public ModelManager(Communicator communicator)
@@ -41,6 +40,7 @@ public class ModelManager implements Model
 
 
   }
+
 
   @Override public void addMeeting(String title, String description, java.sql.Date date, Time startTime, Time endTime, String leadEmail,ArrayList<String> emails)
       throws SQLException, RemoteException
@@ -193,6 +193,25 @@ public class ModelManager implements Model
     support.firePropertyChange("reloadUser", false, true);
   }
 
+  @Override public boolean logIn(String email, String password)
+      throws SQLException, RemoteException
+  {
+    if(communicator.logIn(email, password))
+    {
+      loggedInUser = communicator.getUserByEmail(email);
+      support.firePropertyChange("reloadMeetings", false, true);
+      support.firePropertyChange("reloadTasks", false, true);
+      support.firePropertyChange("reloadLoggedInUser", false, true);
+      return true;
+    }
+    return false;
+  }
+
+  @Override public String getLoggedInUserName()
+  {
+    return loggedInUser.getFirstName();
+  }
+
   @Override public void removeMeeting(Meeting meeting)
       throws SQLException, RemoteException
   {
@@ -201,7 +220,14 @@ public class ModelManager implements Model
 
   @Override public ArrayList<Meeting> getMeetings() {
     try{
-      meetings = communicator.getMeetings();
+      if(isManager())
+      {
+        meetings = communicator.getMeetings();
+      }
+      else
+      {
+        meetings = communicator.getMeetingsByUser(loggedInUser);
+      }
       return meetings;
     }catch (Exception e){
       e.printStackTrace();
@@ -248,7 +274,14 @@ public class ModelManager implements Model
   @Override public ArrayList<Task> getTasks()
   {
     try{
-      tasks = communicator.getTasks();
+      if(isManager())
+      {
+        tasks = communicator.getTasks();
+      }
+      else
+      {
+        tasks = communicator.getTasksByUser(loggedInUser);
+      }
       return tasks;
     }catch (Exception e){
       e.printStackTrace();
@@ -257,9 +290,10 @@ public class ModelManager implements Model
   }
 
 
-  @Override public boolean checkUser()
+  @Override public boolean isManager()
   {
-    return false;
+
+    return loggedInUser.isManager();
   }
 
 

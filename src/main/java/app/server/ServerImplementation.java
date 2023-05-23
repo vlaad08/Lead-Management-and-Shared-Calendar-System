@@ -319,4 +319,32 @@ public class ServerImplementation implements Communicator
     support.firePropertyChange("reloadUser", null, "");
   }
 
+  @Override public boolean logIn(String email, String password)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+
+    return connection.logIn(email, password);
+  }
+
+  @Override public User getUserByEmail(String email)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getUserByEmail(email);
+  }
+
+  @Override public ArrayList<Meeting> getMeetingsByUser(User user) throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getMeetingsByUser(user);
+  }
+
+  @Override public ArrayList<Task> getTasksByUser(User user)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+    return connection.getTasksByUser(user);
+  }
+
 }

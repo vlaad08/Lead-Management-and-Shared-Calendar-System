@@ -389,7 +389,16 @@ public class Draw
 
       try
       {
-        drawManageMeetingPopUp(meetingViewModel, title, leadEmail, datePicker, startTime, endTime, description);
+        if(meetingViewModel.isManager())
+        {
+          drawManageMeetingPopUp(meetingViewModel, title, leadEmail, datePicker, startTime, endTime, description);
+        }
+        else
+        {
+          Alert info = new Alert(Alert.AlertType.INFORMATION);
+          info.setContentText("Only a manager can edit a meeting");
+          info.show();
+        }
       }
       catch (SQLException | RemoteException e)
       {
@@ -515,8 +524,6 @@ public class Draw
 
     descr.getChildren().addAll(newDescription, descrText, buttons);
     descr.setLayoutY(10);
-
-
 
 
 
@@ -953,6 +960,8 @@ public class Draw
 
 
 
+
+
     task.setOnMouseClicked(event -> {
       try
       {
@@ -1134,6 +1143,15 @@ public class Draw
     employeeChoice.getChildren().add(assignTable);
 
     insert.addAll(topBar, titleBox, businesses, descr, dueDate,  statusBox, assignTable);
+
+    if(!tasksViewModel.isManager())
+    {
+      descrTextField.setEditable(false);
+      titleTextField.setEditable(false);
+      businessComboBox.setEditable(false);
+      datePicker.setEditable(false);
+      assignTable.setEditable(false);
+    }
 
 
     update.setOnAction(event -> {

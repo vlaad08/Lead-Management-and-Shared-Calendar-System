@@ -4,13 +4,13 @@ import app.model.Model;
 
 public class ViewModelFactory
 {
-  private CalendarViewModel calendarViewModel;
-  private MeetingViewModel meetingViewModel;
-  private TasksViewModel tasksViewModel;
-  private AvailableClientsViewModel availableClientsViewModel;
-  private AllUsersViewModel allUsersViewModel;
-  private LeadsViewModel leadsViewModel;
-  private SelectRoleViewModel selectRoleViewModel;
+  private final CalendarViewModel calendarViewModel;
+  private final MeetingViewModel meetingViewModel;
+  private final TasksViewModel tasksViewModel;
+  private final AvailableClientsViewModel availableClientsViewModel;
+  private final AllUsersViewModel allUsersViewModel;
+  private final LeadsViewModel leadsViewModel;
+  private final LoginViewModel loginViewModel;
 
   public ViewModelFactory(Model model){
     this.calendarViewModel = new CalendarViewModel(model);
@@ -19,12 +19,12 @@ public class ViewModelFactory
     this.availableClientsViewModel = new AvailableClientsViewModel(model);
     this.allUsersViewModel = new AllUsersViewModel(model);
     this.leadsViewModel = new LeadsViewModel(model);
-    this.selectRoleViewModel=new SelectRoleViewModel(model);
+    this.loginViewModel =new LoginViewModel(model);
   }
 
-  public SelectRoleViewModel getSelectRoleViewModel()
+  public LoginViewModel getSelectRoleViewModel()
   {
-    return selectRoleViewModel;
+    return loginViewModel;
   }
 
   public CalendarViewModel getCalendarViewModel(){

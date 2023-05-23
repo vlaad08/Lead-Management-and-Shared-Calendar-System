@@ -6,6 +6,8 @@ import app.shared.Meeting;
 import app.shared.User;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -24,13 +26,27 @@ public class MeetingViewModel implements PropertyChangeListener
 
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Meeting>> meetings;
+  private SimpleStringProperty name;
 
   public MeetingViewModel(Model model){
     this.model = model;
     model.addPropertyChangeListener(this);
     support = new PropertyChangeSupport(this);
     meetings = new SimpleObjectProperty<>();
+
+    name = new SimpleStringProperty(model.getLoggedInUserName());
     meetings.set(FXCollections.observableArrayList(getMeetings()));
+
+  }
+
+  public void bindUserName(StringProperty property)
+  {
+    property.bindBidirectional(name);
+  }
+
+  public boolean isManager()
+  {
+    return model.isManager();
   }
 
   public void addPropertyChangeListener(PropertyChangeListener listener)
@@ -66,6 +82,7 @@ public class MeetingViewModel implements PropertyChangeListener
     return model.getMeetings();
   }
 
+
   public ArrayList<Lead> getLeads() throws SQLException, RemoteException
   {
     return model.getLeads();
@@ -87,10 +104,6 @@ public class MeetingViewModel implements PropertyChangeListener
   }
 
 
-  public boolean checkUser()
-  {
-    return model.checkUser();
-  }
 
   @Override public void propertyChange(PropertyChangeEvent evt)
   {
@@ -100,6 +113,11 @@ public class MeetingViewModel implements PropertyChangeListener
       ObservableList<Meeting> observableList= FXCollections.observableList(list);
       meetings.set(observableList);
       support.firePropertyChange("reloadMeetings", false, true);
+    }
+
+    if(evt.getPropertyName().equals("reloadLoggedInUser"))
+    {
+      name = new SimpleStringProperty(model.getLoggedInUserName());
     }
   }
 }

@@ -32,22 +32,10 @@ public class MyApplication extends Application
     Listener listener = new Listener(model);
 
 
-
     communicator.addListener(listener);
-
-
-
-    FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("Calendar.fxml"));
-    Scene scene= new Scene(loader.load());
     primaryStage.setResizable(false);
-
-
     primaryStage.initStyle(StageStyle.UNDECORATED);
-    primaryStage.setScene(scene);
-    primaryStage.show();
 
-    //For creating connection with the server
 
     ViewModelFactory viewModelFactory = new ViewModelFactory(model);
     ViewHandler viewHandler = new ViewHandler(viewModelFactory);

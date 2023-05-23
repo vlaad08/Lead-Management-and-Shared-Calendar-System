@@ -140,7 +140,8 @@ public class SQLConnection
       ArrayList<User> users = new ArrayList<>();
       ResultSet set = statement.executeQuery();
       while (set.next()) {
-        boolean manager = false;
+
+
 
         String firstname = set.getString("firstname");
         String middleName = set.getString("middlename");
@@ -148,22 +149,19 @@ public class SQLConnection
         if (middleName == null) {
           middleName = "";
         }
-
         String lastname = set.getString("lastname");
         String email = set.getString("email");
         String phone = set.getString("phone");
-        String role = set.getString("role");
-
-        if (role.equals("manager")) {
-          manager = true;
-        }
-
+        boolean manager = set.getBoolean("role");
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
         String city = set.getString("city");
         String country = set.getString("country");
 
-        users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode, city, country));
+        if(!email.equals("a@a.aa"))
+        {
+          users.add(new User(firstname, middleName, lastname, email, phone, manager, street, postalCode, city, country));
+        }
       }
       return users;
     }
@@ -580,7 +578,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       ResultSet set = statement.executeQuery();
       User user = null;
       if (set.next()) {
-        boolean manager = false;
+
 
         String firstname = set.getString("firstname");
         String middleName = set.getString("middlename");
@@ -592,12 +590,7 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
         String lastname = set.getString("lastname");
         String e = set.getString("email");
         String phone = set.getString("phone");
-        String role = set.getString("role");
-
-        if (role.equals("manager")) {
-          manager = true;
-        }
-
+        boolean manager = set.getBoolean("role");
         String street = set.getString("street");
         int postalCode = set.getInt("postalcode");
         String city = set.getString("city");
@@ -609,4 +602,74 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
+  public boolean logIn(String email, String password) throws SQLException
+  {
+    try
+        (
+            Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement("select * from \"user\" where email = ? and password = ?")
+            )
+    {
+      statement.setString(1, email);
+      statement.setString(2, password);
+
+      ResultSet set = statement.executeQuery();
+
+      if(set.next())
+      {
+        return set.getString("email").equals(email) && set.getString("password")
+            .equals(password);
+      }
+      return false;
+    }
+  }
+
+  public ArrayList<Meeting> getMeetingsByUser(User user) throws  SQLException
+  {
+    try (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+            "select * from meeting m join attendance a on m.title = a.title and m.date = a.date and m.starttime = a.starttime and m.endtime = a.endtime\n"
+                + " where a.email = ?"))
+    {
+
+      statement.setString(1, user.getEmail());
+      ArrayList<Meeting> meetings = new ArrayList<>();
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next())
+      {
+        String title = resultSet.getString("title");
+        String description = resultSet.getString("description");
+        Date date = resultSet.getDate("date");
+        Time startTime = resultSet.getTime("starttime");
+        Time endTime = resultSet.getTime("endtime");
+        String email = resultSet.getString("email");
+        meetings.add(
+            new Meeting(title, description, date, startTime, endTime, email));
+      }
+      return meetings;
+    }
+  }
+
+  public ArrayList<Task> getTasksByUser(User user) throws SQLException
+  {
+    try (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(
+            "select * from task t join assignment a on t.title = a.title and t.duedate = a.duedate and t.business_id = a.business_id\n"
+                + "where a.email = ?"))
+    {
+      ArrayList<Task> tasks = new ArrayList<>();
+      statement.setString(1, user.getEmail());
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next())
+      {
+        String title = resultSet.getString("title");
+        String description = resultSet.getString("description");
+        Date date = resultSet.getDate("dueDate");
+        String status = resultSet.getString("status");
+        int businessId = resultSet.getInt("business_id");
+        tasks.add(new Task(title, description, date, status, businessId));
+      }
+      return tasks;
+    }
+  }
 }
