@@ -87,19 +87,19 @@ public class SQLConnectionTest {
             new Meeting("Meeting2", "", Date.valueOf(LocalDate.of( 2023, 5, 22)),
                 Time.valueOf(LocalTime.of(7, 0)), Time.valueOf(LocalTime.of(11,0)), "le2@gmail.com"))
     ));
-    ArrayList<Meeting> meetings = sqlConnection.getMeetings();
+    ArrayList<Object> meetings = sqlConnection.getMeetings();
     Mockito.verify(connection).prepareStatement("select * from meeting");
     Mockito.verify(statement).executeQuery();
     assertEquals(2,meetings.size());
 
-    Meeting meeting1 = meetings.get(0);
+    Meeting meeting1 = (Meeting) meetings.get(0);
     assertEquals(meeting1.getTitle(),"Meeting1");
     assertEquals(meeting1.getDescription(),"");
     assertEquals(meeting1.getDate(),Date.valueOf(LocalDate.of( 2023, 5, 22)));
     assertEquals(meeting1.getStartTime(),Time.valueOf(LocalTime.of(7, 0)));
     assertEquals(meeting1.getEndTime(),Time.valueOf(LocalTime.of(11,0)));
     assertEquals(meeting1.getLeadEmail(),"le1@gmail.com");
-    Meeting meeting2 = meetings.get(1);
+    Meeting meeting2 = (Meeting) meetings.get(1);
     assertEquals(meeting2.getTitle(),"Meeting2");
     assertEquals(meeting2.getDescription(),"");
     assertEquals(meeting2.getDate(),Date.valueOf(LocalDate.of( 2023, 5, 22)));
@@ -148,18 +148,18 @@ public class SQLConnectionTest {
   {
     Mockito.when(sqlConnection.getTasks()).thenReturn(new ArrayList<>(List.of(new Task("Task1","", Date.valueOf(LocalDate.of( 2023, 5, 22)),"To do", 7456),new Task("Task2","",Date.valueOf(LocalDate.of( 2023, 5, 24)),"Ready", 7456))));
 
-    ArrayList<Task> tasks = sqlConnection.getTasks();
+    ArrayList<Object> tasks = sqlConnection.getTasks();
     Mockito.verify(connection).prepareStatement("select * from task");
     Mockito.verify(statement).executeQuery();
     assertEquals(2,tasks.size());
 
-    Task task1 = tasks.get(0);
+    Task task1 = (Task) tasks.get(0);
     assertEquals(task1.getTitle(),"Task1");
     assertEquals(task1.getDescription(),"");
     assertEquals(task1.getDate(),Date.valueOf(LocalDate.of( 2023, 5, 22)));
     assertEquals(task1.getStatus(),"To do");
     assertEquals(task1.getBusiness_id(),7456);
-    Task task2 = tasks.get(1);
+    Task task2 = (Task) tasks.get(1);
     assertEquals(task2.getTitle(),"Task2");
     assertEquals(task2.getDescription(),"");
     assertEquals(task2.getDate(),Date.valueOf(LocalDate.of( 2023, 5, 24)));
@@ -234,14 +234,14 @@ public class SQLConnectionTest {
   @Test
   void get_Users_gives_back_all_users() throws SQLException
   {
-    Mockito.when(sqlConnection.getUsers()).thenReturn(new ArrayList<>(List.of(new User("Test1", null,"User", "testuser1@gmail.com","+4511223344",false,"Street 1",4433, "TestCity", "TestCountry"),new User("Test2", null,"User", "testuser2@gmail.com","+4522334455",true,"Street 2",4433, "TestCity", "TestCountry"))));
+    Mockito.when(sqlConnection.getUsers()).thenReturn(new ArrayList<>(List.of(new User("Test1", null,"User", "testuser1@gmail.com","+4511223344",false,"Street 1",4433),new User("Test2", null,"User", "testuser2@gmail.com","+4522334455",true,"Street 2",4433))));
 
-    ArrayList<User> users=sqlConnection.getUsers();
+    ArrayList<Object> users=sqlConnection.getUsers();
     Mockito.verify(connection).prepareStatement("SELECT * FROM \"user\" INNER JOIN address ON \"user\".street = address.street AND \"user\".postalcode = address.postalcode");
     Mockito.verify(statement).executeQuery();
     assertEquals(2,users.size());
 
-    User user1=users.get(0);
+    User user1= (User) users.get(0);
     assertEquals(user1.getFirstName(),"Test1");
     assertEquals(user1.getMiddleName(),null);
     assertEquals(user1.getLastName(),"User");
@@ -253,7 +253,7 @@ public class SQLConnectionTest {
     assertEquals(user1.getCity(),"TestCity");
     assertEquals(user1.getCountry(),"TestCountry");
 
-    User user2=users.get(1);
+    User user2= (User) users.get(1);
     assertEquals(user2.getFirstName(),"Test2");
     assertEquals(user2.getMiddleName(),null);
     assertEquals(user2.getLastName(),"User");
@@ -277,16 +277,16 @@ public class SQLConnectionTest {
   {
     Mockito.when(sqlConnection.getBusinesses()).thenReturn(new ArrayList<>(List.of(new Business("Test1", "Street 1",1122), new Business("Test2","Street 2", 1122 ))));
 
-    ArrayList<Business> businesses=sqlConnection.getBusinesses();
+    ArrayList<Object> businesses=sqlConnection.getBusinesses();
     Mockito.verify(connection).prepareStatement("select * from business");
     Mockito.verify(statement).executeQuery();
     assertEquals(2,businesses.size());
 
-    Business business1=businesses.get(0);
+    Business business1= (Business) businesses.get(0);
     assertEquals(business1.getName(), "Test1");
     assertEquals(business1.getStreet(), "Street 1");
     assertEquals(business1.getPostalCode(), 1122);
-    Business business2=businesses.get(1);
+    Business business2= (Business) businesses.get(1);
     assertEquals(business2.getName(), "Test2");
     assertEquals(business2.getStreet(), "Street 2");
     assertEquals(business2.getPostalCode(), 1122);
@@ -430,12 +430,12 @@ public class SQLConnectionTest {
     Mockito.when(sqlConnection.getLeads()).thenReturn(new ArrayList<>(List.of(new Lead("Test1", null, "Lead", "le1@gmail.com", "+4555445544","CEO", 7456, "BMW Motors", "Available")
             ,new Lead("Test2", null, "Lead", "le2@gmail.com", "+4544554455","CFO", 7456, "BMW Motors", "Available"))));
 
-    ArrayList<Lead> leads=sqlConnection.getLeads();
+    ArrayList<Object> leads=sqlConnection.getLeads();
     Mockito.verify(connection).prepareStatement("select * from lead");
     Mockito.verify(statement).executeQuery();
     assertEquals(2,leads.size());
 
-    Lead lead1=leads.get(0);
+    Lead lead1= (Lead) leads.get(0);
     assertEquals(lead1.getFirstname(),"Test1");
     assertEquals(lead1.getMiddleName(),null);
     assertEquals(lead1.getLastname(),"Lead");
@@ -445,7 +445,7 @@ public class SQLConnectionTest {
     assertEquals(lead1.getBusiness_id(),7456);
     assertEquals(lead1.getBusinessName(),"BMW Motors");
     assertEquals(lead1.getStatus(),"Available");
-    Lead lead2=leads.get(1);
+    Lead lead2= (Lead) leads.get(1);
     assertEquals(lead2.getFirstname(),"Test2");
     assertEquals(lead2.getMiddleName(),null);
     assertEquals(lead2.getLastname(),"Lead");
@@ -569,8 +569,9 @@ public class SQLConnectionTest {
   @Test
   void creating_new_user_will_update_user_table() throws SQLException
   {
-    User user=new User("Test", null, "User", "user@gmail.com", "+4544556677",false,"Street 1", 8700, "Horsens", "Denmark");
-    sqlConnection.createUser(user);
+    User user=new User("Test", null, "User", "user@gmail.com", "+4544556677",false,"Street 1", 8700);
+    String password="password";
+    sqlConnection.createUser(user,password);
     Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(2),stringArgumentCaptor.capture());
@@ -579,7 +580,8 @@ public class SQLConnectionTest {
     Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(6),stringArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(7),stringArgumentCaptor.capture());
-    Mockito.verify(statement).setInt(eq(8),integerArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(8),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(9),integerArgumentCaptor.capture());
     Mockito.verify(statement).executeUpdate();
 
     assertEquals(stringArgumentCaptor.getAllValues().get(0), "INSERT Into \"user\"(firstname, middlename, lastname, email, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?)");
@@ -587,9 +589,10 @@ public class SQLConnectionTest {
     assertEquals(stringArgumentCaptor.getAllValues().get(2),null);
     assertEquals(stringArgumentCaptor.getAllValues().get(3),"User");
     assertEquals(stringArgumentCaptor.getAllValues().get(4),"user@gmail.com");
-    assertEquals(stringArgumentCaptor.getAllValues().get(5),"+4544556677");
-    assertEquals(stringArgumentCaptor.getAllValues().get(6),"employee");
-    assertEquals(stringArgumentCaptor.getAllValues().get(7),"Street 1");
+    assertEquals(stringArgumentCaptor.getAllValues().get(5),"password");
+    assertEquals(stringArgumentCaptor.getAllValues().get(6),"+4544556677");
+    assertEquals(stringArgumentCaptor.getAllValues().get(7),"employee");
+    assertEquals(stringArgumentCaptor.getAllValues().get(8),"Street 1");
     assertEquals(integerArgumentCaptor.getValue(),8700);
   }
 
@@ -805,7 +808,7 @@ public class SQLConnectionTest {
   void getting_user_by_email_returns_a_User() throws SQLException
   {
     String email="testuser@gmail.com";
-    User user=new User("Test1", null,"User", "testuser@gmail.com","+4511223344",false,"Street 1",4433, "TestCity", "TestCountry");
+    User user=new User("Test1", null,"User", "testuser@gmail.com","+4511223344",false,"Street 1",4433);
     Mockito.when(sqlConnection.getUserByEmail(email)).thenReturn(user);
     assertEquals(User.class,sqlConnection.getUserByEmail(email).getClass());
   }
@@ -815,7 +818,7 @@ public class SQLConnectionTest {
       throws SQLException
   {
     String email="testuser@gmail.com";
-    User user=new User("Test1", null,"User", "testuser@gmail.com","+4511223344",false,"Street 1",4433, "TestCity", "TestCountry");
+    User user=new User("Test1", null,"User", "testuser@gmail.com","+4511223344",false,"Street 1",4433);
     Mockito.when(sqlConnection.getUserByEmail(email)).thenReturn(user);
     User result=sqlConnection.getUserByEmail(email);
     Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());

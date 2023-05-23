@@ -752,8 +752,8 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-  public ArrayList<Object> getAttendanceByUser(User oldObj)
-  {
-    
-  }
+//  public ArrayList<Object> getAttendanceByUser(User oldObj)
+//  {
+//
+//  }
 }
