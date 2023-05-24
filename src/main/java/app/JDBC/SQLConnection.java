@@ -752,7 +752,41 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
     }
   }
 
-//  public ArrayList<Object> getAttendanceByUser(User oldObj)
+  public Object getAddress(User obj) throws SQLException
+  {
+    try( Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("select * from address where street = ? and postalcode = ?")
+
+        )
+    {
+      statement.setString(1, obj.getStreet());
+      statement.setInt(2, obj.getPostalCode());
+      ResultSet set = statement.executeQuery();
+      if(set.next())
+      {
+        String city = set.getString("city");
+        String country = set.getString("country");
+        return new Address(obj.getStreet(), city, country, obj.getPostalCode());
+      }
+      return null;
+    }
+  }
+
+  public void removeAddress(Address obj) throws SQLException
+  {
+    try
+        (Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement("delete from address where street = ? and city = ? and country = ? and postalcode = ? "))
+    {
+      statement.setString(1, obj.getStreet());
+      statement.setString(2, obj.getCity());
+      statement.setString(3, obj.getCountry());
+      statement.setInt(4, obj.getPostalCode());
+      statement.executeUpdate();
+    }
+  }
+
+  //  public ArrayList<Object> getAttendanceByUser(User oldObj)
 //  {
 //
 //  }

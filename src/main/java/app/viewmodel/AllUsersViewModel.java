@@ -127,4 +127,17 @@ public class AllUsersViewModel implements PropertyChangeListener
   {
     model.editObjectWithPassword(oldUser,newUser,password);
   }
+
+  public Address getAddress(User user) throws SQLException, RemoteException
+  {
+      Object obj = model.getObject(user, "address");
+      if(obj instanceof Address)
+        return (Address) obj;
+      return null;
+  }
+
+  public void removeAddress(Address a) throws SQLException, RemoteException
+  {
+    model.removeObject(a);
+  }
 }

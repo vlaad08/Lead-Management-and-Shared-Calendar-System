@@ -1,11 +1,15 @@
 package app.view;
 
 import app.model.ConstraintChecker;
+import app.shared.Business;
 import app.viewmodel.LoginViewModel;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 
@@ -21,6 +25,8 @@ public class LoginController
   @FXML private TextField emailTextField;
   @FXML private TextField passwordField;
 
+  @FXML private Button loginButton;
+
   Alert loginError  = new Alert(Alert.AlertType.ERROR);
 
   public void init(ViewHandler viewHandler, LoginViewModel loginViewModel,Region root)
@@ -29,7 +35,47 @@ public class LoginController
     this.loginViewModel = loginViewModel;
     this.viewHandler=viewHandler;
 
-    
+
+
+    emailTextField.setOnKeyPressed(event -> {
+      try
+      {
+        if(event.getCode() == KeyCode.ENTER)
+        {
+          logIn();
+        }
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+    passwordField.setOnKeyPressed(event -> {
+      try
+      {
+        if(event.getCode() == KeyCode.ENTER)
+        {
+          logIn();
+        }
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
+    loginButton.setOnKeyPressed(event -> {
+      try
+      {
+        if(event.getCode() == KeyCode.ENTER)
+        {
+          logIn();
+        }
+      }
+      catch (SQLException | RemoteException e)
+      {
+        throw new RuntimeException(e);
+      }
+    });
   }
 
   public Region getRoot()

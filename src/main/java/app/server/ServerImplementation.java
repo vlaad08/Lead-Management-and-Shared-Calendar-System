@@ -84,10 +84,13 @@ public class ServerImplementation implements Communicator
       connection.createLead((Lead) obj);
       support.firePropertyChange("reloadLead",null,"");
     }
-    if(obj instanceof Address && !checkIfAddressExists((Address) obj))
+    if(obj instanceof Address)
     {
-      connection.createAddress((Address) obj);
-      support.firePropertyChange("reloadAddress", null, "");
+      if(!checkIfAddressExists((Address) obj))
+      {
+        connection.createAddress((Address) obj);
+        support.firePropertyChange("reloadAddress", null, "");
+      }
     }
     if(obj instanceof Business)
     {
@@ -228,6 +231,11 @@ public class ServerImplementation implements Communicator
   {
     connection = SQLConnection.getInstance();
 
+
+    if(obj instanceof Address)
+    {
+      connection.removeAddress((Address) obj);
+    }
     if(obj instanceof String)
     {
       connection.removeAssignmentsForUser((String) obj);
@@ -389,6 +397,20 @@ public class ServerImplementation implements Communicator
       support.firePropertyChange("reloadMeeting", null, "");
       support.firePropertyChange("realodTask", null, "");
     }
+  }
+
+  @Override public Object getObject(Object obj, String expectedType)
+      throws SQLException, RemoteException
+  {
+    connection = SQLConnection.getInstance();
+
+
+    if(obj instanceof User && expectedType.equalsIgnoreCase("address"))
+    {
+      return connection.getAddress((User) obj);
+    }
+
+    return null;
   }
 
 }

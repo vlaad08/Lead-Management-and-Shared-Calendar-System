@@ -64,4 +64,5 @@ public interface Model
   void addObjectWithPassword(User user, String password) throws SQLException, RemoteException;
   void editObjectWithPassword(Object oldObj, Object newObj, String password)
       throws SQLException, RemoteException;
+  Object getObject(Object obj, String expectedType) throws SQLException, RemoteException;
 }
