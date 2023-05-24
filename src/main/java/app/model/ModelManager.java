@@ -171,6 +171,13 @@ public class ModelManager implements Model
     communicator.editObjectWithPassword(oldObj,newObj,password);
   }
 
+  @Override public Object getObject(Object obj, String expectedType)
+      throws SQLException, RemoteException
+  {
+
+    return communicator.getObject(obj, expectedType);
+  }
+
   @Override public void meetingAddedFromServer()
   {
     support.firePropertyChange("reloadMeetings", false, true);

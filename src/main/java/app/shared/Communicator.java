@@ -44,4 +44,5 @@ public interface Communicator extends Remote
   String getUserPassword(String oldEmail) throws SQLException, RemoteException;
   void editObjectWithPassword(Object oldObj, Object newObj, String password)
       throws SQLException, RemoteException;
+  Object getObject(Object obj, String expectedType) throws SQLException, RemoteException;
 }
