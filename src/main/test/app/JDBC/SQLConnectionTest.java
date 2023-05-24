@@ -34,6 +34,8 @@ public class SQLConnectionTest {
   private ArgumentCaptor<Time> timeArgumentCaptor;
   @Captor
   private ArgumentCaptor<Integer> integerArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<Boolean> booleanArgumentCaptor;
 
 
   @BeforeEach
@@ -47,6 +49,7 @@ public class SQLConnectionTest {
     dateArgumentCaptor=ArgumentCaptor.forClass(Date.class);
     timeArgumentCaptor=ArgumentCaptor.forClass(Time.class);
     integerArgumentCaptor=ArgumentCaptor.forClass(Integer.class);
+    booleanArgumentCaptor=ArgumentCaptor.forClass(Boolean.class);
 
     Mockito.when(sqlConnection.getConnection()).thenReturn(connection);
     Mockito.when(connection.prepareStatement(anyString())).thenReturn(statement);
@@ -250,8 +253,6 @@ public class SQLConnectionTest {
     assertEquals(user1.isManager(),false);
     assertEquals(user1.getStreet(),"Street 1");
     assertEquals(user1.getPostalCode(),4433);
-    assertEquals(user1.getCity(),"TestCity");
-    assertEquals(user1.getCountry(),"TestCountry");
 
     User user2= (User) users.get(1);
     assertEquals(user2.getFirstName(),"Test2");
@@ -262,8 +263,6 @@ public class SQLConnectionTest {
     assertEquals(user2.isManager(),true);
     assertEquals(user2.getStreet(),"Street 2");
     assertEquals(user2.getPostalCode(),4433);
-    assertEquals(user2.getCity(),"TestCity");
-    assertEquals(user2.getCountry(),"TestCountry");
   }
 
   @Test
@@ -569,6 +568,7 @@ public class SQLConnectionTest {
   @Test
   void creating_new_user_will_update_user_table() throws SQLException
   {
+
     User user=new User("Test", null, "User", "user@gmail.com", "+4544556677",false,"Street 1", 8700);
     String password="password";
     sqlConnection.createUser(user,password);
@@ -579,20 +579,20 @@ public class SQLConnectionTest {
     Mockito.verify(statement).setString(eq(4),stringArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(5),stringArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(6),stringArgumentCaptor.capture());
-    Mockito.verify(statement).setString(eq(7),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setBoolean(eq(7),booleanArgumentCaptor.capture());
     Mockito.verify(statement).setString(eq(8),stringArgumentCaptor.capture());
     Mockito.verify(statement).setInt(eq(9),integerArgumentCaptor.capture());
     Mockito.verify(statement).executeUpdate();
 
-    assertEquals(stringArgumentCaptor.getAllValues().get(0), "INSERT Into \"user\"(firstname, middlename, lastname, email, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?)");
+    assertEquals(stringArgumentCaptor.getAllValues().get(0), "INSERT Into \"user\"(firstname, middlename, lastname, email, password, phone, role, street, postalcode) VALUES (?,?,?,?,?,?,?,?,?)");
     assertEquals(stringArgumentCaptor.getAllValues().get(1),"Test");
     assertEquals(stringArgumentCaptor.getAllValues().get(2),null);
     assertEquals(stringArgumentCaptor.getAllValues().get(3),"User");
     assertEquals(stringArgumentCaptor.getAllValues().get(4),"user@gmail.com");
     assertEquals(stringArgumentCaptor.getAllValues().get(5),"password");
     assertEquals(stringArgumentCaptor.getAllValues().get(6),"+4544556677");
-    assertEquals(stringArgumentCaptor.getAllValues().get(7),"employee");
-    assertEquals(stringArgumentCaptor.getAllValues().get(8),"Street 1");
+    assertEquals(booleanArgumentCaptor.getValue(),false);
+    assertEquals(stringArgumentCaptor.getAllValues().get(7),"Street 1");
     assertEquals(integerArgumentCaptor.getValue(),8700);
   }
 

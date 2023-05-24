@@ -36,21 +36,6 @@ public class ConstraintChecker
     return false;
   }
 
-  public static boolean checkDateAndTime(LocalDate date, Time startTime, Time endTime){
-    if(!checkDate(date)){
-      return false;
-    }
-
-    if(LocalDate.now().isEqual(date)){
-      if(startTime.after(Time.valueOf(LocalTime.now()))){
-        return true;
-      }else return false;
-    }else if(LocalDate.now().isBefore(date) && checkTime(startTime, endTime)){
-      return true;
-    }
-    return false;
-  }
-
   public static boolean checkFillOut(TextField textField)
   {
     return !textField.getText().equals("");

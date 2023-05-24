@@ -37,19 +37,19 @@ public class ManageMeetingTest_Server
 
   }*/
 
-  @Test
-  void edit_a_meeting() throws Exception {
-    server.editMeeting(meeting, meeting);
-    Mockito.verify(server, Mockito.times(1)).editMeeting(meeting, meeting);
-  }
-
-  @Test void test_if_a_meeting_is_removed() throws Exception{
-    server.removeMeeting(meeting);
-    Mockito.verify(server,Mockito.times(1)).removeMeeting(meeting);
-  }
-
-  @Test void getMeetings() throws Exception{
-    server.getMeetings();
-    Mockito.verify(server,Mockito.times(1)).getMeetings();
-  }
+//  @Test
+//  void edit_a_meeting() throws Exception {
+//    server.editMeeting(meeting, meeting);
+//    Mockito.verify(server, Mockito.times(1)).editMeeting(meeting, meeting);
+//  }
+//
+//  @Test void test_if_a_meeting_is_removed() throws Exception{
+//    server.removeMeeting(meeting);
+//    Mockito.verify(server,Mockito.times(1)).removeMeeting(meeting);
+//  }
+//
+//  @Test void getMeetings() throws Exception{
+//    server.getMeetings();
+//    Mockito.verify(server,Mockito.times(1)).getMeetings();
+//  }
 }

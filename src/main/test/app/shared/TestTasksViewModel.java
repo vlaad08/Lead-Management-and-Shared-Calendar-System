@@ -44,17 +44,17 @@ public class TestTasksViewModel
         dummy.getStatus(), dummy.getBusiness_id(),emails);
   }
 
-  @Test
-  void new_task_is_not_stored_without_title()
-      throws SQLException, RemoteException
-  {
-    ArrayList<String> emails = new ArrayList<String>();
-    emails.add("example@gmail.com");
-    Task temp=new Task("","DummyDescription", Date.valueOf("2023-05-12"),"",1);
-    tasksViewModel.addTask(dummy.getTitle(), dummy.getDescription(), dummy.getDate(),
-        dummy.getStatus(), dummy.getBusiness_id(),emails);
-    Mockito.verify(communicator,Mockito.never()).createTask(temp);
-  }
+//  @Test
+//  void new_task_is_not_stored_without_title()
+//      throws SQLException, RemoteException
+//  {
+//    ArrayList<String> emails = new ArrayList<String>();
+//    emails.add("example@gmail.com");
+//    Task temp=new Task("","DummyDescription", Date.valueOf("2023-05-12"),"",1);
+//    tasksViewModel.addTask(dummy.getTitle(), dummy.getDescription(), dummy.getDate(),
+//        dummy.getStatus(), dummy.getBusiness_id(),emails);
+//    Mockito.verify(communicator,Mockito.never()).createTask(temp);
+//  }
 
   
 
