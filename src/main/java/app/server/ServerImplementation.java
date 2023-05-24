@@ -358,11 +358,36 @@ public class ServerImplementation implements Communicator
     if(oldObj instanceof User && newObj instanceof User)
     {
       ArrayList<Object> assignedTasks = connection.getTasksByUser((User) oldObj);
-      ArrayList<Object> assignedMeetings = connection.getAttendanceByUser((User) oldObj);
+      ArrayList<Object> assignedMeetings = connection.getMeetingsByUser((User) oldObj);
+
+      connection.removeAssignmentsForUser(((User) oldObj).getEmail());
+      connection.removeAttendanceForUser(((User) oldObj).getEmail());
+
+
 
 
       connection.editUser((User)oldObj, (User)newObj, password);
+
+      for(Object task : assignedTasks)
+      {
+        if(task instanceof Task)
+        {
+          connection.assignTask((Task) task, ((User) newObj).getEmail());
+        }
+      }
+
+      for(Object meeting : assignedMeetings)
+      {
+        if(meeting instanceof Meeting)
+        {
+          connection.setAttendance(((User) newObj).getEmail(),
+              (Meeting) meeting);
+        }
+      }
+
       support.firePropertyChange("reloadUser", null, "");
+      support.firePropertyChange("reloadMeeting", null, "");
+      support.firePropertyChange("realodTask", null, "");
     }
   }
 

@@ -166,6 +166,7 @@ public class ModelManager implements Model
   }
 
   @Override public void editObjectWithPassword(Object oldObj, Object newObj, String password)
+      throws SQLException, RemoteException
   {
     communicator.editObjectWithPassword(oldObj,newObj,password);
   }

@@ -123,6 +123,7 @@ public class AllUsersViewModel implements PropertyChangeListener
   }
 
   public void editUser(User oldUser, User newUser, String password)
+      throws SQLException, RemoteException
   {
     model.editObjectWithPassword(oldUser,newUser,password);
   }

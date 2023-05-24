@@ -1959,6 +1959,9 @@ public class Draw
   {
 
     Stage stage = new Stage();
+
+
+
     stage.initStyle(StageStyle.UNDECORATED);
 
 
@@ -2017,7 +2020,7 @@ public class Draw
     HBox city = new HBox();
     Label cityLabel = new Label("City:");
     cityLabel.setPrefWidth(100);
-    TextField cityField = new TextField();
+    TextField cityField = new TextField(oldcity);
     cityField.setText(oldcity);
     cityField.setPrefWidth(200);
     city.setSpacing(20);
@@ -2027,7 +2030,7 @@ public class Draw
     HBox country = new HBox();
     Label countryLabel = new Label("Country:");
     countryLabel.setPrefWidth(100);
-    TextField countryField = new TextField();
+    TextField countryField = new TextField(oldcountry);
     countryField.setText(oldcountry);
     countryField.setPrefWidth(200);
     country.setSpacing(20);
@@ -2069,6 +2072,13 @@ public class Draw
     delete.setPrefWidth(60);
     delete.setTextFill(Paint.valueOf("White"));
     delete.setStyle("-fx-background-color: #ff0000");
+
+
+    if(!allUsersViewModel.isManager())
+    {
+      roleComboBox.setEditable(false);
+    }
+
 
     Platform.runLater(()->delete.setOnAction(event -> {
       try
@@ -2124,7 +2134,15 @@ public class Draw
       Optional<ButtonType> result = alert.showAndWait();
 
       if (result.isPresent() && result.get() == yesButton) {
-        allUsersViewModel.editUser(oldUser, newUser, passwordTextField.getText());
+        try
+        {
+          allUsersViewModel.editUser(oldUser, newUser, passwordTextField.getText());
+          stage.close();
+        }
+        catch (SQLException | RemoteException e)
+        {
+          throw new RuntimeException(e);
+        }
       } else {
         System.out.println("no clicked");
       }
