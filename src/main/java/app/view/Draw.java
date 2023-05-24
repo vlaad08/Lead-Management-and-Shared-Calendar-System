@@ -2019,29 +2019,28 @@ public class Draw
     email.setPadding(new Insets(20,0,0,20));
 
     Label passwordLabel = new Label("Password: ");
+    passwordLabel.setPrefWidth(77);
     TextField passwordTextField = new TextField(allUsersViewModel.getUserPassword(oldemail));
 
     email.getChildren().addAll(emailLabel, emailField, passwordLabel, passwordTextField);
 
     HBox phone = new HBox();
     Label phoneLabel = new Label("Phone:");
-    phoneLabel.setPrefWidth(100);
+    phoneLabel.setPrefWidth(65);
     TextField phoneField = new TextField();
     phoneField.setText(oldphone);
-    phoneField.setPrefWidth(200);
     phone.setSpacing(20);
     phone.setPadding(new Insets(20));
     phone.getChildren().addAll(phoneLabel, phoneField);
 
 
-
     HBox roleBox = new HBox();
     Label roleLabel = new Label("Role:");
-    roleLabel.setPrefWidth(100);
+    roleLabel.setPrefWidth(65);
     ComboBox<String> roleComboBox = new ComboBox<>();
     roleComboBox.getItems().addAll("Employee", "Manager");
     roleComboBox.setValue(oldrole);
-    roleComboBox.setPrefWidth(200);
+    roleComboBox.setPrefWidth(100);
 
     roleBox.setSpacing(20);
     roleBox.setPadding(new Insets(20));
@@ -2050,37 +2049,33 @@ public class Draw
 
     HBox city = new HBox();
     Label cityLabel = new Label("City:");
-    cityLabel.setPrefWidth(100);
+    cityLabel.setPrefWidth(65);
     TextField cityField = new TextField(a.getCity());
-    cityField.setPrefWidth(200);
     city.setSpacing(20);
     city.setPadding(new Insets(20));
     Label countryLabel = new Label("Country:");
-    countryLabel.setPrefWidth(100);
+    countryLabel.setPrefWidth(77);
     TextField countryField = new TextField(a.getCountry());
-    countryField.setPrefWidth(200);
     city.getChildren().addAll(cityLabel,cityField,countryLabel,countryField);
 
     HBox streetBox = new HBox();
     Label streetLabel = new Label("Street:");
-    streetLabel.setPrefWidth(100);
+    streetLabel.setPrefWidth(65);
     TextField streetField = new TextField(a.getStreet());
     Label postalCodeLabel = new Label("PO: ");
     TextField postalCodeTextField = new TextField(String.valueOf(a.getPostalCode()));
-    streetField.setPrefWidth(200);
+    streetBox.setSpacing(20);
+    streetBox.setPadding(new Insets(20));
     streetBox.getChildren().addAll(streetLabel, streetField, postalCodeLabel, postalCodeTextField);
 
     Button update = new Button("Update");
-    update.setPrefWidth(60);
+    update.setPrefWidth(120);
     update.setTextFill(Paint.valueOf("White"));
-    update.setStyle("-fx-background-color: #348e2f");
-
-
-
+    update.setStyle("-fx-background-color:  #348e2f");
     Button delete = new Button("Delete");
-    delete.setPrefWidth(60);
+    delete.setPrefWidth(120);
     delete.setTextFill(Paint.valueOf("White"));
-    delete.setStyle("-fx-background-color: #ff0000");
+    delete.setStyle("-fx-background-color: #d93f3f");
 
 
     if(!allUsersViewModel.isManager())
@@ -2154,7 +2149,6 @@ public class Draw
           if(!streetField.getText().equalsIgnoreCase(a.getStreet()) || !cityField.getText().equalsIgnoreCase(a.getCity()) || !countryField.getText().equalsIgnoreCase(a.getCountry()) ||
               !postalCodeTextField.getText().equalsIgnoreCase(String.valueOf(a.getPostalCode())))
           {
-            System.out.println(streetField.getText() + " " + a.getStreet());
             allUsersViewModel.removeAddress(a);
           }
           stage.close();
@@ -2172,11 +2166,12 @@ public class Draw
 
 
     HBox buttonBox = new HBox();
+    buttonBox.setAlignment(Pos.CENTER);
     buttonBox.setSpacing(20);
     buttonBox.setPadding(new Insets(20));
     buttonBox.getChildren().addAll(update, delete);
 
-    insert.addAll(topBar, name, email, phone, city, streetBox, buttonBox);
+    insert.addAll(topBar, name, email, phone, roleBox, city, streetBox, buttonBox);
 
 
     Scene scene = new Scene(parent);
