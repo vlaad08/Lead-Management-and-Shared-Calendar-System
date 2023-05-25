@@ -1,7 +1,8 @@
-package app.model;
+package app.OLDER;
 
 import static org.mockito.Mockito.*;
 
+import app.model.ModelManager;
 import app.server.ServerImplementation;
 import app.shared.Communicator;
 import app.shared.Meeting;

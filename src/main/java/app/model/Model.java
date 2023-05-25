@@ -58,7 +58,6 @@ public interface Model
       throws SQLException, RemoteException;
 
   User getLoggedInUser();
-  void businessAddedFromServer();
 
   String getUserPassword(String oldEmail) throws SQLException, RemoteException;
   void addObjectWithPassword(User user, String password) throws SQLException, RemoteException;

@@ -1,5 +1,6 @@
-package app.model;
+package app.OLDER;
 
+import app.model.ModelManager;
 import app.server.ServerImplementation;
 import app.shared.Communicator;
 import app.shared.Meeting;

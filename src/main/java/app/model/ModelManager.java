@@ -24,16 +24,13 @@ public class ModelManager implements Model
     this.communicator = communicator;
 
     support = new PropertyChangeSupport(this);
-
-
-
   }
 
-  @Override public void addObject(Object obj)
-      throws SQLException, RemoteException
-  {
-    communicator.addObject(obj);
-  }
+    @Override public void addObject(Object obj)
+        throws SQLException, RemoteException
+    {
+      communicator.addObject(obj);
+    }
 
   @Override public void addObject(Object obj, ArrayList<String> emails)
       throws SQLException, RemoteException
@@ -147,10 +144,6 @@ public class ModelManager implements Model
   {
 
     return loggedInUser.isManager();
-  }
-
-  @Override public void businessAddedFromServer()
-  {
   }
 
   @Override public String getUserPassword(String oldEmail)
