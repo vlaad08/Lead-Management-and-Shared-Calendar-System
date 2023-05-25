@@ -1,6 +1,6 @@
 package app.viewmodel;
 
-import app.model.Model;
+import app.model.ModelMeetingAndTask;
 import app.shared.Lead;
 import app.shared.Meeting;
 import app.shared.User;
@@ -22,13 +22,13 @@ import java.sql.Date;
 
 public class MeetingViewModel implements PropertyChangeListener
 {
-  private final Model model;
+  private final ModelMeetingAndTask model;
 
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Meeting>> meetings;
   private SimpleStringProperty name;
 
-  public MeetingViewModel(Model model){
+  public MeetingViewModel(ModelMeetingAndTask model){
     this.model = model;
     model.addPropertyChangeListener(this);
     support = new PropertyChangeSupport(this);

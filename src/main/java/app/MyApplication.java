@@ -1,8 +1,6 @@
 package app;
 
-import app.model.Listener;
-import app.model.Model;
-import app.model.ModelManager;
+import app.model.*;
 import app.shared.Communicator;
 import app.view.ViewHandler;
 import app.viewmodel.ViewModelFactory;
@@ -27,17 +25,22 @@ public class MyApplication extends Application
     Registry registry = LocateRegistry.getRegistry(6123);
     Communicator communicator = (Communicator) registry.lookup("communicator");
 
-    Model model = new ModelManager(communicator);
+    ModelManager model = new ModelManager(communicator);
+    ModelCalendar modelCalendar = model;
+    ModelLead modelLead = model;
+    ModelListener modelListener = model;
+    ModelLogin modelLogin = model;
+    ModelMeetingAndTask modelMeetingAndTask = model;
+    ModelUser modelUser = model;
 
-    Listener listener = new Listener(model);
-
+    Listener listener = new Listener(modelListener);
 
     communicator.addListener(listener);
     primaryStage.setResizable(false);
     primaryStage.initStyle(StageStyle.UNDECORATED);
 
 
-    ViewModelFactory viewModelFactory = new ViewModelFactory(model);
+    ViewModelFactory viewModelFactory = new ViewModelFactory(modelCalendar,modelLead,modelLogin,modelMeetingAndTask,modelUser);
     ViewHandler viewHandler = new ViewHandler(viewModelFactory);
     viewHandler.start(primaryStage);
 

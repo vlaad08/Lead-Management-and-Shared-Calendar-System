@@ -1,6 +1,7 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.model.ModelUser;
 import app.shared.Address;
 import app.shared.User;
 import javafx.beans.property.ObjectProperty;
@@ -23,11 +24,11 @@ public class AllUsersViewModel implements PropertyChangeListener
   private final ObjectProperty<ObservableList<User>> users;
   private final PropertyChangeSupport support;
 
-  private final Model model;
+  private final ModelUser model;
 
   private SimpleStringProperty name;
 
-  public AllUsersViewModel(Model model)
+  public AllUsersViewModel(ModelUser model)
   {
 
     this.model = model;

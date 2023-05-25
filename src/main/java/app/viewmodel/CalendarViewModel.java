@@ -1,6 +1,7 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.model.ModelCalendar;
 import app.shared.Meeting;
 import app.shared.Task;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,12 +14,12 @@ import java.util.ArrayList;
 
 public class CalendarViewModel implements PropertyChangeListener
 {
-  private final Model model;
+  private final ModelCalendar model;
 
   private final PropertyChangeSupport support;
   private SimpleStringProperty name;
 
-  public CalendarViewModel(Model model){
+  public CalendarViewModel(ModelCalendar model){
     this.model = model;
     model.addPropertyChangeListener(this);
     support = new PropertyChangeSupport(this);

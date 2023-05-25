@@ -1,6 +1,7 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.model.ModelCalendar;
 import app.shared.Lead;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,13 +17,13 @@ import java.util.ArrayList;
 
 public class AvailableClientsViewModel implements PropertyChangeListener
 {
-  private final Model model;
+  private final ModelCalendar model;
   private final PropertyChangeSupport support;
   private final ObjectProperty<ObservableList<Lead>> availableLeads;
 
   private SimpleStringProperty name;
 
-  public AvailableClientsViewModel(Model model){
+  public AvailableClientsViewModel(ModelCalendar model){
     this.model = model;
     support = new PropertyChangeSupport(this);
 
