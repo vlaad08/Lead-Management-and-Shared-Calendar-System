@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
-public interface Model
+public interface Model extends ModelMeetingAndTask, ModelCalendar, ModelUser, ModelLead, ModelLogin, ModelListener
 {
 
 
@@ -38,27 +38,23 @@ public interface Model
 
 
 
-
+  void addPropertyChangeListener(PropertyChangeListener listener);
   boolean isManager();
 
   void meetingAddedFromServer()
       throws SQLException, RemoteException;
 
-  void addPropertyChangeListener(PropertyChangeListener listener);
   void taskAddedFromServer() throws SQLException, RemoteException;
+  void businessAddedFromServer();
 
-
-
-
-  int getBusinessId(Business business) throws SQLException, RemoteException;
   void leadAddedFromServer() throws SQLException, RemoteException;
 
   void userAddedFromServer() throws SQLException, RemoteException;
   boolean logIn(String email, String password)
       throws SQLException, RemoteException;
-
+  int getBusinessId(Business business) throws SQLException, RemoteException;
   User getLoggedInUser();
-  void businessAddedFromServer();
+
 
   String getUserPassword(String oldEmail) throws SQLException, RemoteException;
   void addObjectWithPassword(User user, String password) throws SQLException, RemoteException;

@@ -1,6 +1,6 @@
 package app.viewmodel;
 
-import app.model.Model;
+import app.model.ModelMeetingAndTask;
 import app.shared.Business;
 import app.shared.Task;
 import app.shared.User;
@@ -22,14 +22,14 @@ import java.util.ArrayList;
 
 public class TasksViewModel implements PropertyChangeListener
 {
-  private final Model model;
+  private final ModelMeetingAndTask model;
 
   private final ObjectProperty<ObservableList<Task>> tasks = new SimpleObjectProperty<>();
 
   private final PropertyChangeSupport support;
   private SimpleStringProperty name;
 
-  public TasksViewModel(Model model){
+  public TasksViewModel(ModelMeetingAndTask model){
     support = new PropertyChangeSupport(this);
 
     this.model = model;

@@ -1,6 +1,6 @@
 package app.viewmodel;
 
-import app.model.Model;
+import app.model.*;
 
 public class ViewModelFactory
 {
@@ -12,14 +12,14 @@ public class ViewModelFactory
   private final LeadsViewModel leadsViewModel;
   private final LoginViewModel loginViewModel;
 
-  public ViewModelFactory(Model model){
-    this.calendarViewModel = new CalendarViewModel(model);
-    this.meetingViewModel = new MeetingViewModel(model);
-    this.tasksViewModel = new TasksViewModel(model);
-    this.availableClientsViewModel = new AvailableClientsViewModel(model);
-    this.allUsersViewModel = new AllUsersViewModel(model);
-    this.leadsViewModel = new LeadsViewModel(model);
-    this.loginViewModel =new LoginViewModel(model);
+  public ViewModelFactory(ModelCalendar modelCalendar, ModelLead modelLead, ModelLogin modelLogin, ModelMeetingAndTask modelMeetingAndTask, ModelUser modelUser){
+    this.calendarViewModel = new CalendarViewModel(modelCalendar);
+    this.meetingViewModel = new MeetingViewModel(modelMeetingAndTask);
+    this.tasksViewModel = new TasksViewModel(modelMeetingAndTask);
+    this.availableClientsViewModel = new AvailableClientsViewModel(modelCalendar);
+    this.allUsersViewModel = new AllUsersViewModel(modelUser);
+    this.leadsViewModel = new LeadsViewModel(modelLead);
+    this.loginViewModel =new LoginViewModel(modelLogin);
   }
 
   public LoginViewModel getSelectRoleViewModel()

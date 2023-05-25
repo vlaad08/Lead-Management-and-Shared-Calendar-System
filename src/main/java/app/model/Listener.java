@@ -11,9 +11,9 @@ public class Listener extends UnicastRemoteObject implements
     RemotePropertyChangeListener<String>
 {
 
-  private final Model model;
+  private final ModelListener model;
 
-  public Listener(Model model) throws RemoteException
+  public Listener(ModelListener model) throws RemoteException
   {
     this.model = model;
   }
