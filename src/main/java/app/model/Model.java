@@ -45,7 +45,6 @@ public interface Model extends ModelMeetingAndTask, ModelCalendar, ModelUser, Mo
       throws SQLException, RemoteException;
 
   void taskAddedFromServer() throws SQLException, RemoteException;
-  void businessAddedFromServer();
 
   void leadAddedFromServer() throws SQLException, RemoteException;
 
