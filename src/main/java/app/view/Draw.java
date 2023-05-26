@@ -1320,9 +1320,9 @@ public class Draw
       {
         tasksViewModel.addTask(title, description, date, status, business.getBusiness_id(), emails);
       }
-      catch (SQLException | RemoteException e)
+      catch (Exception e)
       {
-        throw new RuntimeException(e);
+        e.printStackTrace();
       }
     });
 

@@ -1,15 +1,16 @@
 package app.viewmodel;
 
 import app.model.Model;
+import app.model.ModelLogin;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 public class LoginViewModel
 {
-  private final Model model;
+  private final ModelLogin model;
 
-  public LoginViewModel(Model model)
+  public LoginViewModel(ModelLogin model)
   {
     this.model = model;
   }

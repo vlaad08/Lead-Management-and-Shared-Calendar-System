@@ -1,10 +1,13 @@
 package app.model;
 
 import app.shared.Communicator;
+import app.shared.Meeting;
+import app.shared.Task;
 import app.shared.User;
 import dk.via.remote.observer.RemotePropertyChangeEvent;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -13,7 +16,11 @@ import org.powermock.reflect.Whitebox;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,5 +177,83 @@ public class ModelManagerTest
     });
   }
 
+  @Test
+  void getting_list_by_object_returns_an_arraylist()
+  {
+    assertEquals(model.getList(new Object()).getClass(),ArrayList.class);
+  }
+
+  @Test
+  void getting_list_by_object_returns_the_list_of_Employees_for_given_meeting_or_task()
+      throws SQLException, RemoteException
+  {
+    Meeting meeting=new Meeting("Meeting","", Date.valueOf(LocalDate.of(2023,5,10)),
+        Time.valueOf(LocalTime.of(9,0)),Time.valueOf(LocalTime.of(11,0)),"email@gmail.com");
+    Task task= new Task("Task","",Date.valueOf(LocalDate.of(2023,5,11)), "To do",1234);
+    model.getList(meeting);
+    model.getList(task);
+    Mockito.verify(communicator).getListOfEmployees(meeting);
+    Mockito.verify(communicator).getListOfEmployees(task);
+  }
+
+  @Test
+  void getting_list_by_meeting_recognizes_SQLException()
+      throws SQLException, RemoteException
+  {
+    Mockito.when(communicator.getListOfEmployees(Mockito.any())).thenThrow(
+        SQLException.class);
+    Meeting meeting=new Meeting("Meeting","", Date.valueOf(LocalDate.of(2023,5,10)),
+        Time.valueOf(LocalTime.of(9,0)),Time.valueOf(LocalTime.of(11,0)),"email@gmail.com");
+    assertThrows(RuntimeException.class, ()->{
+      model.getList(meeting);
+    });
+  }
+  @Test
+  void getting_list_by_meeting_recognizes_RemoteException()
+      throws SQLException, RemoteException
+  {
+    Mockito.when(communicator.getListOfEmployees(Mockito.any())).thenThrow(
+        RemoteException.class);
+    Meeting meeting=new Meeting("Meeting","", Date.valueOf(LocalDate.of(2023,5,10)),
+        Time.valueOf(LocalTime.of(9,0)),Time.valueOf(LocalTime.of(11,0)),"email@gmail.com");
+    assertThrows(RuntimeException.class, ()->{
+      model.getList(meeting);
+    });
+  }
+  @Test
+  void getting_list_by_task_recognizes_SQLException()
+      throws SQLException, RemoteException
+  {
+    Mockito.when(communicator.getListOfEmployees(Mockito.any())).thenThrow(
+        SQLException.class);
+    Task task= new Task("Task","",Date.valueOf(LocalDate.of(2023,5,11)), "To do",1234);
+    assertThrows(RuntimeException.class, ()->{
+      model.getList(task);
+    });
+  }
+  @Test
+  void getting_list_by_task_recognizes_RemoteException()
+    throws SQLException, RemoteException
+  {
+    Mockito.when(communicator.getListOfEmployees(Mockito.any())).thenThrow(
+        RemoteException.class);
+    Task task= new Task("Task","",Date.valueOf(LocalDate.of(2023,5,11)), "To do",1234);
+    assertThrows(RuntimeException.class, ()->{
+      model.getList(task);
+    });
+  }
+
+  @Test
+  void get_list_returns_an_array_of_users_if_object_is_meeting()
+      throws SQLException, RemoteException
+  {
+    Meeting meeting = new Meeting("", "", new Date(2030, 2, 2), new Time(3000),
+        new Time(300000), "doesntmatter@gmail.com");
+
+    model.getList(meeting);
+    Mockito.verify(communicator).getListOfEmployees(meeting);
+
+
+  }
 
 }
