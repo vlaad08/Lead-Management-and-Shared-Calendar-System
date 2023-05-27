@@ -196,7 +196,6 @@ public class ServerImplementation implements Communicator
     ArrayList<Object> users = connection.getUsers();
 
 
-
     if(meetings != null)
     {
       Map<Meeting, ArrayList<String>> meetingMap = new HashMap<>();
@@ -211,9 +210,11 @@ public class ServerImplementation implements Communicator
         ArrayList<String> userEmails = meetingMap.get(meeting);
 
 
+
         for(String email : userEmails)
         {
           User user = connection.getUserByEmail(email);
+
 
 
           if(meeting.getDate().equals(date) &&
@@ -226,6 +227,7 @@ public class ServerImplementation implements Communicator
               )
           )
           {
+
             users.remove(user);
           }
         }
@@ -244,7 +246,7 @@ public class ServerImplementation implements Communicator
     {
       connection.removeAddress((Address) obj);
     }
-    if(obj instanceof String)
+    if(obj instanceof String) //removes an user based on their email
     {
       connection.removeAssignmentsForUser((String) obj);
       connection.removeAttendanceForUser((String) obj);
@@ -304,7 +306,6 @@ public class ServerImplementation implements Communicator
       for(Meeting meeting : meetings)
       {
         ArrayList<String> emails = getListOfEmployees(meeting);
-
         connection.removeAttendance(meeting);
         connection.removeMeeting(meeting);
 
@@ -312,6 +313,7 @@ public class ServerImplementation implements Communicator
 
         meetingMap.put(meeting, emails);
       }
+
 
       connection.editLead((Lead) oldObj, (Lead) newObj);
 
@@ -321,6 +323,7 @@ public class ServerImplementation implements Communicator
         ArrayList<String> emails = meetingMap.get(meeting);
         for(String e : emails)
         {
+
           connection.setAttendance(e, meeting);
         }
       }
@@ -359,10 +362,10 @@ public class ServerImplementation implements Communicator
     }
   }
 
-  @Override public String getUserPassword(String oldEmail) throws SQLException, RemoteException
+  @Override public String getUserPassword(String email) throws SQLException, RemoteException
   {
 
-    return  connection.getUserPassword(oldEmail);
+    return  connection.getUserPassword(email);
   }
 
   @Override public void editObjectWithPassword(Object oldObj, Object newObj,
@@ -403,16 +406,13 @@ public class ServerImplementation implements Communicator
 
       support.firePropertyChange("reloadUser", null, "");
       support.firePropertyChange("reloadMeeting", null, "");
-      support.firePropertyChange("realodTask", null, "");
+      support.firePropertyChange("reloadTask", null, "");
     }
   }
 
   @Override public Object getObject(Object obj, String expectedType)
       throws SQLException, RemoteException
   {
-
-
-
     if(obj instanceof User && expectedType.equalsIgnoreCase("address"))
     {
       return connection.getAddress((User) obj);
