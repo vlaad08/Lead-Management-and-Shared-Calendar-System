@@ -16,18 +16,27 @@ import java.util.Map;
 
 public class ServerImplementation implements Communicator
 {
-  private final RemotePropertyChangeSupport<String> support;
+  private RemotePropertyChangeSupport<String> support;
 
   private SQLConnection connection;
 
 
 
-  public ServerImplementation()
+  public ServerImplementation() throws SQLException
   {
     support = new RemotePropertyChangeSupport<>();
+    connection = SQLConnection.getInstance();
   }
 
+  public void setSupport(RemotePropertyChangeSupport support)
+  {
+    this.support = support;
+  }
 
+  public void setConnection(SQLConnection connection)
+  {
+    this.connection = connection;
+  }
 
   @Override public void addListener(
       RemotePropertyChangeListener<String> listener) throws RemoteException
@@ -38,7 +47,7 @@ public class ServerImplementation implements Communicator
   private boolean checkIfAddressExists(Address address)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
     Address a = connection.getAddress(address);
 
@@ -54,7 +63,7 @@ public class ServerImplementation implements Communicator
   @Override public int getBusinessId(Business business)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
     return connection.getBusinessID(business);
   }
 
@@ -63,21 +72,21 @@ public class ServerImplementation implements Communicator
   @Override public boolean logIn(String email, String password)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
     return connection.logIn(email, password);
   }
 
   @Override public User getUserByEmail(String email)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
     return connection.getUserByEmail(email);
   }
 
   @Override public void addObject(Object obj)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
     if(obj instanceof Lead)
     {
@@ -102,7 +111,6 @@ public class ServerImplementation implements Communicator
   @Override public void addObjectWithPassword(Object obj, String password)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
 
 
     if(obj instanceof User)
@@ -115,7 +123,7 @@ public class ServerImplementation implements Communicator
   @Override public void addObject(Object obj, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
     if(obj instanceof Meeting)
     {
       connection.createMeeting((Meeting) obj);
@@ -139,7 +147,7 @@ public class ServerImplementation implements Communicator
   @Override public ArrayList<Object> getList(String expectedType)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
     if(expectedType.equalsIgnoreCase("Meetings"))
     {
@@ -182,11 +190,10 @@ public class ServerImplementation implements Communicator
   @Override public ArrayList<Object> getListOfAvailableEmployees(Date date, Time startTime,
       Time endTime) throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
     ArrayList<Object> meetings = connection.getMeetings();
     ArrayList<Object> users = connection.getUsers();
-
 
 
     if(meetings != null)
@@ -203,9 +210,11 @@ public class ServerImplementation implements Communicator
         ArrayList<String> userEmails = meetingMap.get(meeting);
 
 
+
         for(String email : userEmails)
         {
           User user = connection.getUserByEmail(email);
+
 
 
           if(meeting.getDate().equals(date) &&
@@ -218,6 +227,7 @@ public class ServerImplementation implements Communicator
               )
           )
           {
+
             users.remove(user);
           }
         }
@@ -229,14 +239,14 @@ public class ServerImplementation implements Communicator
   @Override public void removeObject(Object obj)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
 
     if(obj instanceof Address)
     {
       connection.removeAddress((Address) obj);
     }
-    if(obj instanceof String)
+    if(obj instanceof String) //removes an user based on their email
     {
       connection.removeAssignmentsForUser((String) obj);
       connection.removeAttendanceForUser((String) obj);
@@ -288,7 +298,7 @@ public class ServerImplementation implements Communicator
   @Override public void editObject(Object oldObj, Object newObj)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
     if(oldObj instanceof Lead && newObj instanceof Lead)
     {
       ArrayList<Meeting> meetings = connection.getMeetingsByLead((Lead) oldObj);
@@ -296,7 +306,6 @@ public class ServerImplementation implements Communicator
       for(Meeting meeting : meetings)
       {
         ArrayList<String> emails = getListOfEmployees(meeting);
-
         connection.removeAttendance(meeting);
         connection.removeMeeting(meeting);
 
@@ -304,6 +313,7 @@ public class ServerImplementation implements Communicator
 
         meetingMap.put(meeting, emails);
       }
+
 
       connection.editLead((Lead) oldObj, (Lead) newObj);
 
@@ -313,6 +323,7 @@ public class ServerImplementation implements Communicator
         ArrayList<String> emails = meetingMap.get(meeting);
         for(String e : emails)
         {
+
           connection.setAttendance(e, meeting);
         }
       }
@@ -327,7 +338,7 @@ public class ServerImplementation implements Communicator
   @Override public void editObjectWithList(Object oldObj, Object newObj,
       ArrayList<String> emails) throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
     if(oldObj instanceof Task && newObj instanceof Task)
     {
@@ -351,16 +362,16 @@ public class ServerImplementation implements Communicator
     }
   }
 
-  @Override public String getUserPassword(String oldEmail) throws SQLException, RemoteException
+  @Override public String getUserPassword(String email) throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
-    return  connection.getUserPassword(oldEmail);
+
+    return  connection.getUserPassword(email);
   }
 
   @Override public void editObjectWithPassword(Object oldObj, Object newObj,
       String password) throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
+
 
 
     if(oldObj instanceof User && newObj instanceof User)
@@ -395,16 +406,13 @@ public class ServerImplementation implements Communicator
 
       support.firePropertyChange("reloadUser", null, "");
       support.firePropertyChange("reloadMeeting", null, "");
-      support.firePropertyChange("realodTask", null, "");
+      support.firePropertyChange("reloadTask", null, "");
     }
   }
 
   @Override public Object getObject(Object obj, String expectedType)
       throws SQLException, RemoteException
   {
-    connection = SQLConnection.getInstance();
-
-
     if(obj instanceof User && expectedType.equalsIgnoreCase("address"))
     {
       return connection.getAddress((User) obj);
