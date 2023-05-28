@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "password");
+        "postgres", "1945");
   }
 
   public ArrayList<Object> getMeetings() throws SQLException
@@ -785,4 +785,9 @@ public void editMeeting(Meeting oldMeeting, Meeting newMeeting) throws SQLExcept
       statement.executeUpdate();
     }
   }
+
+  //  public ArrayList<Object> getAttendanceByUser(User oldObj)
+//  {
+//
+//  }
 }
