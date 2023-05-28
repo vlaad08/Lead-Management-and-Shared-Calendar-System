@@ -15,7 +15,7 @@ public class ModelManager implements Model
 
   private User loggedInUser = new User("", "", "", "", "", true, "", 41412);
 
-  private final PropertyChangeSupport support;
+  private PropertyChangeSupport support;
 
 
 
@@ -26,7 +26,17 @@ public class ModelManager implements Model
     support = new PropertyChangeSupport(this);
   }
 
-    @Override public void addObject(Object obj)
+  public void setSupport(PropertyChangeSupport support)
+  {
+    this.support = support;
+  }
+
+  public void setLoggedInUser(User loggedInUser)
+  {
+    this.loggedInUser = loggedInUser;
+  }
+
+  @Override public void addObject(Object obj)
         throws SQLException, RemoteException
     {
       communicator.addObject(obj);
