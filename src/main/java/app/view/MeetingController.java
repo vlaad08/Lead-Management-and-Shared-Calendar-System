@@ -85,9 +85,6 @@ public class MeetingController implements PropertyChangeListener
     return root;
   }
 
-  public void  reset() throws SQLException
-  {
-  } //why not
 
   @FXML public void changeView(ActionEvent e)
   {

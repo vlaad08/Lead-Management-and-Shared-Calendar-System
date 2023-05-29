@@ -62,7 +62,6 @@ public class AvailableClientsController implements PropertyChangeListener
     return root;
   }
 
-  public void  reset(){} //why not
 
   @FXML public void changeView(ActionEvent e)
   {
