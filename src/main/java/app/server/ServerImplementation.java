@@ -120,7 +120,7 @@ public class ServerImplementation implements Communicator
     }
   }
 
-  @Override public void addObject(Object obj, ArrayList<String> emails)
+  @Override public void  addObject(Object obj, ArrayList<String> emails)
       throws SQLException, RemoteException
   {
 
@@ -358,7 +358,7 @@ public class ServerImplementation implements Communicator
       {
         connection.setAttendance(e, (Meeting) newObj);
       }
-      support.firePropertyChange("reloadMeeting", null, "");
+        support.firePropertyChange("reloadMeeting", null, "");
     }
   }
 

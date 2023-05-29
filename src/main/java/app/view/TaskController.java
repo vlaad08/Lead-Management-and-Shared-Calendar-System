@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskController implements PropertyChangeListener
+public class  TaskController implements PropertyChangeListener
 {
   public Button addButton;
   public StackPane addRectangle;
