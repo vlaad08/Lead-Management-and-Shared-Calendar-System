@@ -1,4 +1,4 @@
-package app.model;
+package app.shared;
 
 import app.JDBC.SQLConnection;
 import app.shared.Lead;

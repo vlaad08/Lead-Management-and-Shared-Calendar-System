@@ -3,6 +3,8 @@ package app.model;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -65,15 +67,19 @@ public class ConstraintCheckerTest
   }
 
   @Test
-  void checking_TextFields_checks_for_empty_textfields()
+  void checking_TextFields_checks_for_empty_TextFields()
   {
-    Platform.startup(() -> {
-      TextField textField = new TextField("");
+    Platform.startup(() -> {});
+    TextField textField1= new TextField();
+    TextField textField2= new TextField();
 
-      boolean result = ConstraintChecker.checkFillOut(textField);
-      assertEquals(false, result);
+    textField1.setText("");
+    textField2.setText("Some text");
 
-      Platform.exit();
-    });
+    boolean result1 = ConstraintChecker.checkFillOut(textField1);
+    boolean result2 = ConstraintChecker.checkFillOut(textField2);
+    assertFalse(result1);
+    assertTrue(result2);
+    Platform.exit();
   }
 }
