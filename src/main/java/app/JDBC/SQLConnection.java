@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "password");
+        "postgres", "1945");
   }
 
   public ArrayList<Object> getMeetings() throws SQLException
@@ -104,6 +104,7 @@ public class SQLConnection
         int businessId = resultSet.getInt("business_id");
         tasks.add(new Task(title, description, date, status, businessId));
       }
+      System.out.println(tasks);
       return tasks;
     }
   }

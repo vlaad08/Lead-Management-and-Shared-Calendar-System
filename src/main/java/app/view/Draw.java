@@ -1169,7 +1169,7 @@ public class Draw
               emailsUpdated.add(row.getEmail());
             }
           }
-          Task newTask = new Task(titleTextField.getText(), descrTextField.getText(), Date.valueOf(datePicker.getValue()), statuses.getValue(), 7456);
+          Task newTask = new Task(titleTextField.getText(), descrTextField.getText(), Date.valueOf(datePicker.getValue()), statuses.getValue(), business_id);
           Task oldTask = new Task(title, description, Date.valueOf(date),
               status, business_id);
           updateTaskObject(tasksViewModel, newTask, oldTask, emailsUpdated);

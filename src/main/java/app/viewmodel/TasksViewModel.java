@@ -88,7 +88,7 @@ public class TasksViewModel implements PropertyChangeListener
       throws SQLException, RemoteException
   {
 
-    model.editObjectWithList(newTask,oldTask,emails);
+    model.editObjectWithList(oldTask,newTask,emails);
   }
 
 
@@ -114,6 +114,8 @@ public class TasksViewModel implements PropertyChangeListener
     {
       ArrayList<Task> list = getTasks();
       ObservableList<Task> observableList= FXCollections.observableList(list);
+
+
       tasks.set(observableList);
       support.firePropertyChange("reloadTasks", false, true);
     }
