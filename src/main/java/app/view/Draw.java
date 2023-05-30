@@ -1,6 +1,5 @@
 package app.view;
 
-import app.model.ConstraintChecker;
 import app.shared.*;
 import app.viewmodel.AllUsersViewModel;
 import app.viewmodel.LeadsViewModel;

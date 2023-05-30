@@ -1,16 +1,11 @@
 package app.view;
 
-import app.model.ConstraintChecker;
-import app.shared.Business;
 import app.viewmodel.LoginViewModel;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 
 import java.rmi.RemoteException;
