@@ -1071,8 +1071,32 @@ public class SQLConnectionTest {
     assertEquals(address.getCity(),stringArgumentCaptor.getAllValues().get(2));
     assertEquals(address.getCountry(),stringArgumentCaptor.getAllValues().get(3));
     assertEquals(address.getPostalCode(),integerArgumentCaptor.getValue());
+  }
 
+  @Test
+  void getAssignedUsers_by_task_returns_an_arraylist() throws SQLException
+  {
+    Task task= new Task("Task","",  Date.valueOf(LocalDate.of( 2023, 5, 22)),"To do", 7456);
+    assertEquals(ArrayList.class,sqlConnection.getAssignedUsers(task).getClass());
+  }
+  @Test
+  void getAssignedUsers_by_task_returns_a_list_of_emails() throws SQLException
+  {
+    Task task= new Task("Task","",  Date.valueOf(LocalDate.of( 2023, 5, 22)),"To do", 7456);
+    Mockito.when(sqlConnection.getAssignedUsers(task)).thenReturn(new ArrayList<>(List.of("email1@gmail.com","email2@gmail.com")));
+    ArrayList<String> emails=sqlConnection.getAssignedUsers(task);
+    Mockito.verify(connection).prepareStatement(stringArgumentCaptor.capture());
+    Mockito.verify(statement).setString(eq(1),stringArgumentCaptor.capture());
+    Mockito.verify(statement).setDate(eq(2),dateArgumentCaptor.capture());
+    Mockito.verify(statement).setInt(eq(3),integerArgumentCaptor.capture());
+    Mockito.verify(statement).executeQuery();
 
+    assertEquals(2,emails.size());
+    assertEquals("select * from assignment"
+        + " where title = ? and duedate = ? and business_id = ?",stringArgumentCaptor.getAllValues().get(0));
+    assertEquals("Task",stringArgumentCaptor.getAllValues().get(1));
+    assertEquals(Date.valueOf(LocalDate.of( 2023, 5, 22)),dateArgumentCaptor.getValue());
+    assertEquals(7456, integerArgumentCaptor.getValue());
   }
 
 }
