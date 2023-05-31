@@ -104,7 +104,7 @@ public class SQLConnection
         int businessId = resultSet.getInt("business_id");
         tasks.add(new Task(title, description, date, status, businessId));
       }
-      System.out.println(tasks);
+
       return tasks;
     }
   }

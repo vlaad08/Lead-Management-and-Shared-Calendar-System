@@ -38,6 +38,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class Draw
 {
@@ -80,7 +81,12 @@ public class Draw
     HBox lead=new HBox();
     Label leadLabel=new Label("Lead: ");
     ComboBox<Lead> leads=new ComboBox<>();
-    leads.setItems(FXCollections.observableArrayList(meetingViewModel.getLeads()));
+    ArrayList<Lead> list = meetingViewModel.getLeads();
+    leads.setItems(FXCollections.observableArrayList(list));
+
+
+
+
     leads.setPrefWidth(150);
     lead.setSpacing(65);
     lead.setPadding(new Insets(20,0,0,20));
@@ -246,10 +252,13 @@ public class Draw
       }
       else
       {
+
+
         Time startTime = Time.valueOf(LocalTime.of(startTimeHours.getValue(), startTimeMinutes.getValue()));
         Time endTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
 
-        if (ConstraintChecker.checkTime(startTime,endTime) && ConstraintChecker.checkDate(datePicker.getValue()))
+        if (ConstraintChecker.checkTime(startTime,endTime) && ConstraintChecker.checkDate(datePicker.getValue())
+        && ConstraintChecker.checkFillOut(titleTextField))
         {
           ArrayList<String> emails = new ArrayList<>();
           for(UserTableRow row : attendance.getItems())
@@ -259,12 +268,14 @@ public class Draw
               emails.add(row.getEmail());
             }
           }
-          createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime, endTime, descrTextField.getText(), emails);
+
+            createMeetingObject(meetingViewModel, titleTextField.getText(), leads.getValue(), datePicker, startTime, endTime, descrTextField.getText(), emails);
+
           stage.close();
         }else
         {
           Alert A = new Alert(Alert.AlertType.ERROR);
-          A.setContentText("Check time and date inputs");
+          A.setContentText("Check that all the fields are filled inputs");
           A.show();
         }
       }
@@ -656,7 +667,8 @@ public class Draw
             startTimeMinutes.getValue()));
         Time newEndTime = Time.valueOf(LocalTime.of(endTimeHours.getValue(), endTimeMinutes.getValue()));
 
-        if (ConstraintChecker.checkTime(newStartTime, newEndTime) && ConstraintChecker.checkDate(datePicker.getValue()))
+        if (ConstraintChecker.checkTime(newStartTime, newEndTime) && ConstraintChecker.checkDate(datePicker.getValue()) &&
+        ConstraintChecker.checkFillOut(newTitleTextField))
         {
           ArrayList<String> emailsUpdated = new ArrayList<>();
           for (UserTableRow row : attendance.getItems())
@@ -863,7 +875,7 @@ public class Draw
 
 
     create.setOnAction(event -> {
-      if (ConstraintChecker.checkFillOut(titleTextField))
+      if (ConstraintChecker.checkFillOut(titleTextField) && businessComboBox.getValue() != null)
       {
         if(ConstraintChecker.checkDate(datePicker.getValue()))
         {
@@ -887,7 +899,7 @@ public class Draw
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Title must not be empty");
+        A.setContentText("Check input fields");
         A.show();
       }
 
@@ -1534,6 +1546,8 @@ public class Draw
     emailField.setPromptText("Required");
     phoneField.setPromptText("Required");
     titleTextField.setPromptText("Required");
+    Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
     create.setOnAction(event -> {
       if (ConstraintChecker.checkFillOut(firstNameTextField) &&
           ConstraintChecker.checkFillOut(lastNameTextField)  &&
@@ -1545,10 +1559,23 @@ public class Draw
         if(businessComboBox.getValue() == null || businessComboBox.getValue().getName() == null ||  businessComboBox.getValue().getName().equals("null"))
         {
 
+
+
             Platform.runLater(()->{
               try
               {
-                leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
+                if(ConstraintChecker.checkFillOut(businessAddressTextField) && ConstraintChecker.checkFillOut(businessCityTextField) && ConstraintChecker.checkFillOut(businessCountryTextField)
+                && ConstraintChecker.checkFillOut(businessPostalCodeTextField))
+                {
+                  leadsViewModel.createAddress(businessAddressTextField.getText(), businessCityTextField.getText(), businessCountryTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
+
+                }
+                else
+                {
+                  Alert alert = new Alert(Alert.AlertType.ERROR);
+                  alert.setContentText("Input all business address information");
+                  alert.show();
+                }
               }
               catch (SQLException | RemoteException e)
               {
@@ -1556,7 +1583,16 @@ public class Draw
               }
               try
               {
-                leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
+                if (ConstraintChecker.checkFillOut(businessNameTextField))
+                {
+                  leadsViewModel.createBusiness(businessNameTextField.getText(), businessAddressTextField.getText(), Integer.parseInt(businessPostalCodeTextField.getText()));
+                }
+                else
+                {
+                  Alert alert = new Alert(Alert.AlertType.ERROR);
+                  alert.setContentText("Input all business information");
+                  alert.show();
+                }
               }
               catch (SQLException | RemoteException e)
               {
@@ -1574,17 +1610,36 @@ public class Draw
               {
                 throw new RuntimeException(e);
               }
-              createLeadObject(leadsViewModel, firstNameTextField.getText(), middleNameTextField.getText() ,lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), id, businessNameTextField.getText());
+              if(pattern.matcher(emailField.getText()).matches() && ConstraintChecker.checkFillOut(firstNameTextField) && ConstraintChecker.checkFillOut(lastNameTextField)
+              && ConstraintChecker.checkFillOut(phoneField) && ConstraintChecker.checkFillOut(titleTextField))
+              {
+                createLeadObject(leadsViewModel, firstNameTextField.getText(), middleNameTextField.getText() ,lastNameTextField.getText(),emailField.getText(),phoneField.getText(),titleTextField.getText(), id, businessNameTextField.getText());
+                stage.close();
+              }
+              else
+              {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Check filled out information");
+                alert.show();
+              }
 
             });
           }
         else
         {
-          createLeadObject(leadsViewModel, firstNameTextField.getText(),
-              middleNameTextField.getText(), lastNameTextField.getText(), emailField.getText(), phoneField.getText(), titleTextField.getText(), businessComboBox.getValue().getBusiness_id(), businessComboBox.getValue().getName());
+          if (ConstraintChecker.checkFillOut(firstNameTextField) && ConstraintChecker.checkFillOut(lastNameTextField) && pattern.matcher(emailField.getText()).matches() &&
+          ConstraintChecker.checkFillOut(phoneField) && ConstraintChecker.checkFillOut(titleTextField))
+          {
+            createLeadObject(leadsViewModel, firstNameTextField.getText(),
+                middleNameTextField.getText(), lastNameTextField.getText(),
+                emailField.getText(), phoneField.getText(), titleTextField.getText(),
+                businessComboBox.getValue().getBusiness_id(),
+                businessComboBox.getValue().getName());
+            stage.close();
+          }
         }
 
-        stage.close();
+
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
@@ -1780,8 +1835,18 @@ public class Draw
           business_id, businessName,"Available");
       try
       {
-        leadsViewModel.editLead(oldLead, newLead);
-        stage.close();
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        if(pattern.matcher(emailTextField.getText()).matches())
+        {
+          leadsViewModel.editLead(oldLead, newLead);
+          stage.close();
+        }
+        else
+        {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setContentText("Input email is not a valid email");
+          alert.show();
+        }
       }
       catch (SQLException | RemoteException e)
       {
@@ -1820,8 +1885,13 @@ public class Draw
       for(Lead lead : leads)
       {
         Platform.runLater(()->
+        {
+          if(lead.getBusiness_id() != -1)
+          {
+            leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id()));
 
-          leadVBox.getChildren().add(drawLeadTile(leadsViewModel, lead.getFirstname(), lead.getMiddleName(), lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle(), lead.getPhone(), lead.getBusiness_id())));
+          }
+        });
       }
     }
   }
@@ -1841,9 +1911,14 @@ public class Draw
       for(Lead lead : leads)
       {
         Platform.runLater(()->
+        {
+          if(lead.getBusiness_id() != -1)
+          {
 
-          leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(),
-              lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle())));
+            leadVBox.getChildren().add(drawAvailableLeadTile(lead.getFirstname(),
+                lead.getLastname(), lead.getEmail(), lead.getBusinessName(),lead.getTitle()));
+          }
+        });
       }
     }
   }
@@ -2076,11 +2151,14 @@ public class Draw
     delete.setTextFill(Paint.valueOf("White"));
     delete.setStyle("-fx-background-color: #d93f3f");
 
+    Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
 
     if(!allUsersViewModel.isManager())
     {
       roleComboBox.setDisable(true);
     }
+
 
 
     Platform.runLater(()->delete.setOnAction(event -> {
@@ -2136,31 +2214,40 @@ public class Draw
 
       Optional<ButtonType> result = alert.showAndWait();
 
-      if (result.isPresent() && result.get() == yesButton) {
-        try
-        {
-          if(!streetField.getText().equalsIgnoreCase(a.getStreet()) || !cityField.getText().equalsIgnoreCase(a.getCity()) || !countryField.getText().equalsIgnoreCase(a.getCountry()) ||
-          !postalCodeTextField.getText().equalsIgnoreCase(String.valueOf(a.getPostalCode())))
+      if(pattern.matcher(emailField.getText()).matches())
+      {
+        if (result.isPresent() && result.get() == yesButton) {
+          try
           {
-            allUsersViewModel.createAddress(streetField.getText(), cityField.getText(), countryField.getText(), Integer.parseInt(postalCodeTextField.getText()));
+            if(!streetField.getText().equalsIgnoreCase(a.getStreet()) || !cityField.getText().equalsIgnoreCase(a.getCity()) || !countryField.getText().equalsIgnoreCase(a.getCountry()) ||
+                !postalCodeTextField.getText().equalsIgnoreCase(String.valueOf(a.getPostalCode())))
+            {
+              allUsersViewModel.createAddress(streetField.getText(), cityField.getText(), countryField.getText(), Integer.parseInt(postalCodeTextField.getText()));
+            }
+            allUsersViewModel.editUser(oldUser, newUser, passwordTextField.getText());
+            if(!streetField.getText().equalsIgnoreCase(a.getStreet()) || !cityField.getText().equalsIgnoreCase(a.getCity()) || !countryField.getText().equalsIgnoreCase(a.getCountry()) ||
+                !postalCodeTextField.getText().equalsIgnoreCase(String.valueOf(a.getPostalCode())))
+            {
+              allUsersViewModel.removeAddress(a);
+            }
+            stage.close();
           }
-          allUsersViewModel.editUser(oldUser, newUser, passwordTextField.getText());
-          if(!streetField.getText().equalsIgnoreCase(a.getStreet()) || !cityField.getText().equalsIgnoreCase(a.getCity()) || !countryField.getText().equalsIgnoreCase(a.getCountry()) ||
-              !postalCodeTextField.getText().equalsIgnoreCase(String.valueOf(a.getPostalCode())))
+          catch (SQLException | RemoteException e)
           {
-            allUsersViewModel.removeAddress(a);
+            throw new RuntimeException(e);
           }
-          stage.close();
+        } else {
+          System.out.println("no clicked");
         }
-        catch (SQLException | RemoteException e)
-        {
-          throw new RuntimeException(e);
-        }
-      } else {
-        System.out.println("no clicked");
-      }
 
-      stage.close();
+        stage.close();
+      }
+      else
+      {
+        Alert alert1 = new Alert(Alert.AlertType.ERROR);
+        alert1.setContentText("Email is not a valid email");
+        alert1.show();
+      }
     });
 
 
@@ -2304,6 +2391,8 @@ public class Draw
 
     insert.addAll(topBar, name,email, phone, roleBox, city, streetBox, create);
 
+    Pattern pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
 
     create.setOnAction(event -> {
       if (ConstraintChecker.checkFillOut(firstNameTextField) &&
@@ -2314,7 +2403,8 @@ public class Draw
           ConstraintChecker.checkFillOut(postalCodeField) &&
           ConstraintChecker.checkInt(postalCodeField.getText()) &&
           ConstraintChecker.checkFillOut(countryField) &&
-          ConstraintChecker.checkFillOut(cityField)
+          ConstraintChecker.checkFillOut(cityField) &&
+          pattern.matcher(emailField.getText()).matches()
       )
       {
         try
@@ -2330,7 +2420,7 @@ public class Draw
       }else
       {
         Alert A = new Alert(Alert.AlertType.ERROR);
-        A.setContentText("Text field must not be empty and postal code is a number!");
+        A.setContentText("Check the input fields!");
         A.show();
       }
 
