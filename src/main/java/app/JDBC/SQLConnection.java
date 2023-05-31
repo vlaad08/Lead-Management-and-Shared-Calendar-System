@@ -28,7 +28,7 @@ public class SQLConnection
   {
     return DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres?currentSchema=leadflow",
-        "postgres", "1945");
+        "postgres", "7319");
   }
 
   public ArrayList<Object> getMeetings() throws SQLException
