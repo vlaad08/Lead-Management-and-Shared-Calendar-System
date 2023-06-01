@@ -249,14 +249,23 @@ public class CalendarController implements PropertyChangeListener
             ArrayList<Meeting> meetings = calendarViewModel.getMeetings();
             for (Meeting meeting : meetings) {
                 LocalDateTime localDateTime = LocalDateTime.of(meeting.getDate().toLocalDate(), meeting.getStartTime().toLocalTime());
-                ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(),
-                    localDateTime.getDayOfMonth(), localDateTime.getHour(),
-                    localDateTime.getMinute(), 0,0,dateFocus.getZone());
-                if(localDateTime.getYear() == time.getYear() && localDateTime.getMonth().getValue() == time.getMonthValue() &&
-                    localDateTime.getDayOfMonth() == time.getDayOfMonth() && localDateTime.getHour() == time.getHour() && localDateTime.getMinute() == time.getMinute())
+                try
                 {
+                  ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(),
+                      localDateTime.getDayOfMonth(), localDateTime.getHour(),
+                      localDateTime.getMinute(), 0,0,dateFocus.getZone());
+
+                  if(localDateTime.getYear() == time.getYear() && localDateTime.getMonth().getValue() == time.getMonthValue() &&
+                      localDateTime.getDayOfMonth() == time.getDayOfMonth() && localDateTime.getHour() == time.getHour() && localDateTime.getMinute() == time.getMinute())
+                  {
                     calendarActivities.add(new CalendarActivity(time, meeting));
+                  }
                 }
+                catch (DateTimeException e)
+                {
+
+                }
+
             }
         }
         if(calendarViewModel.getTasks() != null)
@@ -265,13 +274,23 @@ public class CalendarController implements PropertyChangeListener
             for(Task task : tasks)
             {
                 LocalDateTime localDateTime = LocalDateTime.of(task.getDate().toLocalDate(), LocalTime.of(0, 0));
-                ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(), localDateTime.getDayOfMonth(),
-                    localDateTime.getHour(), localDateTime.getMinute(), 0, 0, dateFocus.getZone());
+              try
+              {
+                ZonedDateTime time = ZonedDateTime.of(dateFocus.getYear(), dateFocus.getMonthValue(),
+                    localDateTime.getDayOfMonth(), localDateTime.getHour(),
+                    localDateTime.getMinute(), 0,0,dateFocus.getZone());
+
                 if(localDateTime.getYear() == time.getYear() && localDateTime.getMonth().getValue() == time.getMonthValue() &&
                     localDateTime.getDayOfMonth() == time.getDayOfMonth() && localDateTime.getHour() == time.getHour() && localDateTime.getMinute() == time.getMinute())
                 {
-                    calendarActivities.add(new CalendarActivity(time, task));
+                  calendarActivities.add(new CalendarActivity(time, task));
                 }
+              }
+              catch (DateTimeException e)
+              {
+
+              }
+
             }
         }
 
