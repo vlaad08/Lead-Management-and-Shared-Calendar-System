@@ -38,6 +38,12 @@ public class CalendarActivity {
     }
 
 
-
+/*
+  The logic behind the Calendar's behaviour has been built upon
+  and by using this open source code:
+  GitHub,2023. Da9el00/Calendar.fxml [online]
+  Available at:https://gist.github.com/Da9el00/f4340927b8ba6941eb7562a3306e93b6
+  [Accessed 16 April 2023]
+  */
 
 }
