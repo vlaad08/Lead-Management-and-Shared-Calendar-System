@@ -107,16 +107,22 @@ public class CalendarController implements PropertyChangeListener
 
     @FXML
     void backOneMonth() {
+      Platform.runLater(()->{
         dateFocus = dateFocus.minusMonths(1);
         calendar.getChildren().clear();
         drawCalendar();
+      });
+
     }
 
     @FXML
     void forwardOneMonth() {
+      Platform.runLater(()->{
         dateFocus = dateFocus.plusMonths(1);
         calendar.getChildren().clear();
         drawCalendar();
+      });
+
     }
 
     private void drawCalendar(){
@@ -301,11 +307,8 @@ public class CalendarController implements PropertyChangeListener
   {
     if(evt.getPropertyName().equals("reloadCalendar"))
     {
-      for (Node node : calendar.getChildren())
-      {
-        Platform.runLater(() -> calendar.getChildren().remove(node));
-      }
-      Platform.runLater(this::drawCalendar);
+      backOneMonth();
+      forwardOneMonth();
     }
   }
 
